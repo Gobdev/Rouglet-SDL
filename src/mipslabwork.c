@@ -71,7 +71,7 @@ void labinit( void )
 	IFS(0) &= ~0x8000; // Set interrupt flag to 0.
 	IEC(0) |= 0x8000; // Enable interrupt for switch 3.
 
-	enable_interrupt(); // Enable interrupts globally.
+	//enable_interrupt(); // Enable interrupts globally.
 }
 
 

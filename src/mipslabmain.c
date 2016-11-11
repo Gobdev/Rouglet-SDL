@@ -34,21 +34,8 @@ int main(void) {
 	/* Set up input pins */
 	TRISDSET = (1 << 8);
 	TRISFSET = (1 << 1);
-	
-	/* Set up SPI as master */
-	//SPI2CON = 0;
-	//SPI2BRG = 15;
-	/* SPI2STAT bit SPIROV = 0; */
-	//SPI2STATCLR = 0x40;
-	/* SPI2CON bit CKP = 1; */
-    //    SPI2CONSET = 0x40;
-	/* SPI2CON bit MSTEN = 1; */
-	//SPI2CONSET = 0x20;
-	/* SPI2CON bit ON = 1; */
-	//SPI2CONSET = 0x8000;
-	
+
 	inititalize_display();
-	//display_init2();
 	display_string(0, "GOBLET GOBLE");
 	display_string(1, "T GOBLET GOB");
 	display_string(2, "LET GOBLET G");
@@ -58,10 +45,20 @@ int main(void) {
 	display_image(96, icon);
 	
 	labinit(); /* Do any lab-specific initialization */
-
+	int i, j, k;
+	k = 0;
 	while( 1 )
 	{
-	  labwork(); /* Do lab-specific things again and again */
+		if (++k > 3)
+			k = 0;
+		clearScreen();
+		delayMs(5);
+		for (i = 0; i < 128 / 4; i++){
+			for (j = 0; j < 32; j++){
+				paintOnePixel(i * 4 + k, j);
+			}
+		}
+		updateScreen();
 	}
 	return 0;
 }

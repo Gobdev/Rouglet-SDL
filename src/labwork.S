@@ -123,11 +123,11 @@ time2string:
 	sb $zero,6($t1)
 	add $a0, $zero, $t1
 	
-	POP $s0
-	POP $s1	
-	POP $s2
-	POP $s3
 	POP $s4
+	POP $s3	
+	POP $s2
+	POP $s1
+	POP $s0
 	POP $ra
 	jr $ra
 	nop

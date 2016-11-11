@@ -13,6 +13,10 @@ void display_init(void);
 void display_string(int line, char *s);
 void display_update(void);
 uint8_t spi_send_recv(uint8_t data);
+void clearScreen();
+void paintOnePixel(int x, int y);
+void updateScreen();
+void delayMs(int ms);
 
 /* Declare lab-related functions from mipslabfunc.c */
 char * itoaconv( int num );
