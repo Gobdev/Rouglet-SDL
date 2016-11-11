@@ -1,1 +1,2 @@
-# dtek-project
+# Roguelet: Komm süsser goblet
+
