@@ -36,19 +36,19 @@ int main(void) {
 	TRISFSET = (1 << 1);
 	
 	/* Set up SPI as master */
-	SPI2CON = 0;
-	SPI2BRG = 15;
+	//SPI2CON = 0;
+	//SPI2BRG = 15;
 	/* SPI2STAT bit SPIROV = 0; */
-	SPI2STATCLR = 0x40;
+	//SPI2STATCLR = 0x40;
 	/* SPI2CON bit CKP = 1; */
-        SPI2CONSET = 0x40;
+    //    SPI2CONSET = 0x40;
 	/* SPI2CON bit MSTEN = 1; */
-	SPI2CONSET = 0x20;
+	//SPI2CONSET = 0x20;
 	/* SPI2CON bit ON = 1; */
-	SPI2CONSET = 0x8000;
+	//SPI2CONSET = 0x8000;
 	
-	//inititalize_display();
-	display_init();
+	inititalize_display();
+	//display_init2();
 	display_string(0, "GOBLET GOBLE");
 	display_string(1, "T GOBLET GOB");
 	display_string(2, "LET GOBLET G");
