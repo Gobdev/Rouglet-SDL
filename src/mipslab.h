@@ -52,3 +52,5 @@ void time2string( char *, int );
 /* Written as part of i/o lab: getbtns, getsw */
 int getbtns(void);
 int getsw(void);
+
+void inititalize_display();

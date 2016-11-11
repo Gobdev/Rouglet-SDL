@@ -37,7 +37,7 @@ int main(void) {
 	
 	/* Set up SPI as master */
 	SPI2CON = 0;
-	SPI2BRG = 4;
+	SPI2BRG = 15;
 	/* SPI2STAT bit SPIROV = 0; */
 	SPI2STATCLR = 0x40;
 	/* SPI2CON bit CKP = 1; */
@@ -47,6 +47,7 @@ int main(void) {
 	/* SPI2CON bit ON = 1; */
 	SPI2CONSET = 0x8000;
 	
+	//inititalize_display();
 	display_init();
 	display_string(0, "GOBLET GOBLE");
 	display_string(1, "T GOBLET GOB");
