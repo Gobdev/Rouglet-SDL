@@ -2,7 +2,6 @@
 #include <pic32mx.h>
 #include "mipslab.h"
 
-
 #define CHANGE_TO_COMMAND_MODE (PORTFCLR = 0x10)
 #define CHANGE_TO_DATA_MODE (PORTFSET = 0x10)
 
@@ -10,10 +9,22 @@
 #define DO_NOT_RESET (PORTGSET = 0x200)
 
 #define ACTIVATE_VDD (PORTFCLR = 0x40)
+#define TURN_OFF_VDD (PORTFSET = 0x40)
+
+#define TURN_OFF_VBAT (PORTFSET = 0x20)
 #define ACTIVATE_VBAT (PORTFCLR = 0x20)
 
-#define TURN_OFF_VDD (PORTFSET = 0x40)
-#define TURN_OFF_VBAT (PORTFSET = 0x20)
+
+#define OLED_MAX_BYTES 512 
+//max number of bytes in display buffer 
+#define OLED_COL_LENGTH 8 
+//number of display columns 
+#define OLED_ROW_LENGTH 128
+//number of display rows 
+#define OLED_PAGES 4 
+//number of display memory pages 
+
+char oledBuffer[OLED_MAX_BYTES] = {0};
 
 void delayMs(int milliseconds){
     int i;
@@ -48,10 +59,18 @@ void inititalize_host(){
     DO_NOT_RESET;
 }
 
-uint8_t spi_send_recv(uint8_t data) {
+char Spi2PutByte(char data) {
+    /* Wait for transmitter to be ready 
+    */ 
     while(!(SPI2STAT & 0x08));
+    /* Write the next transmit byte. 
+    */ 
     SPI2BUF = data;
+    /* Wait for receive byte. 
+    */ 
     while(!(SPI2STAT & 1));
+    /* Return the received byte in the buffer. 
+    */ 
     return SPI2BUF;
 }
 
@@ -69,7 +88,7 @@ void inititalize_display()
     delayMs(10); 
     /* Display off command 
     */ 
-    spi_send_recv(0xAE); 
+    Spi2PutByte(0xAE); 
     /* Bring Reset low and then high 
     */ 
     ACTIVATE_RESET; 
@@ -77,10 +96,10 @@ void inititalize_display()
     DO_NOT_RESET; 
     /* Send the Set Charge Pump and Set Pre-Charge Period commands 
     */ 
-    spi_send_recv(0x8D); 
-    spi_send_recv(0x14); 
-    spi_send_recv(0xD9); 
-    spi_send_recv(0xF1); 
+    Spi2PutByte(0x8D); 
+    Spi2PutByte(0x14); 
+    Spi2PutByte(0xD9); 
+    Spi2PutByte(0xF1); 
     /* Turn on VCC and wait 100ms 
     */ 
     ACTIVATE_VBAT;
@@ -88,18 +107,73 @@ void inititalize_display()
     /* Send the commands to invert the display. This puts the display origin 
     ** in the upper left corner. 
     */ 
-    spi_send_recv(0xA1); 
+    Spi2PutByte(0xA1); 
     //remap columns 
-    spi_send_recv(0xC8); 
+    Spi2PutByte(0xC8); 
     //remap the rows 
     /* Send the commands to select sequential COM configuration. This makes the 
     ** display memory non-interleaved. 
     */ 
-    spi_send_recv(0xDA); 
+    Spi2PutByte(0xDA); 
     //set COM configuration command 
-    spi_send_recv(0x20); 
+    Spi2PutByte(0x20); 
     //sequential COM, left/right remap enabled 
     /* Send Display On command 
     */ 
-    spi_send_recv(0xAF); 
+    Spi2PutByte(0xAF); 
 } 
+
+void OledPutBuffer(int cb, char * rgbTx) { 
+    int ib; 
+    char bTmp; 
+    /* Write/Read the data 
+    */ 
+    for (ib = 0; ib < cb; ib++) { 
+        bTmp = Spi2PutByte(*rgbTx++);
+    }   
+} 
+
+void OledUpdate() { 
+    int ipag; 
+    int icol; 
+    char *pb; 
+    pb = oledBuffer; 
+    for (ipag = 0; ipag < OLED_PAGES; ipag++) { 
+        CHANGE_TO_COMMAND_MODE; 
+        /* Set the page address 
+        */ 
+        Spi2PutByte(0x22); 
+        //Set page command 
+        Spi2PutByte(ipag); 
+        //page number 
+        /* Start at the left column 
+        */ 
+        Spi2PutByte(0x00); 
+        //set low nybble of column 
+        Spi2PutByte(0x10); 
+        //set high nybble of column 
+        CHANGE_TO_DATA_MODE; 
+        /* Copy this memory page of display data. 
+        */ 
+        OledPutBuffer(OLED_ROW_LENGTH, pb);
+        pb += OLED_ROW_LENGTH; 
+    } 
+} 
+
+void clearScreen(){
+    int i;
+    for (i = 0; i < OLED_MAX_BYTES; i++){
+        oledBuffer[i] = 0x0;
+    }
+}
+
+void paintOnePixel(int x, int y){
+    if (y > 32 || x > 128){
+        return;
+    } 
+    oledBuffer[y / OLED_COL_LENGTH * OLED_ROW_LENGTH + x] |= 1 << (y % OLED_COL_LENGTH);
+}
+
+void updateScreen(){
+    OledUpdate();
+}
