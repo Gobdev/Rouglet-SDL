@@ -29,7 +29,7 @@ void printText(int x, int y){
 }
 
 void paintImage(int x, int y){
-	paint7x7(x, y, test);
+	paint7x7(x, y, sword);
 }
 
 int main(void) {

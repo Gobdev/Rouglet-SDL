@@ -34,6 +34,7 @@ OBJFILES	+=$(SYMSFILES:.syms=.syms.o)
 DEPDIR = .deps
 df = $(DEPDIR)/$(*F)
 
+
 .PHONY: all clean install envcheck
 .SUFFIXES:
 
@@ -44,6 +45,7 @@ clean:
 	$(RM) -R $(DEPDIR)
 
 envcheck:
+	python images/compileImages.py
 	@echo "$(TARGET)" | grep mcb32 > /dev/null || (\
 		echo ""; \
 		echo " **************************************************************"; \
