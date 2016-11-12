@@ -28,8 +28,8 @@ void printText(int x, int y){
 	paint7x7(x + 32, y, K);
 }
 
-void paintImage(int x, int y){
-	paint7x7(x, y, sword);
+void paintImage(int x, int y, const char* image){
+	paint7x7(x, y, image);
 }
 
 int main(void) {
@@ -57,15 +57,15 @@ int main(void) {
 	TRISFSET = (1 << 1);
 
 	inititalize_display();
-	display_string(0, "GOBLET GOBLE");
-	display_string(1, "T GOBLET GOB");
-	display_string(2, "LET GOBLET G");
-	display_string(3, "OBLET GOBLET");
-	display_update();
+	//display_string(0, "GOBLET GOBLE");
+	//display_string(1, "T GOBLET GOB");
+	//display_string(2, "LET GOBLET G");
+	//display_string(3, "OBLET GOBLET");
+	//display_update();
 	
-	display_image(96, icon);
+	//display_image(96, icon);
 	
-	labinit(); /* Do any lab-specific initialization */
+	//labinit(); /* Do any lab-specific initialization */
 	int i, j, k;
 	i = 0;
 	j = 0;
@@ -78,18 +78,15 @@ int main(void) {
 			k = 0;
 		clearScreen();
 		delayMs(5);
-		/*for (i = 0; i < 128 / 4; i++){
-			for (j = 0; j < 32; j++){
-				paintOnePixel(i * 4 + k, j);
-			}
-		}*/
-		paintImage((i + 0) % 128, (j + 0) % 32);
-		paintImage((i + 64) % 128, (j + 5) % 32);
-		paintImage((i + 20) % 128, (j + 10) % 32);
-		paintImage((i + 84) % 128, (j + 15) % 32);
-		paintImage((i + 40) % 128, (j + 20) % 32);
-		paintImage((i + 104) % 128, (j + 25) % 32);
-		paintImage((i + 60) % 128, (j + 30) % 32);
+
+
+		paintImage((i + 0) % 128, (j + 0) % 32, sword);
+		paintImage((i + 64) % 128, (j + 5) % 32, shield);
+		paintImage((i + 20) % 128, (j + 10) % 32, spooks);
+		paintImage((i + 84) % 128, (j + 15) % 32, armor);
+		paintImage((i + 40) % 128, (j + 20) % 32, goblet2);
+		paintImage((i + 104) % 128, (j + 25) % 32, lootBox);
+		paintImage((i + 60) % 128, (j + 30) % 32, goblet1);
 		updateScreen();
 	}
 	return 0;
