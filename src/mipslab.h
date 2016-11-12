@@ -17,6 +17,7 @@ void clearScreen();
 void paintOnePixel(int x, int y);
 void updateScreen();
 void delayMs(int ms);
+void paint7x7(int x, int y, const char* pic);
 
 /* Declare lab-related functions from mipslabfunc.c */
 char * itoaconv( int num );

@@ -1,6 +1,5 @@
 #include <stdint.h>
 #include <pic32mx.h>
-#include "mipslab.h"
 
 #define CHANGE_TO_COMMAND_MODE (PORTFCLR = 0x10)
 #define CHANGE_TO_DATA_MODE (PORTFSET = 0x10)
@@ -18,9 +17,9 @@
 #define OLED_MAX_BYTES 512 
 //max number of bytes in display buffer 
 #define OLED_COL_LENGTH 8 
-//number of display columns 
+//number of pixels in a column 
 #define OLED_ROW_LENGTH 128
-//number of display rows 
+//number of pixels in a row
 #define OLED_PAGES 4 
 //number of display memory pages 
 
@@ -123,7 +122,7 @@ void inititalize_display()
     Spi2PutByte(0xAF); 
 } 
 
-void OledPutBuffer(int cb, char * rgbTx) { 
+void OledPutBuffer(int cb, char* rgbTx) { 
     int ib; 
     char bTmp; 
     /* Write/Read the data 
@@ -136,7 +135,7 @@ void OledPutBuffer(int cb, char * rgbTx) {
 void OledUpdate() { 
     int ipag; 
     int icol; 
-    char *pb; 
+    char* pb; 
     pb = oledBuffer; 
     for (ipag = 0; ipag < OLED_PAGES; ipag++) { 
         CHANGE_TO_COMMAND_MODE; 
@@ -172,6 +171,27 @@ void paintOnePixel(int x, int y){
         return;
     } 
     oledBuffer[y / OLED_COL_LENGTH * OLED_ROW_LENGTH + x] |= 1 << (y % OLED_COL_LENGTH);
+}
+
+void paint7x7(int x, int y, const char* pic){
+    if (x < 0 || x > OLED_ROW_LENGTH || y < 0 || y > OLED_COL_LENGTH * OLED_PAGES)
+        return;
+    int size = 7;
+    int i, shift, page;
+    shift = y % OLED_COL_LENGTH;
+    page = (y / OLED_COL_LENGTH) * OLED_ROW_LENGTH; // Select page
+    for (i = 0; i < size; i++){
+        oledBuffer[page + x + i] &= ~(0xFF << shift); // Clear the bits to be used.
+        oledBuffer[page + x + i] |= pic[i] << shift;  // Set the bits to the values in the picture.
+    }
+    if (shift >= OLED_COL_LENGTH - size && page < 3 * OLED_ROW_LENGTH){
+        page += OLED_ROW_LENGTH;
+        shift = OLED_COL_LENGTH - shift;
+        for (i = 0; i < size; i++){
+            oledBuffer[page + x + i] &= ~(0xFF >> shift); // Clear the bits to be used.
+            oledBuffer[page + x + i] |= pic[i] >> shift;  // Set the bits to the values in the picture.       
+        }
+    }
 }
 
 void updateScreen(){

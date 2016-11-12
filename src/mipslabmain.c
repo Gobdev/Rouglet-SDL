@@ -10,6 +10,27 @@
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
+#include "images/images.c"   // Images
+
+char H[7] = {0x7F, 0x08, 0x08, 0x08, 0x7F, 0x00, 0x00};
+char E[7] = {0x7F, 0x49, 0x49, 0x41, 0x41, 0x00, 0x00};
+char N[7] = {0x7F, 0x06, 0x18, 0x60, 0x7F, 0x00, 0x00};
+char R[7] = {0x7F, 0x09, 0x19, 0x29, 0x46, 0x00, 0x00};
+char I[7] = {0x41, 0x41, 0x7F, 0x41, 0x41, 0x00, 0x00};
+char K[7] = {0x7F, 0x08, 0x14, 0x22, 0x41, 0x00, 0x00};
+
+void printText(int x, int y){
+	paint7x7(x, y, H);
+	paint7x7(x + 6, y, E);
+	paint7x7(x + 12, y, N);
+	paint7x7(x + 18, y, R);
+	paint7x7(x + 24, y, I);
+	paint7x7(x + 32, y, K);
+}
+
+void paintImage(int x, int y){
+	paint7x7(x, y, test);
+}
 
 int main(void) {
 	/* Set up peripheral bus clock */
@@ -46,18 +67,29 @@ int main(void) {
 	
 	labinit(); /* Do any lab-specific initialization */
 	int i, j, k;
+	i = 0;
+	j = 0;
 	k = 0;
 	while( 1 )
 	{
+		++i;
+		++j;
 		if (++k > 3)
 			k = 0;
 		clearScreen();
 		delayMs(5);
-		for (i = 0; i < 128 / 4; i++){
+		/*for (i = 0; i < 128 / 4; i++){
 			for (j = 0; j < 32; j++){
 				paintOnePixel(i * 4 + k, j);
 			}
-		}
+		}*/
+		paintImage((i + 0) % 128, (j + 0) % 32);
+		paintImage((i + 64) % 128, (j + 5) % 32);
+		paintImage((i + 20) % 128, (j + 10) % 32);
+		paintImage((i + 84) % 128, (j + 15) % 32);
+		paintImage((i + 40) % 128, (j + 20) % 32);
+		paintImage((i + 104) % 128, (j + 25) % 32);
+		paintImage((i + 60) % 128, (j + 30) % 32);
 		updateScreen();
 	}
 	return 0;
