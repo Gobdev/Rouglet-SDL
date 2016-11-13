@@ -3,17 +3,16 @@ import os, re
 
 path = re.match('(.*?)(/src(/images)?)?$', os.getcwd()).group(1)
 path += "/src/images/"
-dirs = [directory for directory in os.listdir(path) if os.isdir(directory)]
+dirs = [directory for directory in os.listdir(path) if os.path.isdir(path + directory)]
 for directory in dirs:
 	images = {}
+	pngFiles = [file for file in os.listdir(path + directory) if re.match('.*\.png$', file)]
 	for file in pngFiles:
 		key = re.sub('\..*$', "", file)
-		im = Image.open(path + file) #Can be many different formats.
+		im = Image.open(path + directory + "/" + file) #Can be many different formats.
 		pix = im.load()
 		x, y = im.size
 		lista = []
-		if not x == 7 or not y == 7:
-			continue
 		for i in range(x):
 			value = 0;
 			for j in range(y):
@@ -28,8 +27,8 @@ for directory in dirs:
 		images[key] = lista
 
 	f = open(path + directory + '.c', 'w')
+	print "Created file '" + path + directory + ".c'."
 	for key in images:
-		print "Added image '" + key + "'."
 		f.write('const char const ' + key + '[] = {')
 		f.write(', '.join(images.get(key)))
 		f.write('};\n')

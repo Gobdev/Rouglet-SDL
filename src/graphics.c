@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <pic32mx.h>
+#include "images/character_sprites.c"
 
 #define CHANGE_TO_COMMAND_MODE (PORTFCLR = 0x10)
 #define CHANGE_TO_DATA_MODE (PORTFSET = 0x10)
@@ -24,6 +25,12 @@
 //number of display memory pages 
 
 char oledBuffer[OLED_MAX_BYTES] = {0};
+char debugBuffer[OLED_MAX_BYTES] = {0};
+int debug = 0;
+
+void enableDebug(){
+    debug = 1;
+}
 
 void delayMs(int milliseconds){
     int i;
@@ -132,11 +139,11 @@ void OledPutBuffer(int cb, char* rgbTx) {
     }   
 } 
 
-void OledUpdate() { 
+void OledUpdate(char* buffer) { 
     int ipag; 
     int icol; 
     char* pb; 
-    pb = oledBuffer; 
+    pb = buffer; 
     for (ipag = 0; ipag < OLED_PAGES; ipag++) { 
         CHANGE_TO_COMMAND_MODE; 
         /* Set the page address 
@@ -167,33 +174,45 @@ void clearScreen(){
 }
 
 void paintOnePixel(int x, int y){
-    if (y > 32 || x > 128){
+    if (y < 0 || y > 32 || x < 0 || x > 128){
         return;
     } 
     oledBuffer[y / OLED_COL_LENGTH * OLED_ROW_LENGTH + x] |= 1 << (y % OLED_COL_LENGTH);
 }
 
 void paint7x7(int x, int y, const char* pic){
-    if (x < 0 || x > OLED_ROW_LENGTH || y < 0 || y > OLED_COL_LENGTH * OLED_PAGES)
-        return;
     int size = 7;
-    int i, shift, page;
+    int i, shift, page, clearBits;
+
+    if (x < -size || x > OLED_ROW_LENGTH - size || y < -size || y > OLED_COL_LENGTH * OLED_PAGES - size)
+        return;
+    
     shift = y % OLED_COL_LENGTH;
     page = (y / OLED_COL_LENGTH) * OLED_ROW_LENGTH; // Select page
-    for (i = 0; i < size; i++){
-        oledBuffer[page + x + i] &= ~(0xFF << shift); // Clear the bits to be used.
-        oledBuffer[page + x + i] |= pic[i] << shift;  // Set the bits to the values in the picture.
+    if (page >= 0){
+        for (i = 0; i < size; i++){
+            if (x + i < 0)
+                continue;
+            clearBits = ~(0xFF << shift);
+            oledBuffer[page + x + i] &= clearBits; // Clear the bits to be used.
+            oledBuffer[page + x + i] |= pic[i] << shift;  // Set the bits to the values in the picture.
+        }
     }
-    if (shift >= OLED_COL_LENGTH - size && page < 3 * OLED_ROW_LENGTH){
+    if (shift >= OLED_COL_LENGTH - size && page >= -OLED_ROW_LENGTH && page < 3 * OLED_ROW_LENGTH){ // If the picture falls on two pages
         page += OLED_ROW_LENGTH;
         shift = OLED_COL_LENGTH - shift;
         for (i = 0; i < size; i++){
-            oledBuffer[page + x + i] &= ~(0xFF >> shift); // Clear the bits to be used.
+            if (x + i < 0)
+                continue;
+            clearBits = ~(0xFF >> shift);
+            oledBuffer[page + x + i] &= clearBits; // Clear the bits to be used.
             oledBuffer[page + x + i] |= pic[i] >> shift;  // Set the bits to the values in the picture.       
         }
     }
 }
 
 void updateScreen(){
-    OledUpdate();
+    OledUpdate(oledBuffer);
+    if (debug)
+        OledUpdate(debugBuffer);
 }
