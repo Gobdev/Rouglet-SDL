@@ -11,7 +11,7 @@
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
 
-char whiteBox[7] = {0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F};
+const char whitebox[7] = {0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F};
 char H[7] = {0x7F, 0x08, 0x08, 0x08, 0x7F, 0x00, 0x00};
 char E[7] = {0x7F, 0x49, 0x49, 0x41, 0x41, 0x00, 0x00};
 char N[7] = {0x7F, 0x06, 0x18, 0x60, 0x7F, 0x00, 0x00};
@@ -70,6 +70,7 @@ int main(void) {
 	i = -4;
 	j = -4;
 	k = 0;
+	enable_debug();
 	while( 1 )
 	{
 		//++i;
@@ -78,8 +79,11 @@ int main(void) {
 			k = 0;
 		clearScreen();
 		delayMs(5);
+		print_debug(0, "Test><+-/");
+		print_debug(1, "I am mad scientist.");
+		print_debug(2, "Is so cool!");
+		print_debug(3, "Sonuvabich?");
 
-		paint7x7(-1, -1, whiteBox);
 		/*printText((i + 0) % 128, (j + 0) % 32);
 		printText((i + 64) % 128, (j + 5) % 32);
 		printText((i + 20) % 128, (j + 10) % 32);

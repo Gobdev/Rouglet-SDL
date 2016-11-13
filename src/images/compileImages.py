@@ -29,7 +29,7 @@ for directory in dirs:
 	f = open(path + directory + '.c', 'w')
 	print "Created file '" + path + directory + ".c'."
 	for key in images:
-		f.write('const char const ' + key + '[] = {')
+		f.write('const char const ' + key + '[' + str(len(images.get(key))) + '] = {')
 		f.write(', '.join(images.get(key)))
 		f.write('};\n')
 	f.close()

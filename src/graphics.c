@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <pic32mx.h>
-#include "images/character_sprites.c"
+#include "images/alphabet.c"
+#include "images/symbols.c"
 
 #define CHANGE_TO_COMMAND_MODE (PORTFCLR = 0x10)
 #define CHANGE_TO_DATA_MODE (PORTFSET = 0x10)
@@ -22,15 +23,29 @@
 #define OLED_ROW_LENGTH 128
 //number of pixels in a row
 #define OLED_PAGES 4 
-//number of display memory pages 
+//number of display memory pages
+
 
 char oledBuffer[OLED_MAX_BYTES] = {0};
 char debugBuffer[OLED_MAX_BYTES] = {0};
+const char whiteBox[7] = {0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F};
 int debug = 0;
+int debug_pages_len[4] = {0};
 
-void enableDebug(){
+int strlen(char* string){
+    int i;
+    for (i = 0; i < 128; i++){
+        if (string[i] == 0){
+            break;
+        }
+    }
+    return i;
+}
+
+void enable_debug(){
     debug = 1;
 }
+
 
 void delayMs(int milliseconds){
     int i;
@@ -210,9 +225,47 @@ void paint7x7(int x, int y, const char* pic){
         }
     }
 }
+const char* getCharacterPointer(char character){
+    if (character > 0x1F && character < 0x40){
+        return symbols + (character - 0x20) * 3;
+    }
+    if (character > 0x40 && character < 0x5B){
+        return letters + (character - 0x41) * 3;
+    }
+    if (character > 0x60 && character < 0x7B){
+        return letters + (character - 0x61) * 3;
+    }
+}
+
+void print_debug(int page, char* string){
+    int i, j, length;
+    length = strlen(string);
+    const char* letter;
+    debug_pages_len[page] = length;
+    for (i = 0; i < length; i++){
+        if (i * 4 + 3 > OLED_ROW_LENGTH)
+            break;
+        letter = getCharacterPointer(string[i]);
+        for (j = 0; j < 3; j++){ 
+            debugBuffer[page * OLED_ROW_LENGTH + i * 4 + j] |= letter[j];
+        }
+        debugBuffer[page * OLED_ROW_LENGTH + i * 4 + 3] |= 0x0;   
+    }
+}
+
+void putDebugInBuffer(){
+    int page, i, j;
+    for (page = 0; page < OLED_PAGES; page++){
+        for (i = 0; i < debug_pages_len[page]; i++){
+            for (j = 0; j < 4; j++){
+                oledBuffer[page * OLED_ROW_LENGTH + i * 4 + j] = debugBuffer[page * OLED_ROW_LENGTH + i * 4 + j];
+            }
+        }
+    }
+}
 
 void updateScreen(){
-    OledUpdate(oledBuffer);
     if (debug)
-        OledUpdate(debugBuffer);
+        putDebugInBuffer();
+    OledUpdate(oledBuffer);
 }
