@@ -195,47 +195,53 @@ void paintOnePixel(int x, int y){
     oledBuffer[y / OLED_COL_LENGTH * OLED_ROW_LENGTH + x] |= 1 << (y % OLED_COL_LENGTH);
 }
 
-void paint7x7(int x, int y, const char* pic){
+void paintPic(int x, int y, const char* pic){
     int x_size = pic[0];
     int y_size = pic[1];
     pic += 2;
-    int i, shift, page, clearBits;
+    int i, j, shift, first_page, current_page, clearLeft, clearRight, picPage;
 
     if (x < -x_size || x > OLED_ROW_LENGTH - x_size || y < -y_size || y > OLED_COL_LENGTH * OLED_PAGES - y_size)
         return;
     
     shift = y % OLED_COL_LENGTH;
-    page = (y / OLED_COL_LENGTH) * OLED_ROW_LENGTH; // Select page
-    if (page >= 0){
-        for (i = 0; i < x_size; i++){
-            if (x + i < 0)
-                continue;
-            clearBits = ~(0xFF << shift);
-            oledBuffer[page + x + i] &= clearBits; // Clear the bits to be used.
-            oledBuffer[page + x + i] |= pic[i] << shift;  // Set the bits to the values in the picture.
+    first_page = (y / OLED_COL_LENGTH) * OLED_ROW_LENGTH; // Select page
+    clearLeft = ~(0xFF << shift);
+    clearRight = ~(0xFF >> shift);
+    picPage = 0;
+    current_page = first_page;
+    for (i = 0; i <= (y_size + shift) / OLED_COL_LENGTH * OLED_ROW_LENGTH; picPage += x_size);{
+        if (current_page >= 0 && current_page < OLED_MAX_BYTES){
+            for (j = 0; j < x_size; j++){
+                if (x + j >= 0 && x + j < OLED_ROW_LENGTH){
+                    oledBuffer[current_page + x + j] &= clearLeft;                  // Clear the bits to be used.
+                    oledBuffer[current_page + x + j] |= pic[j + picPage] << shift;  // Set the bits to the values in the picture.    
+                }
+            }
         }
-    }
-    if (shift >= OLED_COL_LENGTH - x_size && page >= -OLED_ROW_LENGTH && page < 3 * OLED_ROW_LENGTH){ // If the picture falls on two pages
-        page += OLED_ROW_LENGTH;
-        shift = OLED_COL_LENGTH - shift;
-        for (i = 0; i < x_size; i++){
-            if (x + i < 0)
-                continue;
-            clearBits = ~(0xFF >> shift);
-            oledBuffer[page + x + i] &= clearBits; // Clear the bits to be used.
-            oledBuffer[page + x + i] |= pic[i] >> shift;  // Set the bits to the values in the picture.       
+        i++;
+        current_page = first_page + i * OLED_ROW_LENGTH;
+        if (current_page >= 0 && current_page < OLED_MAX_BYTES){
+            for (j = 0; j < x_size; j++){
+                if (x + j >= 0 && x + j < OLED_ROW_LENGTH){
+                    oledBuffer[current_page + x + j] &= clearRight;                 // Clear the bits to be used.
+                    oledBuffer[current_page + x + j] |= pic[j + picPage] >> shift;  // Set the bits to the values in the picture.    
+                }
+            }
         }
     }
 }
+
+
 const char* getCharacterPointer(char character){
     if (character > 0x1F && character < 0x40){
-        return symbols + (character - 0x20) * 3;
+        return symbols + (character - 0x20) * 3 + 2;
     }
     if (character > 0x40 && character < 0x5B){
-        return letters + (character - 0x41) * 3;
+        return letters + (character - 0x41) * 3 + 2;
     }
     if (character > 0x60 && character < 0x7B){
-        return letters + (character - 0x61) * 3;
+        return letters + (character - 0x61) * 3 + 2;
     }
 }
 

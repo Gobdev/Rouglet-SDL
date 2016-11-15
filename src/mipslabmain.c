@@ -21,16 +21,16 @@ char I[7] = {0x41, 0x41, 0x7F, 0x41, 0x41, 0x00, 0x00};
 char K[7] = {0x7F, 0x08, 0x14, 0x22, 0x41, 0x00, 0x00};
 
 void printText(int x, int y){
-	paint7x7(x, y, H);
-	paint7x7(x + 6, y, E);
-	paint7x7(x + 12, y, N);
-	paint7x7(x + 18, y, R);
-	paint7x7(x + 24, y, I);
-	paint7x7(x + 32, y, K);
+	paintPic(x, y, H);
+	paintPic(x + 6, y, E);
+	paintPic(x + 12, y, N);
+	paintPic(x + 18, y, R);
+	paintPic(x + 24, y, I);
+	paintPic(x + 32, y, K);
 }
 
 void paintImage(int x, int y, const char* image){
-	paint7x7(x, y, image);
+	paintPic(x, y, image);
 }
 
 int main(void) {
