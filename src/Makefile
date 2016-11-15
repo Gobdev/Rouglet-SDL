@@ -2,7 +2,9 @@
 DEVICE		= 32MX320F128H
 
 # UART settings for programmer
-TTYDEV		?=/dev/ttyUSB0
+#over ttydev is for johan under is for simon	
+#TTYDEV		?=/dev/ttyUSB0
+TTYDEV		?=/dev/cu.usbserial-AJV9JXYC
 TTYBAUD		?=115200
 
 # Name of the project
