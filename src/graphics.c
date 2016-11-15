@@ -196,16 +196,18 @@ void paintOnePixel(int x, int y){
 }
 
 void paint7x7(int x, int y, const char* pic){
-    int size = 7;
+    int x_size = pic[0];
+    int y_size = pic[1];
+    pic += 2;
     int i, shift, page, clearBits;
 
-    if (x < -size || x > OLED_ROW_LENGTH - size || y < -size || y > OLED_COL_LENGTH * OLED_PAGES - size)
+    if (x < -x_size || x > OLED_ROW_LENGTH - x_size || y < -y_size || y > OLED_COL_LENGTH * OLED_PAGES - y_size)
         return;
     
     shift = y % OLED_COL_LENGTH;
     page = (y / OLED_COL_LENGTH) * OLED_ROW_LENGTH; // Select page
     if (page >= 0){
-        for (i = 0; i < size; i++){
+        for (i = 0; i < x_size; i++){
             if (x + i < 0)
                 continue;
             clearBits = ~(0xFF << shift);
@@ -213,10 +215,10 @@ void paint7x7(int x, int y, const char* pic){
             oledBuffer[page + x + i] |= pic[i] << shift;  // Set the bits to the values in the picture.
         }
     }
-    if (shift >= OLED_COL_LENGTH - size && page >= -OLED_ROW_LENGTH && page < 3 * OLED_ROW_LENGTH){ // If the picture falls on two pages
+    if (shift >= OLED_COL_LENGTH - x_size && page >= -OLED_ROW_LENGTH && page < 3 * OLED_ROW_LENGTH){ // If the picture falls on two pages
         page += OLED_ROW_LENGTH;
         shift = OLED_COL_LENGTH - shift;
-        for (i = 0; i < size; i++){
+        for (i = 0; i < x_size; i++){
             if (x + i < 0)
                 continue;
             clearBits = ~(0xFF >> shift);

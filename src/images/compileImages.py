@@ -12,7 +12,7 @@ for directory in dirs:
 		im = Image.open(path + directory + "/" + file) #Can be many different formats.
 		pix = im.load()
 		x, y = im.size
-		lista = []
+		lista = [str(x), str(y)]
 		for i in range(x):
 			value = 0;
 			for j in range(y):
