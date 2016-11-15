@@ -25,6 +25,7 @@
 #define OLED_PAGES 4 
 //number of display memory pages
 
+ //oldGraphics
 
 char oledBuffer[OLED_MAX_BYTES] = {0};
 char debugBuffer[OLED_MAX_BYTES] = {0};
