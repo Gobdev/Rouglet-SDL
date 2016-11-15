@@ -67,10 +67,12 @@ int main(void) {
 	//display_image(96, icon);
 	
 	//labinit(); /* Do any lab-specific initialization */
-	int i, j, k;
+	int i, j, k,xPos,yPos;
 	i = -4;
 	j = -4;
 	k = 0;
+	xPos = 0;
+	yPos = 0;
 	enable_debug();
 	while( 1 )
 	{
@@ -80,10 +82,12 @@ int main(void) {
 			k = 0;
 		clearScreen();
 		delayMs(5);
-		print_debug(0, "Test><+-/");
+		/*
+		print_debug(0, "New");
 		print_debug(1, "I am mad scientist.");
 		print_debug(2, "Is so cool!");
 		print_debug(3, "Sonuvabich?");
+		*/
 
 		/*printText((i + 0) % 128, (j + 0) % 32);
 		printText((i + 64) % 128, (j + 5) % 32);
@@ -92,6 +96,7 @@ int main(void) {
 		printText((i + 40) % 128, (j + 20) % 32);
 		printText((i + 104) % 128, (j + 25) % 32);
 		printText((i + 60) % 128, (j + 30) % 32);*/
+		/*
 		paintImage((i + 0) % 128, (j + 0) % 32, sword);
 		paintImage((i + 64) % 128, (j + 5) % 32, shield);
 		paintImage((i + 20) % 128, (j + 10) % 32, spooks);
@@ -99,6 +104,40 @@ int main(void) {
 		paintImage((i + 40) % 128, (j + 20) % 32, goblet2);
 		paintImage((i + 104) % 128, (j + 25) % 32, lootBox);
 		paintImage((i + 60) % 128, (j + 30) % 32, goblet1);
+		*/
+		paintImage(xPos,yPos, smileyMan);
+
+		if(pressedButton(1)){
+			PORTE |= 0x1;
+			yPos += 7;
+		}else{
+			PORTE &= 0xE;
+		}
+
+		if(pressedButton(2)){
+			PORTE |= 0x2;
+			yPos -= 7;
+
+		}else{
+			PORTE &= 0xD;
+		}
+
+		if(pressedButton(3)){
+			PORTE |= 0x4;
+			xPos += 7;
+
+		}else{
+			PORTE &= 0xB;
+		}
+
+		if(pressedButton(4)){
+			PORTE |= 0x8;
+			xPos -= 7;
+
+		}else{
+			PORTE &= 0x7;
+		}
+
 		updateScreen();
 	}
 	return 0;
