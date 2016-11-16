@@ -79,12 +79,8 @@ int main(void) {
 		if (++k > 3)
 			k = 0;
 		clearScreen();
-		delayMs(5);
-		print_debug(0, "Test><+-/");
-		print_debug(1, "I am mad scientist.");
-		print_debug(2, "Is so cool!");
-		print_debug(3, "Sonuvabich?");
 
+		delayMs(3);
 		/*printText((i + 0) % 128, (j + 0) % 32);
 		printText((i + 64) % 128, (j + 5) % 32);
 		printText((i + 20) % 128, (j + 10) % 32);
@@ -92,13 +88,13 @@ int main(void) {
 		printText((i + 40) % 128, (j + 20) % 32);
 		printText((i + 104) % 128, (j + 25) % 32);
 		printText((i + 60) % 128, (j + 30) % 32);*/
-		paintImage((i + 0) % 128, (j + 0) % 32, sword);
-		paintImage((i + 64) % 128, (j + 5) % 32, shield);
-		paintImage((i + 20) % 128, (j + 10) % 32, spooks);
-		paintImage((i + 84) % 128, (j + 15) % 32, armor);
-		paintImage((i + 40) % 128, (j + 20) % 32, goblet2);
-		paintImage((i + 104) % 128, (j + 25) % 32, lootBox);
-		paintImage((i + 60) % 128, (j + 30) % 32, goblet1);
+		paintImage((i + 0) % 142 - 7, (j + 0) % 46 - 7, sword);
+		paintImage((i + 64) % 142 - 7, (j + 5) % 46 - 7, shield);
+		paintImage((i + 20) % 142 - 7, (j + 10) % 46 - 7, spooks);
+		paintImage((i + 84) % 142 - 7, (j + 15) % 46 - 7, armor);
+		paintImage((i + 40) % 142 - 7, (j + 20) % 46 - 7, goblet2);
+		paintImage((i + 104) % 142 - 7, (j + 25) % 46 - 7, lootBox);
+		paintImage((i + 60) % 142 - 7, (j + 30) % 46 - 7, goblet1);
 		updateScreen();
 	}
 	return 0;
