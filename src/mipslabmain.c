@@ -51,10 +51,12 @@ int main(void) {
 	//display_image(96, icon);
 	
 	//labinit(); /* Do any lab-specific initialization */
-	int i, j, k;
+	int i, j, k, xPos, yPos;
 	i = -4;
 	j = -4;
 	k = 0;
+	xPos = 0;
+	yPos = 0;
 	enable_debug();
 	while( 1 )
 	{
@@ -84,6 +86,7 @@ int main(void) {
 		paintImage((i + 40) % 142 - 7, (j + 20) % 46 - 7, goblet2);
 		paintImage((i + 104) % 142 - 7, (j + 25) % 46 - 7, goblet2);
 		paintImage((i + 60) % 142 - 7, (j + 30) % 46 - 7, goblet2);
+		paintImage(xPos, yPos, smileyMan);
 		updateScreen();
 		if(pressedButton(1)){
 			PORTE |= 0x1;
