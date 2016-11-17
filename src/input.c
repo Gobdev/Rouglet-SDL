@@ -13,27 +13,41 @@ int getSwitches(void){ //bit 8-11 in port D
 }
 */
 
+char allowPress[4] = {1,1,1,1}; //Allow a button to send signal
+
 
 char checkButton(char buttonNumber){
 	switch(buttonNumber){
 		case 1:
-			PORTE |= 0x1;
-			return (PORTF & 0x2); //bit index 1 in PORTF
-			break;
+			return PORTF & 0x2;
+			//bit index 1 in PORTF
 		case 2:
-			PORTE |= 0x2;
-			return (PORTD & 0x20); //bit index 5 in PORTD
-			break;
+			return PORTD & 0x20;
+			//bit index 5 in PORTD
 		case 3:
-			PORTE |= 0x4;
-			return (PORTD & 0x40); //bit index 6 in PORTD
-			break;
+			return PORTD & 0x40;
+			//bit index 6 in PORTD
 		case 4:
-			PORTE |= 0x8;
-			return (PORTD & 0x80); //bit index 7 in PORTD
-			break;
+			return PORTD & 0x80;
+			//bit index 7 in PORTD
 	}
 }
+
+char pressedButton(char buttonNumber){
+	if(checkButton(buttonNumber)){
+		if(allowPress[buttonNumber] == 1){
+			allowPress[buttonNumber] = 0;
+			return 1;
+		}else{
+			return 0;
+		}
+	}else{
+		allowPress[buttonNumber] = 1;
+		return 0;
+	}
+}
+
+
 
 char checkSwitches(char switchNumber){
 	switch(switchNumber){
