@@ -35,14 +35,14 @@ char checkButton(char buttonNumber){
 
 char pressedButton(char buttonNumber){
 	if(checkButton(buttonNumber)){
-		if(allowPress[buttonNumber] == 1){
-			allowPress[buttonNumber] = 0;
+		if(allowPress[buttonNumber - 1] == 1){
+			allowPress[buttonNumber - 1] = 0;
 			return 1;
 		}else{
 			return 0;
 		}
 	}else{
-		allowPress[buttonNumber] = 1;
+		allowPress[buttonNumber - 1] = 1;
 		return 0;
 	}
 }

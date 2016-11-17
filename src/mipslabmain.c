@@ -47,8 +47,8 @@ int main(void) {
 	i = -4;
 	j = -4;
 	k = 0;
-	xPos = 0;
-	yPos = 0;
+	xPos = 105;
+	yPos = 16;
 	enable_debug();
 	while( 1 )
 	{
@@ -103,7 +103,6 @@ int main(void) {
 			PORTE &= 0xB;
 		}
 
-		print_int(PORTD);
 		updateScreen();
 	}
 	return 0;
