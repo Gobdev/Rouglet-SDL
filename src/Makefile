@@ -9,7 +9,6 @@ TTYDEV		?=/dev/ttyUSB0
 #TTYDEV		?=/dev/cu.usbserial-AJV9JXYC
 TTYBAUD		?=115200
 
-
 # Name of the project
 PROGNAME	= outfile
 

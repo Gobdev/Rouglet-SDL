@@ -13,7 +13,6 @@
 #include "images/character_sprites.c"
 #include "images/UI.c"
 
-
 void paintImage(int x, int y, const char* image){
 	paintPic(x, y, image);
 }
@@ -53,8 +52,8 @@ int main(void) {
 	
 	//labinit(); /* Do any lab-specific initialization */
 	int i, j, k;
-	i = 0;
-	j = 0;
+	i = -4;
+	j = -4;
 	k = 0;
 	enable_debug();
 	while( 1 )
@@ -86,6 +85,36 @@ int main(void) {
 		paintImage((i + 104) % 142 - 7, (j + 25) % 46 - 7, goblet2);
 		paintImage((i + 60) % 142 - 7, (j + 30) % 46 - 7, goblet2);
 		updateScreen();
+		if(pressedButton(1)){
+			PORTE |= 0x1;
+			yPos += 7;
+		}else{
+			PORTE &= 0xE;
+		}
+
+		if(pressedButton(2)){
+			PORTE |= 0x2;
+			yPos -= 7;
+
+		}else{
+			PORTE &= 0xD;
+		}
+
+		if(pressedButton(3)){
+			PORTE |= 0x4;
+			xPos += 7;
+
+		}else{
+			PORTE &= 0xB;
+		}
+
+		if(pressedButton(4)){
+			PORTE |= 0x8;
+			xPos -= 7;
+
+		}else{
+			PORTE &= 0x7;
+		}
 	}
 	return 0;
 }
