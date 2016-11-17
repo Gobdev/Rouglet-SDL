@@ -13,17 +13,20 @@ for directory in dirs:
 		pix = im.load()
 		x, y = im.size
 		lista = [str(x), str(y)]
-		for i in range(x):
-			value = 0;
-			for j in range(y):
-				pixel = pix[i, j]
-				if isinstance(pixel, tuple):
-					if sum(pixel) / len(pixel) > 128:
-						value += 2**j
-				else:
-					if pixel > 128:
-						value += 2**j
-			lista.append(hex(value))
+		for page in range((int)(y / 8) + 1):
+			for i in range(x):
+				value = 0;
+				for j in range(8):
+					if (page * 8 + j >= y):
+						break
+					pixel = pix[i, page * 8 + j]
+					if isinstance(pixel, tuple):
+						if sum(pixel) / len(pixel) > 128:
+							value += 2**j
+					else:
+						if pixel > 128:
+							value += 2**j
+				lista.append(hex(value))
 		images[key] = lista
 
 	f = open(path + directory + '.c', 'w')

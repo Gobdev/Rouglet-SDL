@@ -11,23 +11,8 @@
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
 #include "images/character_sprites.c"
+#include "images/UI.c"
 
-const char whitebox[7] = {0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F};
-char H[7] = {0x7F, 0x08, 0x08, 0x08, 0x7F, 0x00, 0x00};
-char E[7] = {0x7F, 0x49, 0x49, 0x41, 0x41, 0x00, 0x00};
-char N[7] = {0x7F, 0x06, 0x18, 0x60, 0x7F, 0x00, 0x00};
-char R[7] = {0x7F, 0x09, 0x19, 0x29, 0x46, 0x00, 0x00};
-char I[7] = {0x41, 0x41, 0x7F, 0x41, 0x41, 0x00, 0x00};
-char K[7] = {0x7F, 0x08, 0x14, 0x22, 0x41, 0x00, 0x00};
-
-void printText(int x, int y){
-	paintPic(x, y, H);
-	paintPic(x + 6, y, E);
-	paintPic(x + 12, y, N);
-	paintPic(x + 18, y, R);
-	paintPic(x + 24, y, I);
-	paintPic(x + 32, y, K);
-}
 
 void paintImage(int x, int y, const char* image){
 	paintPic(x, y, image);
@@ -80,7 +65,7 @@ int main(void) {
 			k = 0;
 		clearScreen();
 
-		delayMs(3);
+		delayMs(2);
 		/*printText((i + 0) % 128, (j + 0) % 32);
 		printText((i + 64) % 128, (j + 5) % 32);
 		printText((i + 20) % 128, (j + 10) % 32);
@@ -88,13 +73,18 @@ int main(void) {
 		printText((i + 40) % 128, (j + 20) % 32);
 		printText((i + 104) % 128, (j + 25) % 32);
 		printText((i + 60) % 128, (j + 30) % 32);*/
-		paintImage((i + 0) % 142 - 7, (j + 0) % 46 - 7, sword);
-		paintImage((i + 64) % 142 - 7, (j + 5) % 46 - 7, shield);
-		paintImage((i + 20) % 142 - 7, (j + 10) % 46 - 7, spooks);
-		paintImage((i + 84) % 142 - 7, (j + 15) % 46 - 7, armor);
+		paintImage(0, 0, ui1);
+		printText(10, 2, "135-238");
+		printText(10, 10, "45/60");
+		printText(10, 18, "80");
+		printText(25, 26, "3");
+		paintImage((i + 0) % 142 - 7, (j + 0) % 46 - 7, goblet2);
+		paintImage((i + 64) % 142 - 7, (j + 5) % 46 - 7, goblet2);
+		paintImage((i + 20) % 142 - 7, (j + 10) % 46 - 7, goblet2);
+		paintImage((i + 84) % 142 - 7, (j + 15) % 46 - 7, goblet2);
 		paintImage((i + 40) % 142 - 7, (j + 20) % 46 - 7, goblet2);
-		paintImage((i + 104) % 142 - 7, (j + 25) % 46 - 7, lootBox);
-		paintImage((i + 60) % 142 - 7, (j + 30) % 46 - 7, goblet1);
+		paintImage((i + 104) % 142 - 7, (j + 25) % 46 - 7, goblet2);
+		paintImage((i + 60) % 142 - 7, (j + 30) % 46 - 7, goblet2);
 		updateScreen();
 	}
 	return 0;

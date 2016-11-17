@@ -37,7 +37,7 @@ void intToString(int value, char* str){
     int valueCopy, i;
     i = 0;
     if (value < 0){
-        str[0] = 0x2D;  
+        str[0] = 0x2D;                  // Negative sign  
         str++;
         value = ~value + 1;             // For negative numbers
     }
@@ -253,7 +253,7 @@ void paintPic(int x, int y, const char* pic){
     int x_size = pic[0];
     int y_size = pic[1];
     pic += 2;
-    int i, j, shift, first_page, current_page, picPage;
+    int i, j, shift, first_page, last_page, current_page, picPage;
     char clearLeft, clearRight;
 
     if (x < -x_size || x > OLED_ROW_LENGTH + x_size || y < -y_size || y > OLED_COL_LENGTH * OLED_PAGES + y_size){
@@ -262,8 +262,9 @@ void paintPic(int x, int y, const char* pic){
 
     shift = y % OLED_COL_LENGTH;
     if (shift < 0)
-        shift += OLED_COL_LENGTH; 
+        shift += OLED_COL_LENGTH;
     first_page = (y - OLED_COL_LENGTH * (y < 0)) / OLED_COL_LENGTH * OLED_ROW_LENGTH; // Select page if y is negative
+    last_page = first_page + ((y_size + shift) / OLED_COL_LENGTH) * OLED_ROW_LENGTH; 
     clearLeft = ~(0xFF << shift);
     clearRight = ~(0xFF >> (OLED_COL_LENGTH - shift));
     current_page = first_page;
@@ -277,7 +278,7 @@ void paintPic(int x, int y, const char* pic){
             }
         }
         current_page += OLED_ROW_LENGTH;
-        if (current_page >= 0 && current_page < OLED_MAX_BYTES){
+        if (current_page <= last_page && current_page >= 0 && current_page < OLED_MAX_BYTES){
             for (j = 0; j < x_size; j++){
                 if (x + j >= 0 && x + j < OLED_ROW_LENGTH){
                     oledBuffer[current_page + x + j] &= clearRight;                       // Clear the bits to be used.
@@ -288,6 +289,19 @@ void paintPic(int x, int y, const char* pic){
     }
 }
 
+void printText(int x, int y, char* str){
+    int length = strlen(str);
+    int i, j;
+    const char *letterPic;
+    char currentLetter[5] = {3, 5, 0, 0, 0};
+    for (i = 0; i < length; i++){
+        letterPic = getCharacterPointer(str[i]);
+        for (j = 0; j < 3; j++){
+            currentLetter[2 + j] = letterPic[j];
+        }
+        paintPic(x + i * 4, y, currentLetter);
+    }
+}
 
 
 void putDebugInBuffer(){
