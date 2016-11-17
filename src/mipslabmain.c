@@ -10,8 +10,9 @@
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
-#include "images/character_sprites.c"
-#include "images/UI.c"
+#include "graphics/graphics.c"
+#include "graphics/images/character_sprites.c"
+#include "graphics/images/UI.c"
 
 void paintImage(int x, int y, const char* image){
 	paintPic(x, y, image);
@@ -42,15 +43,6 @@ int main(void) {
 	TRISFSET = (1 << 1);
 
 	inititalize_display();
-	//display_string(0, "GOBLET GOBLE");
-	//display_string(1, "T GOBLET GOB");
-	//display_string(2, "LET GOBLET G");
-	//display_string(3, "OBLET GOBLET");
-	//display_update();
-	
-	//display_image(96, icon);
-	
-	//labinit(); /* Do any lab-specific initialization */
 	int i, j, k, xPos, yPos;
 	i = -4;
 	j = -4;
@@ -67,13 +59,6 @@ int main(void) {
 		clearScreen();
 
 		delayMs(2);
-		/*printText((i + 0) % 128, (j + 0) % 32);
-		printText((i + 64) % 128, (j + 5) % 32);
-		printText((i + 20) % 128, (j + 10) % 32);
-		printText((i + 84) % 128, (j + 15) % 32);
-		printText((i + 40) % 128, (j + 20) % 32);
-		printText((i + 104) % 128, (j + 25) % 32);
-		printText((i + 60) % 128, (j + 30) % 32);*/
 		paintImage(0, 0, ui1);
 		printText(10, 2, "135-238");
 		printText(10, 10, "45/60");
@@ -87,7 +72,14 @@ int main(void) {
 		paintImage((i + 104) % 142 - 7, (j + 25) % 46 - 7, goblet2);
 		paintImage((i + 60) % 142 - 7, (j + 30) % 46 - 7, goblet2);
 		paintImage(xPos, yPos, smileyMan);
-		updateScreen();
+		
+		if(pressedButton(4)){
+			PORTE |= 0x8;
+			xPos -= 7;
+
+		}else{
+			PORTE &= 0x7;
+		}
 		if(pressedButton(1)){
 			PORTE |= 0x1;
 			yPos += 7;
@@ -111,13 +103,8 @@ int main(void) {
 			PORTE &= 0xB;
 		}
 
-		if(pressedButton(4)){
-			PORTE |= 0x8;
-			xPos -= 7;
-
-		}else{
-			PORTE &= 0x7;
-		}
+		print_int(PORTD);
+		updateScreen();
 	}
 	return 0;
 }

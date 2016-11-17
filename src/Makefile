@@ -25,11 +25,13 @@ ELFFILE		= $(PROGNAME).elf
 HEXFILE		= $(PROGNAME).hex
 
 # Find all source files automatically
+CDEPS 			= $(wildcard */*.c)
 CFILES          = $(wildcard *.c)
 ASFILES         = $(wildcard *.S)
 SYMSFILES	= $(wildcard *.syms)
 
 # Object file names
+OBJCDEPS 		= $(CFILES:.c=.c.o)
 OBJFILES        = $(CFILES:.c=.c.o)
 OBJFILES        +=$(ASFILES:.S=.S.o)
 OBJFILES	+=$(SYMSFILES:.syms=.syms.o)
@@ -49,7 +51,7 @@ clean:
 	$(RM) -R $(DEPDIR)
 
 envcheck:
-	python images/compileImages.py
+	python graphics/images/compileImages.py
 	@echo "$(TARGET)" | grep mcb32 > /dev/null || (\
 		echo ""; \
 		echo " **************************************************************"; \

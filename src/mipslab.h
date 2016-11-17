@@ -13,11 +13,6 @@ void display_init(void);
 void display_string(int line, char *s);
 void display_update(void);
 uint8_t spi_send_recv(uint8_t data);
-void clearScreen();
-void paintOnePixel(int x, int y);
-void updateScreen();
-void delayMs(int ms);
-void paint7x7(int x, int y, const char* pic);
 
 /* Declare lab-related functions from mipslabfunc.c */
 char * itoaconv( int num );
@@ -38,7 +33,6 @@ void tick( unsigned int * timep );
    repeated calls to display_image; display_image overwrites
    about half of the digits shown by display_debug.
 */
-void display_debug( volatile int * const addr );
 
 /* Declare bitmap array containing font */
 extern const uint8_t const font[128*8];
@@ -57,5 +51,3 @@ void time2string( char *, int );
 /* Written as part of i/o lab: getbtns, getsw */
 int getbtns(void);
 int getsw(void);
-
-void inititalize_display();
