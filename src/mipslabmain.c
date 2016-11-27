@@ -13,6 +13,7 @@
 #include "graphics/graphics.c"
 #include "graphics/images/character_sprites.c"
 #include "graphics/images/UI.c"
+#include "rng/rng.c"
 
 void paintImage(int x, int y, const char* image){
 	paintPic(x, y, image);
@@ -50,6 +51,7 @@ int main(void) {
 	xPos = 105;
 	yPos = 16;
 	enable_debug();
+	rng_init(0);
 	while( 1 )
 	{
 		++i;
@@ -58,7 +60,7 @@ int main(void) {
 			k = 0;
 		clearScreen();
 
-		delayMs(2);
+		delayMs(30);
 		paintImage(0, 0, ui1);
 		printText(10, 2, "135-238");
 		printText(10, 10, "45/60");
@@ -73,6 +75,8 @@ int main(void) {
 		paintImage((i + 60) % 142 - 7, (j + 30) % 46 - 7, goblet2);
 		paintImage(xPos, yPos, smileyMan);
 		
+		print_int(rng_function());
+
 		if(pressedButton(4)){
 			PORTE |= 0x8;
 			xPos -= 7;
