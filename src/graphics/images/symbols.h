@@ -1,3 +1,4 @@
+#pragma once
 const char const exclamation[5] = {3, 5, 0x0, 0x17, 0x0};
 const char const question[5] = {3, 5, 0x1, 0x15, 0x7};
 const char const backslash[5] = {3, 5, 0x3, 0x4, 0x18};

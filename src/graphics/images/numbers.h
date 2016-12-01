@@ -1,3 +1,4 @@
+#pragma once
 const char const seven[5] = {3, 5, 0x1, 0x1d, 0x3};
 const char const nine[5] = {3, 5, 0x7, 0x5, 0x1f};
 const char const six[5] = {3, 5, 0x1f, 0x15, 0x1d};

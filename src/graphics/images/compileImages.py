@@ -29,8 +29,9 @@ for directory in dirs:
 				lista.append(hex(value))
 		images[key] = lista
 
-	f = open(path + directory + '.c', 'w')
-	print "Created file '" + path + directory + ".c'."
+	f = open(path + directory + '.h', 'w')
+	print "Created file '" + path + directory + ".h'."
+	f.write("#pragma once\n")
 	for key in images:
 		f.write('const char const ' + key + '[' + str(len(images.get(key))) + '] = {')
 		f.write(', '.join(images.get(key)))

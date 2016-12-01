@@ -1,3 +1,5 @@
+#include "rng.h"
+
 unsigned short current_value;
 unsigned short S0;
 short S1;

@@ -26,7 +26,7 @@ HEXFILE		= $(PROGNAME).hex
 
 # Find all source files automatically
 CDEPS 			= $(wildcard */*.c)
-CFILES          = $(wildcard *.c)
+CFILES          = $(wildcard *.c) $(wildcard */*.c)
 ASFILES         = $(wildcard *.S)
 SYMSFILES	= $(wildcard *.syms)
 

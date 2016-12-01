@@ -10,19 +10,23 @@
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
-#include "graphics/graphics.c"
-#include "graphics/images/character_sprites.c"
-#include "graphics/images/UI.c"
-#include "rng/rng.c"
+#include "graphics/graphics.h"
+#include "graphics/images/character_sprites.h"
+#include "graphics/images/UI.h"
+#include "rng/rng.h"
 
-void paintImage(int x, int y, const char* image){
-	paintPic(x, y, image);
-}
-
-int main(void) {
+/*
+	The three functions below were copied directly from the file "stubs.c" used in the labs.
+*/
+/* Non-Maskable Interrupt; something bad likely happened, so hang */
+void _nmi_handler(){for(;;);}
+/* This function is called upon reset, before .data and .bss is set up */
+void _on_reset(){}
+/* This function is called before main() is called, you can do setup here */
+void _on_bootstrap(){
 	/* Set up peripheral bus clock */
-        /* OSCCONbits.PBDIV = 1; */
-        OSCCONCLR = 0x100000; /* clear PBDIV bit 1 */
+    /* OSCCONbits.PBDIV = 1; */
+    OSCCONCLR = 0x100000; /* clear PBDIV bit 1 */
 	OSCCONSET = 0x080000; /* set PBDIV bit 0 */
 	
 	/* Set up output pins */
@@ -44,14 +48,21 @@ int main(void) {
 	TRISFSET = (1 << 1);
 
 	inititalize_display();
+	enable_debug();
+	rng_init(0);
+}
+
+void paintImage(int x, int y, const char* image){
+	paintPic(x, y, image);
+}
+
+int main(void) {
 	int i, j, k, xPos, yPos;
 	i = -4;
 	j = -4;
 	k = 0;
 	xPos = 105;
 	yPos = 16;
-	enable_debug();
-	rng_init(0);
 	while( 1 )
 	{
 		++i;
@@ -60,7 +71,7 @@ int main(void) {
 			k = 0;
 		clearScreen();
 
-		delayMs(30);
+		delayMs(5);
 		paintImage(0, 0, ui1);
 		printText(10, 2, "135-238");
 		printText(10, 10, "45/60");
@@ -75,7 +86,7 @@ int main(void) {
 		paintImage((i + 60) % 142 - 7, (j + 30) % 46 - 7, goblet2);
 		paintImage(xPos, yPos, smileyMan);
 		
-		print_int(rng_function());
+		//print_int(rng_function());
 
 		if(pressedButton(4)){
 			PORTE |= 0x8;
