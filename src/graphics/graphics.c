@@ -2,8 +2,8 @@
 #include <math.h>
 #include <pic32mx.h>
 #include "graphics.h"
-#include "images/alphabet.c"
-#include "images/symbols.c"
+#include "images/alphabet.h"
+#include "images/symbols.h"
 
 #define CHANGE_TO_COMMAND_MODE (PORTFCLR = 0x10)
 #define CHANGE_TO_DATA_MODE (PORTFSET = 0x10)
