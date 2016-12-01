@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <pic32mx.h>
+#include "input.h"
 
 /*
 int getButtons(void){ //bit 1 in port F and bit 5-7 in port D

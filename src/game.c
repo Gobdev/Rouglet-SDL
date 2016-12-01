@@ -1,28 +1,24 @@
-/* mipslabmain.c
-
-   This file written 2015 by Axel Isaksson,
-   modified 2015 by F Lundevall
-
-   Latest update 2015-08-28 by F Lundevall
-
-   For copyright and licensing, see file COPYING */
+/* game.c
+	Written by Johan Ribom and Simon Edström Kawaji.
+	Based on the file 'mipslabmain.c' that was written in 2015 by Axel Isaksson, and modified in 2015 by F Lundevall.
+*/
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
-#include "mipslab.h"  /* Declatations for these labs */
 #include "graphics/graphics.h"
 #include "graphics/images/character_sprites.h"
 #include "graphics/images/UI.h"
 #include "rng/rng.h"
+#include "input/input.h"
 
-/*
-	The three functions below were copied directly from the file "stubs.c" used in the labs.
-*/
 /* Non-Maskable Interrupt; something bad likely happened, so hang */
 void _nmi_handler(){for(;;);}
 /* This function is called upon reset, before .data and .bss is set up */
 void _on_reset(){}
-/* This function is called before main() is called, you can do setup here */
+
+/*
+	Setup function, run before main() function.	
+*/
 void _on_bootstrap(){
 	/* Set up peripheral bus clock */
     /* OSCCONbits.PBDIV = 1; */
