@@ -13,7 +13,7 @@ for directory in dirs:
 		pix = im.load()
 		x, y = im.size
 		lista = [str(x), str(y)]
-		for page in range((int)(y / 8) + 1):
+		for page in range((int)((y - 1) / 8) + 1):
 			for i in range(x):
 				value = 0;
 				for j in range(8):
@@ -33,7 +33,7 @@ for directory in dirs:
 	print "Created file '" + path + directory + ".h'."
 	f.write("#pragma once\n")
 	for key in images:
-		f.write('const char const ' + key + '[' + str(len(images.get(key))) + '] = {')
+		f.write('const unsigned char ' + key + '[' + str(len(images.get(key))) + '] = {')
 		f.write(', '.join(images.get(key)))
 		f.write('};\n')
 	f.close()
