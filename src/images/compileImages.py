@@ -1,8 +1,8 @@
 from PIL import Image
 import os, re
 
-path = re.match('(.*?)(/src(/graphics/images)?)?$', os.getcwd()).group(1)
-path += "/src/graphics/images/"
+path = re.match('(.*?)(/src(/images)?)?$', os.getcwd()).group(1)
+path += "/src/images/"
 dirs = [directory for directory in os.listdir(path) if os.path.isdir(path + directory)]
 for directory in dirs:
 	images = {}

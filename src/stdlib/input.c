@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <pic32mx.h>
 #include "input.h"
+#include "graphics.h"
 
 /*
 int getButtons(void){ //bit 1 in port F and bit 5-7 in port D
@@ -65,4 +66,19 @@ char checkSwitches(char switchNumber){
 			return (PORTD & 0x400);//bit index 11 in PORTD
 			break;	
 	}
+}
+
+int buttonPress(){
+	int b = 0;
+	while (!b){
+		if (pressedButton(1))
+			b = 1;
+		else if (pressedButton(2))
+			b = 2;
+		else if (pressedButton(3))
+			b = 3;
+		else if (pressedButton(4))
+			b = 4;
+	}
+	return b;
 }

@@ -2,8 +2,9 @@
 #include <math.h>
 #include <pic32mx.h>
 #include "graphics.h"
-#include "images/alphabet.h"
-#include "images/symbols.h"
+#include "stdlib.h"
+#include "../images/alphabet.h"
+#include "../images/symbols.h"
 
 #define CHANGE_TO_COMMAND_MODE (PORTFCLR = 0x10)
 #define CHANGE_TO_DATA_MODE (PORTFSET = 0x10)
@@ -34,39 +35,12 @@ const char whiteBox[7] = {0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F};
 int debug = 0;
 int debug_pages_len[4] = {0};
 
-void intToString(int value, char* str){
-    int valueCopy, i;
-    i = 0;
-    if (value < 0){
-        str[0] = 0x2D;                  // Negative sign  
-        str++;
-        value = ~value + 1;             // For negative numbers
-    }
-    for (valueCopy = value; valueCopy >= 10; valueCopy /= 10){
-        i++;
-    }
-    for (;i >= 0; i--){
-        str[i] = (value % 10) + 0x30;
-        value /= 10;
-    }
-}
-
-int strlen(char* string){
-    int i;
-    for (i = 0; i < 128; i++){
-        if (string[i] == 0){
-            break;
-        }
-    }
-    return i;
-}
-
 void enable_debug(){
     debug = 1;
 }
 
 
-void delayMs(int milliseconds){
+void delay_ms(int milliseconds){
     int i;
     long j;
     long ms = 80000;
@@ -79,8 +53,7 @@ void inititalize_host(){
     /* Initialize SPI port 2. 
     */ 
     SPI2CON = 0; 
-    SPI2BRG = 15; 
-    //8Mhz, with 80Mhz PB clock 
+    SPI2BRG = 15; //8Mhz, with 80Mhz PB clock 
     /* SPI2STAT bit SPIROV = 0; */
     SPI2STATCLR = 0x40;
     SPI2CONSET = 0x8060;
@@ -121,18 +94,18 @@ void inititalize_display()
     /* We're going to be sending commands, so clear the Data/Cmd bit 
     */ 
     CHANGE_TO_COMMAND_MODE; 
-    delayMs(1); 
+    delay_ms(1); 
     /* Start by turning VDD on and wait a while for the power to come up.  
     */
     ACTIVATE_VDD;
-    delayMs(10); 
+    delay_ms(10); 
     /* Display off command 
     */ 
     Spi2PutByte(0xAE); 
     /* Bring Reset low and then high 
     */ 
     ACTIVATE_RESET; 
-    delayMs(1); 
+    delay_ms(1); 
     DO_NOT_RESET; 
     /* Send the Set Charge Pump and Set Pre-Charge Period commands 
     */ 
@@ -143,7 +116,7 @@ void inititalize_display()
     /* Turn on VCC and wait 100ms 
     */ 
     ACTIVATE_VBAT;
-    delayMs(100); 
+    delay_ms(100); 
     /* Send the commands to invert the display. This puts the display origin 
     ** in the upper left corner. 
     */ 
@@ -230,10 +203,10 @@ void print_debug(int page, char* string){
     }
 }
 
-void print_int(int value){
+void print_int(int x, int y, int value){
     char str[15] = {0};
     intToString(value, str);
-    print_debug(2, str);
+    print_text(x, y, str);
 }
 
 void clearScreen(){
@@ -250,7 +223,7 @@ void paintOnePixel(int x, int y){
     oledBuffer[y / OLED_COL_LENGTH * OLED_ROW_LENGTH + x] |= 1 << (y % OLED_COL_LENGTH);
 }
 
-void paintPic(int x, int y, const char* pic){
+void paint_pic(int x, int y, const unsigned char* pic){
     /*
         Read the size of the image from the first two bytes of the picture array.
     */
@@ -266,7 +239,6 @@ void paintPic(int x, int y, const char* pic){
     if (x < -x_size || x > OLED_ROW_LENGTH + x_size || y < -y_size || y > OLED_COL_LENGTH * OLED_PAGES + y_size){
         return;
     }
-
 
     /*
         Set the value that the images get shifted by when they aren't drawn at the top pixel of a page.
@@ -321,7 +293,7 @@ void paintPic(int x, int y, const char* pic){
     }
 }
 
-void printText(int x, int y, char* str){
+void print_text(int x, int y, char* str){
     int length = strlen(str);
     int i, j;
     const char *letterPic;
@@ -331,7 +303,7 @@ void printText(int x, int y, char* str){
         for (j = 0; j < 3; j++){
             currentLetter[2 + j] = letterPic[j];
         }
-        paintPic(x + i * 4, y, currentLetter);
+        paint_pic(x + i * 4, y, currentLetter);
     }
 }
 

@@ -5,11 +5,13 @@
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
-#include "graphics/graphics.h"
-#include "graphics/images/character_sprites.h"
-#include "graphics/images/UI.h"
-#include "rng/rng.h"
-#include "input/input.h"
+#include "stdlib/graphics.h"
+#include "stdlib/rng.h"
+#include "stdlib/input.h"
+#include "stdlib/ui.h"
+#include "images/character_sprites.h"
+#include "images/UI.h"
+#include "images/title.h"
 
 /* Non-Maskable Interrupt; something bad likely happened, so hang */
 void _nmi_handler(){for(;;);}
@@ -43,13 +45,31 @@ void _on_bootstrap(){
 	TRISDSET = (1 << 8);
 	TRISFSET = (1 << 1);
 
+	TRISE = 0;
+
+
+    TMR2 = 0; // Set counter to 0.
+    T2CON = 0x8000; // Set timer on (bit 15), prescale 1:256 (bits 6-4), 16-bit counter (bit 3), internal clock (bit 1).
+    PR2 = 65535; // Counter goes up to 31250, since 31250 * 256 * 10 = 80 000 000.
+
 	inititalize_display();
 	enable_debug();
 	rng_init(0);
 }
 
-void paintImage(int x, int y, const char* image){
-	paintPic(x, y, image);
+void title_screen(){
+	paint_pic(0, 0, roguelet_title);
+	updateScreen();
+	buttonPress();
+	clearScreen();
+	int seed = TMR2;
+	print_text(35, 14, "Seed: ");
+	print_int(56, 14, seed);
+	rng_init(seed);
+	updateScreen();
+	delay_ms(300);
+	clearScreen();
+	updateScreen();
 }
 
 int main(void) {
@@ -59,62 +79,61 @@ int main(void) {
 	k = 0;
 	xPos = 105;
 	yPos = 16;
+	int exp = 0;
+	int button = 5;
+	int level = 0;
+	title_screen();
 	while( 1 )
 	{
-		++i;
-		++j;
+		i += 7;
+		j += 7;
 		if (++k > 3)
 			k = 0;
 		clearScreen();
 
-		delayMs(5);
-		paintImage(0, 0, ui1);
-		printText(10, 2, "135-238");
-		printText(10, 10, "45/60");
-		printText(10, 18, "80");
-		printText(25, 26, "3");
-		paintImage((i + 0) % 142 - 7, (j + 0) % 46 - 7, goblet2);
-		paintImage((i + 64) % 142 - 7, (j + 5) % 46 - 7, goblet2);
-		paintImage((i + 20) % 142 - 7, (j + 10) % 46 - 7, goblet2);
-		paintImage((i + 84) % 142 - 7, (j + 15) % 46 - 7, goblet2);
-		paintImage((i + 40) % 142 - 7, (j + 20) % 46 - 7, goblet2);
-		paintImage((i + 104) % 142 - 7, (j + 25) % 46 - 7, goblet2);
-		paintImage((i + 60) % 142 - 7, (j + 30) % 46 - 7, goblet2);
-		paintImage(xPos, yPos, smileyMan);
+		if (button == 0)
+			button = buttonPress();
+		switch(button){
+			case 1:
+				yPos += 7;
+				break;
+			case 2:
+				yPos -= 7;
+				break;
+			case 3:
+				xPos += 7;
+				break;
+			case 4:
+				xPos -= 7;
+				break;
+			default:
+				break;
+		}
 		
-		//print_int(rng_function());
+		paint_pic(0, 0, ui1);
+		/*print_text(10, 2, "135-238");
+		print_text(10, 10, "45/60");
+		print_text(10, 18, "80");
+		print_text(25, 26, "3");*/
+		paint_pic((i + 0) % 142 - 7, (j + 0) % 46 - 7, goblet2);
+		paint_pic((i + 64) % 142 - 7, (j + 5) % 46 - 7, goblet2);
+		paint_pic((i + 20) % 142 - 7, (j + 10) % 46 - 7, goblet2);
+		paint_pic((i + 84) % 142 - 7, (j + 15) % 46 - 7, goblet2);
+		paint_pic((i + 40) % 142 - 7, (j + 20) % 46 - 7, goblet2);
+		paint_pic((i + 104) % 142 - 7, (j + 25) % 46 - 7, goblet2);
+		paint_pic((i + 60) % 142 - 7, (j + 30) % 46 - 7, goblet2);
+		
+		paint_pic(xPos, yPos, smileyMan);
 
-		if(pressedButton(4)){
-			PORTE |= 0x8;
-			xPos -= 7;
-
-		}else{
-			PORTE &= 0x7;
+		if (exp > 100){
+			exp = 0;
+			level++;
 		}
-		if(pressedButton(1)){
-			PORTE |= 0x1;
-			yPos += 7;
-		}else{
-			PORTE &= 0xE;
-		}
-
-		if(pressedButton(2)){
-			PORTE |= 0x2;
-			yPos -= 7;
-
-		}else{
-			PORTE &= 0xD;
-		}
-
-		if(pressedButton(3)){
-			PORTE |= 0x4;
-			xPos += 7;
-
-		}else{
-			PORTE &= 0xB;
-		}
-
+		updateExpBar(100, exp += 3);
+		printLevel(level);
+		print_int(10, 2, rng_function());
 		updateScreen();
+		button = 0;
 	}
 	return 0;
 }

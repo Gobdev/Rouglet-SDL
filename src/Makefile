@@ -51,7 +51,7 @@ clean:
 	$(RM) -R $(DEPDIR)
 
 envcheck:
-	python graphics/images/compileImages.py
+	python images/compileImages.py
 	@echo "$(TARGET)" | grep mcb32 > /dev/null || (\
 		echo ""; \
 		echo " **************************************************************"; \
