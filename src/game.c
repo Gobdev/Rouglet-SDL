@@ -5,13 +5,13 @@
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
+#include "entities/player.h"
 #include "stdlib/graphics.h"
 #include "stdlib/rng.h"
 #include "stdlib/input.h"
 #include "stdlib/ui.h"
-#include "images/character_sprites.h"
-#include "images/UI.h"
 #include "images/title.h"
+
 
 /* Non-Maskable Interrupt; something bad likely happened, so hang */
 void _nmi_handler(){for(;;);}
@@ -95,43 +95,30 @@ int main(void) {
 			button = buttonPress();
 		switch(button){
 			case 1:
-				yPos += 7;
+				player_moveUp();
 				break;
 			case 2:
-				yPos -= 7;
+				player_moveDown();
 				break;
 			case 3:
-				xPos += 7;
+				player_moveRight();
 				break;
 			case 4:
-				xPos -= 7;
+				player_moveLeft();
 				break;
 			default:
 				break;
 		}
 		
-		paint_pic(0, 0, ui1);
-		/*print_text(10, 2, "135-238");
-		print_text(10, 10, "45/60");
-		print_text(10, 18, "80");
-		print_text(25, 26, "3");*/
-		paint_pic((i + 0) % 142 - 7, (j + 0) % 46 - 7, goblet2);
-		paint_pic((i + 64) % 142 - 7, (j + 5) % 46 - 7, goblet2);
-		paint_pic((i + 20) % 142 - 7, (j + 10) % 46 - 7, goblet2);
-		paint_pic((i + 84) % 142 - 7, (j + 15) % 46 - 7, goblet2);
-		paint_pic((i + 40) % 142 - 7, (j + 20) % 46 - 7, goblet2);
-		paint_pic((i + 104) % 142 - 7, (j + 25) % 46 - 7, goblet2);
-		paint_pic((i + 60) % 142 - 7, (j + 30) % 46 - 7, goblet2);
-		
-		paint_pic(xPos, yPos, smileyMan);
-
 		if (exp > 100){
 			exp = 0;
-			level++;
+			player_level_up();
 		}
+		
+		player_draw_ui();
+		player_draw();
+
 		updateExpBar(100, exp += 3);
-		printLevel(level);
-		print_int(10, 2, rng_function());
 		updateScreen();
 		button = 0;
 	}

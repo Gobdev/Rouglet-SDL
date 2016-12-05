@@ -1,3 +1,5 @@
+#pragma once
+
 void enable_debug();
 void delay_ms(int milliseconds);
 void inititalize_display();

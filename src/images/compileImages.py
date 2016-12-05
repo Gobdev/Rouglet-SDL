@@ -35,5 +35,5 @@ for directory in dirs:
 	for key in images:
 		f.write('const unsigned char ' + key + '[' + str(len(images.get(key))) + '] = {')
 		f.write(', '.join(images.get(key)))
-		f.write('};\n')
+		f.write('};\n')	
 	f.close()
