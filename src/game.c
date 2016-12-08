@@ -13,7 +13,7 @@
 #include "images/title.h"
 #include "level/level.h"
 
-
+const char white_square[7] = {5, 5, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F};
 /* Non-Maskable Interrupt; something bad likely happened, so hang */
 void _nmi_handler(){for(;;);}
 /* This function is called upon reset, before .data and .bss is set up */
@@ -67,7 +67,7 @@ void title_screen(){
 	rng_init(seed);
 	update_screen();
 	reset_timer();
-	buttonPress(10000);
+	buttonPress(1000);
 	clearScreen();
 }
 
@@ -88,7 +88,6 @@ int main(void) {
 	char pointer[34] = {0};
 	while( 1 )
 	{
-		game_state = checkSwitches(1);
 		i += 7;
 		j += 7;
 		if (++k > 3)
@@ -100,6 +99,7 @@ int main(void) {
 		}
 		
 		button = buttonPress(0);
+		game_state = checkSwitches(1);
 		if(game_state == 0){
 			switch(button){
 				case 1:
@@ -119,7 +119,7 @@ int main(void) {
 					break;
 			}
 			player_draw_main_ui();
-		}else{
+		} else {
 			player_draw_inventory_ui();
 			switch(button){
 				case 1:
@@ -145,7 +145,7 @@ int main(void) {
 		player_draw();
 
 		updateExpBar(100, exp += 3);
-		print_player_info();
+		//print_player_info();
 		print_room_info();
 		update_screen();
 		button = 0;

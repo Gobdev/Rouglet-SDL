@@ -2,5 +2,5 @@
 
 char checkButton(char buttonNumber);
 char pressedButton(char buttonNumber);
-int checkSwitches(char switchNumber);
+char checkSwitches(char switchNumber);
 int buttonPress();

@@ -38,21 +38,30 @@ char pressedButton(char buttonNumber){
 	}
 }
 
-int checkSwitches(char switchNumber){
+char checkSwitches(char switchNumber){
 	switch(switchNumber){
 		case 1:
-			return (PORTD & 0x100); //bit index 8 in PORTD
+			return (PORTD & 0x100) >> 8; //bit index 8 in PORTD
 			break;
 		case 2:
-			return (PORTD & 0x200);//bit index 9 in PORTD
+			return (PORTD & 0x200) >> 9;//bit index 9 in PORTD
 			break;
 		case 3:
-			return (PORTD & 0x400);//bit index 10 in PORTD
+			return (PORTD & 0x400) >> 10;//bit index 10 in PORTD
 			break;
 		case 4:
-			return (PORTD & 0x800);//bit index 11 in PORTD
+			return (PORTD & 0x800) >> 11;//bit index 11 in PORTD
 			break;	
 	}
+}
+
+char get_switch_state(){
+	char return_char = 0;
+	return_char += checkSwitches(4);
+	return_char += checkSwitches(3) << 1;
+	return_char += checkSwitches(2) << 2;
+	return_char += checkSwitches(1) << 3;
+	return return_char;
 }
 
 int buttonPress(int timeout){
@@ -60,6 +69,7 @@ int buttonPress(int timeout){
 	int b = 0;
 	reset_timer();
 	int i = 0;
+	char switch_state = get_switch_state();
 	while (!b && (timeout == 0 || i < timeout)){
 		if (pressedButton(1))
 			b = 1;
@@ -69,6 +79,8 @@ int buttonPress(int timeout){
 			b = 3;
 		else if (pressedButton(4))
 			b = 4;
+		else if (get_switch_state() != switch_state)
+			b = 5;
 		if (IFS(0) & 0x100){
             IFS(0) &= ~0x100; // Reset flag.
             i++;              // Increment time counter every 100 ms.

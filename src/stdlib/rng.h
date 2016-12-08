@@ -8,4 +8,3 @@ void rng_init(unsigned short input);
     In the cycle of this set used in the function, 65534 return values are possible.
 */
 int get_random_int(int max);
-char get_random_char(char max);
