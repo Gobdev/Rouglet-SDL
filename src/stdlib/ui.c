@@ -2,11 +2,12 @@
 #include <pic32mx.h>
 #include "ui.h"
 #include "graphics.h"
-/*
-void paintUI(){
+#include "../entities/player.h"
+
+void paintInventory(){
 
 }
-*/
+
 char level_str[15] = {0};
 
 void updateExpBar(int maxExp, int currentExp){

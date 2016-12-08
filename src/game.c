@@ -72,8 +72,13 @@ void title_screen(){
 	updateScreen();
 }
 
+void set_game_state(){
+
+}
+
 int main(void) {
-	int i, j, k, xPos, yPos;
+	int i, j, k, xPos, yPos, game_state;
+	game_state = 0; //inventory(1) or main game(0)
 	i = -4;
 	j = -4;
 	k = 0;
@@ -85,6 +90,7 @@ int main(void) {
 	title_screen();
 	while( 1 )
 	{
+		game_state = checkSwitches(1);
 		i += 7;
 		j += 7;
 		if (++k > 3)
@@ -115,7 +121,11 @@ int main(void) {
 			player_level_up();
 		}
 		
-		player_draw_ui();
+		if(game_state == 0){
+			player_draw_main_ui();
+		}else{
+			player_draw_inventory_ui();
+		}
 		player_draw();
 
 		updateExpBar(100, exp += 3);

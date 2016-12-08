@@ -49,14 +49,19 @@ void use_item(int item_index){
             break; //TODO
         case default:
             set_current_weapon(weapon_low_list[item_id], weapon_high_list[item_id], item_index);
+            break;
     }
 }
 
+
+//TODO if inveotory is full, dont remove item form ground
 void add_to_inventory(int item_id){
-    for(int i = 0 ; i < inventory_size ; i++){
-        if(inventory[i] == 0){
-            inventory[i] = item_id;
-        }
+    if(inventory[inventory_size - 1] == 0){
+        for(int i = 0 ; i < inventory_size ; i++){
+            if(inventory[i] == 0){
+                inventory[i] = item_id;
+            }
+        }  
     }
 }
 
@@ -88,8 +93,8 @@ void player_level_up(){
     player_hp += 10;
 }
 
-void player_draw_ui(){
-    paint_pic(0, 0, ui1);
+void player_draw_main_ui(){
+    paint_pic(0, 0, main_ui);
     print_int(10, 2, (player_atk_low + weapon_atk_low));
     print_text(22, 2, "-");
     print_int(26, 2, (player_atk_high + weapon_atk_high));
@@ -98,6 +103,10 @@ void player_draw_ui(){
     print_int(26, 10, player_max_hp);
     print_int(10, 18, player_gold);
     print_int(25, 26, player_level);
+}
+
+void player_draw_inventory_ui(){
+    paint_pic(0, 0, inventory_ui);
 }
 
 void player_draw(){
