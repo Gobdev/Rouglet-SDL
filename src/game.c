@@ -69,23 +69,12 @@ void title_screen(){
 	reset_timer();
 	buttonPress(10000);
 	clearScreen();
-<<<<<<< HEAD
-	updateScreen();
 }
-
-
 
 int main(void) {
 	int i, j, k, xPos, yPos, game_state,inventory_index;
 	inventory_index = 0; 
 	game_state = 0; //inventory(1) or main game(0)
-=======
-	update_screen();
-}
-
-int main(void) {
-	int i, j, k, xPos, yPos;
->>>>>>> 7ac84544bf47a283994d8913ad29c4a3c22f1464
 	i = -4;
 	j = -4;
 	k = 0;
@@ -105,39 +94,13 @@ int main(void) {
 		if (++k > 3)
 			k = 0;
 		clearScreen();
-
-<<<<<<< HEAD
-=======
-		if (button == 0)
-			button = buttonPress(0);
-		switch(button){
-			case 1:
-				player_moveUp();
-				break;
-			case 2:
-				player_moveDown();
-				break;
-			case 3:
-				player_moveRight();
-				break;
-			case 4:
-			    generate_room_seed(pointer);
-			    set_current_room_to_seed(pointer);
-				break;
-			default:
-				break;
-		}
->>>>>>> 7ac84544bf47a283994d8913ad29c4a3c22f1464
-		
 		if (exp > 100){
 			exp = 0;
 			player_level_up();
 		}
 		
+		button = buttonPress(0);
 		if(game_state == 0){
-			if (button == 0)
-				button = buttonPress();
-
 			switch(button){
 				case 1:
 					player_moveUp();
@@ -149,7 +112,8 @@ int main(void) {
 					player_moveRight();
 					break;
 				case 4:
-					player_moveLeft();
+				    generate_room_seed(pointer);
+				    set_current_room_to_seed(pointer);
 					break;
 				default:
 					break;

@@ -38,19 +38,19 @@ char pressedButton(char buttonNumber){
 	}
 }
 
-char checkSwitches(char switchNumber){
+int checkSwitches(char switchNumber){
 	switch(switchNumber){
 		case 1:
-			return (PORTD & 0x80); //bit index 8 in PORTD
+			return (PORTD & 0x100); //bit index 8 in PORTD
 			break;
 		case 2:
-			return (PORTD & 0x100);//bit index 9 in PORTD
+			return (PORTD & 0x200);//bit index 9 in PORTD
 			break;
 		case 3:
-			return (PORTD & 0x200);//bit index 10 in PORTD
+			return (PORTD & 0x400);//bit index 10 in PORTD
 			break;
 		case 4:
-			return (PORTD & 0x400);//bit index 11 in PORTD
+			return (PORTD & 0x800);//bit index 11 in PORTD
 			break;	
 	}
 }

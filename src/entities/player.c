@@ -112,8 +112,12 @@ int player_get_attack_damage(){
     return player_atk_low + extra_dmg;
 }
 
+void player_draw_inventory_ui(){
+    paint_pic(0, 0, inventory_ui);
+}
+
 void player_draw_main_ui(){
-    paint_pic(0, 0, ui1);
+    paint_pic(0, 0, main_ui);
     print_int(10, 2, min_int(999, player_atk_low));
     print_text(22, 2, "-");
     print_int(26, 2, min_int(999, player_atk_high));
@@ -126,4 +130,8 @@ void player_draw_main_ui(){
 
 void player_draw(){
     paint_pic(player_x, player_y, smileyMan);
+}
+
+void print_player_info(){
+
 }
