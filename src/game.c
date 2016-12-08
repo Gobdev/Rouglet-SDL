@@ -72,12 +72,11 @@ void title_screen(){
 	updateScreen();
 }
 
-void set_game_state(){
 
-}
 
 int main(void) {
-	int i, j, k, xPos, yPos, game_state;
+	int i, j, k, xPos, yPos, game_state,inventory_index;
+	inventory_index = 0; 
 	game_state = 0; //inventory(1) or main game(0)
 	i = -4;
 	j = -4;
@@ -97,24 +96,6 @@ int main(void) {
 			k = 0;
 		clearScreen();
 
-		if (button == 0)
-			button = buttonPress();
-		switch(button){
-			case 1:
-				player_moveUp();
-				break;
-			case 2:
-				player_moveDown();
-				break;
-			case 3:
-				player_moveRight();
-				break;
-			case 4:
-				player_moveLeft();
-				break;
-			default:
-				break;
-		}
 		
 		if (exp > 100){
 			exp = 0;
@@ -122,9 +103,47 @@ int main(void) {
 		}
 		
 		if(game_state == 0){
+			if (button == 0)
+				button = buttonPress();
+
+			switch(button){
+				case 1:
+					player_moveUp();
+					break;
+				case 2:
+					player_moveDown();
+					break;
+				case 3:
+					player_moveRight();
+					break;
+				case 4:
+					player_moveLeft();
+					break;
+				default:
+					break;
+			}
 			player_draw_main_ui();
 		}else{
 			player_draw_inventory_ui();
+			switch(button){
+				case 1:
+					if(inventory_index < get_inventory_size() - 1){
+						inventory_index++;
+					}
+					break;
+				case 2:
+					if(inventory_index > 0){
+						inventory_index--;
+					}
+					break;
+				case 3:
+					break;
+				case 4:
+					use_item(inventory_index);
+					break;
+				default:
+					break;
+			}
 		}
 		player_draw();
 
@@ -133,4 +152,12 @@ int main(void) {
 		button = 0;
 	}
 	return 0;
+}
+
+void main_game_state(){
+
+}
+
+void inventory_game_state(){
+
 }

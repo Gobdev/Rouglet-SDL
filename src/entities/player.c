@@ -4,13 +4,13 @@
 #include "../images/UI.h"
 #include "../images/character_sprites.h"
 
-enum items {SWORD1,SWORD2,SWORD3,SPEAR1,SPEAR2,HAMMER,GREATSWORD,PICKAXE,AXE,HALBERD,SMALL_AXE,TRIDENT,STAFF,BATTLE_AXE,POTION,BOMB};
+enum items {SWORD1,SWORD2,SWORD3,SPEAR1,SPEAR2,HAMMER,GREATSWORD,PICKAXE,AXE,HALBERD,SMALL_AXE,TRIDENT,BATTLE_AXE,POTION,BOMB};
 
-int weapon_low_list[] = {10,20,30,40,50,60,70,80,90,100,110,120,130,140};
-int weapon_high_list[] = {10,20,30,40,50,60,70,80,90,100,110,120,130,140};
+int weapon_low_list[] = {10,20,30,40,50,60,70,80,90,100,110,120,130};
+int weapon_high_list[] = {10,20,30,40,50,60,70,80,90,100,110,120,130};
 
 int player_max_hp = 160;
-int player_hp = player_max_hp;
+int player_hp = 160;
 int player_atk_low = 135;
 int player_atk_high = 165;
 int weapon_atk_low = 0;
@@ -21,12 +21,16 @@ int player_x = 64;
 int player_y = 12;
 int inventory_size = 15;
 int potion_heal_amount = 50;
-int inventory[inventory_size] = {0};
+int inventory[15] = {0};
 int active_weapon_index = 0;
 
+int get_inventory_size(){
+    return inventory_size;
+}
+
 void set_current_weapon(int low,int high,int item_index){
-    weapon_atk_low = attack_low;
-    weapon_atk_high = attack_high;
+    weapon_atk_low = low;
+    weapon_atk_high = high;
     active_weapon_index = item_index;
 }
 
@@ -35,8 +39,8 @@ void draw_active_weapon(){
 }
 
 void use_item(int item_index){
-    int item_id = inventory[index];
-    switch(){
+    int item_id = inventory[item_index];
+    switch(item_id){
         case POTION:
             if(player_hp + potion_heal_amount >= player_max_hp){
                 player_hp = player_max_hp;
@@ -47,7 +51,7 @@ void use_item(int item_index){
             break;
         case BOMB:
             break; //TODO
-        case default:
+        default:
             set_current_weapon(weapon_low_list[item_id], weapon_high_list[item_id], item_index);
             break;
     }
@@ -56,8 +60,9 @@ void use_item(int item_index){
 
 //TODO if inveotory is full, dont remove item form ground
 void add_to_inventory(int item_id){
+    int i;
     if(inventory[inventory_size - 1] == 0){
-        for(int i = 0 ; i < inventory_size ; i++){
+        for(i = 0 ; i < inventory_size ; i++){
             if(inventory[i] == 0){
                 inventory[i] = item_id;
             }
@@ -66,7 +71,8 @@ void add_to_inventory(int item_id){
 }
 
 void remove_item(int item_index){
-    for(int i = item_index ; i < inventory_size - 1 ; i++){
+    int i;
+    for(i = item_index ; i < inventory_size - 1 ; i++){
         inventory[i] = inventory[i+1];
     }
     inventory[inventory_size - 1] = 0;
