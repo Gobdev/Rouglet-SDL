@@ -4,6 +4,8 @@
 #include "../images/UI.h"
 #include "../images/character_sprites.h"
 
+enum items {POTION,BOMB,SWORD1,SWORD2,SWORD3,SPEAR1,SPEAR2,HAMMER,GREATSWORD,PICKAXE,AXE,HALBERD,SMALL_AXE,TRIDENT,STAFF,BATTLE_AXE};
+
 int player_hp = 160;
 int player_max_hp = 160;
 int player_atk_low = 135;
@@ -12,6 +14,24 @@ int player_gold = 0;
 int player_level = 1;
 int player_x = 64;
 int player_y = 12;
+int inventory_size = 15;
+char inventory[inventory_size] = {0};
+
+
+void add_to_inventory(char item_id){
+    for(int i = 0 ; i < inventory_size ; i++){
+        if(inventory[i] == 0){
+            inventory[i] = item_id;
+        }
+    }
+}
+
+void remove_item(int item_index){
+    for(int i = item_index ; i < inventory_size - 1 ; i++){
+        inventory[i] = inventory[i+1];
+    }
+    inventory[inventory_size - 1] = 0;
+}
 
 void player_moveUp(){
     player_y += 7;
