@@ -7,4 +7,5 @@ void rng_init(unsigned short input);
     This function is a bijection from the set of all possible values of an unsigned short to the same set.
     In the cycle of this set used in the function, 65534 return values are possible.
 */
-unsigned short rng_function();
+int get_random_int(int max);
+char get_random_char(char max);

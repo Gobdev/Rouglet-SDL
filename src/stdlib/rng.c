@@ -28,3 +28,15 @@ unsigned short rng_function(){
         current_value = S1 ^ 0x8180;
     return (unsigned short) current_value;
 }
+
+int get_random_int(int max){
+    if (max < 1)
+        return 0;
+    return ((int) rng_function()) % (max + 1);
+}
+
+char get_random_char(char max){
+    if (max < 1)
+        return 0;
+    return ((char) rng_function()) % (max + 1);
+}

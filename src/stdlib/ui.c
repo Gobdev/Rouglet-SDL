@@ -17,6 +17,5 @@ void updateExpBar(int maxExp, int currentExp){
 }
 
 void printLevel(int level){
-    intToString(level, level_str);
-    print_text(25, 26, level_str);
+    print_int(25, 26, level);
 }
