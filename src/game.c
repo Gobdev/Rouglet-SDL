@@ -87,6 +87,7 @@ int main(void) {
 	char pointer[34] = {0};
 	while( 1 )
 	{
+		game_state = checkSwitches(1);
 		i += 7;
 		j += 7;
 		if (++k > 3)
@@ -117,11 +118,15 @@ int main(void) {
 			exp = 0;
 			player_level_up();
 		}
-
-		//set_player_position(get_corner_x(), get_corner_y());
+		
+		if(game_state == 0){
+			player_draw_main_ui();
+		}else{
+			player_draw_inventory_ui();
+		}
 		level_draw();
-		player_draw_ui();
 		player_draw();
+
 		updateExpBar(100, exp += 3);
 		print_player_info();
 		print_room_info();

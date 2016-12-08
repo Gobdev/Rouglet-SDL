@@ -3,17 +3,6 @@
 #include "input.h"
 #include "graphics.h"
 
-/*
-int getButtons(void){ //bit 1 in port F and bit 5-7 in port D
-	return (PORTD & 0xE0) >> 5;
-}
-*/
-
-/*
-int getSwitches(void){ //bit 8-11 in port D
-	return (PORTD & 0xF00) >> 8;
-}
-*/
 
 char allowPress[4] = {1,1,1,1}; //Allow a button to send signal
 
@@ -48,8 +37,6 @@ char pressedButton(char buttonNumber){
 		return 0;
 	}
 }
-
-
 
 char checkSwitches(char switchNumber){
 	switch(switchNumber){

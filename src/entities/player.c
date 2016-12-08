@@ -5,19 +5,77 @@
 #include "../images/UI.h"
 #include "../images/character_sprites.h"
 
-int player_hp = 40;
-int player_max_hp = 995;
+enum items {SWORD1,SWORD2,SWORD3,SPEAR1,SPEAR2,HAMMER,GREATSWORD,PICKAXE,AXE,HALBERD,SMALL_AXE,TRIDENT,STAFF,BATTLE_AXE,POTION,BOMB};
+
+int weapon_low_list[] = {10,20,30,40,50,60,70,80,90,100,110,120,130,140};
+int weapon_high_list[] = {10,20,30,40,50,60,70,80,90,100,110,120,130,140};
+
+int player_max_hp = 160;
+int player_hp = player_max_hp;
 int player_atk_low = 135;
 int player_atk_high = 165;
+int weapon_atk_low = 0;
+int weapon_atk_high = 0;
 int player_gold = 0;
 int player_level = 1;
 int player_x = 66;
 int player_y = 16;
 
+void set_current_weapon(int low,int high,int item_index){
+    weapon_atk_low = attack_low;
+    weapon_atk_high = attack_high;
+    active_weapon_index = item_index;
+}
+
+
 void set_player_position(int new_x, int new_y){
     player_x = new_x;
     player_y = new_y;
 }
+
+
+void draw_active_weapon(){
+    //TODO
+}
+
+void use_item(int item_index){
+    int item_id = inventory[index];
+    switch(){
+        case POTION:
+            if(player_hp + potion_heal_amount >= player_max_hp){
+                player_hp = player_max_hp;
+            }else{
+                player_hp += potion_heal_amount;
+            }
+            remove_item(item_index);
+            break;
+        case BOMB:
+            break; //TODO
+        case default:
+            set_current_weapon(weapon_low_list[item_id], weapon_high_list[item_id], item_index);
+            break;
+    }
+}
+
+
+//TODO if inveotory is full, dont remove item form ground
+void add_to_inventory(int item_id){
+    if(inventory[inventory_size - 1] == 0){
+        for(int i = 0 ; i < inventory_size ; i++){
+            if(inventory[i] == 0){
+                inventory[i] = item_id;
+            }
+        }  
+    }
+}
+
+void remove_item(int item_index){
+    for(int i = item_index ; i < inventory_size - 1 ; i++){
+        inventory[i] = inventory[i+1];
+    }
+    inventory[inventory_size - 1] = 0;
+}
+
 void player_moveUp(){
     player_y += 7;
 }
@@ -44,7 +102,7 @@ int player_get_attack_damage(){
     return player_atk_low + extra_dmg;
 }
 
-void player_draw_ui(){
+void player_draw_main_ui(){
     paint_pic(0, 0, ui1);
     print_int(10, 2, min_int(999, player_atk_low));
     print_text(22, 2, "-");
@@ -58,9 +116,4 @@ void player_draw_ui(){
 
 void player_draw(){
     paint_pic(player_x, player_y, smileyMan);
-}
-
-void print_player_info(){
-    print_int(52, 14, player_x);
-    print_int(52, 20, player_y);
 }
