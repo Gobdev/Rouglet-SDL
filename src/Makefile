@@ -86,7 +86,7 @@ $(DEPDIR):
 
 # Link symbol lists to object files
 %.syms.o: %.syms
-	$(LD) -o $@ -r --just-symbols=$<
+	$(CC) -o $@ -r --just-symbols=$<
 
 # Check dependencies
 -include $(CFILES:%.c=$(DEPDIR)/%.c.P)

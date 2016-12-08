@@ -11,6 +11,7 @@
 #include "stdlib/input.h"
 #include "stdlib/ui.h"
 #include "images/title.h"
+#include "level/level.h"
 
 
 /* Non-Maskable Interrupt; something bad likely happened, so hang */
@@ -22,6 +23,7 @@ void _on_reset(){}
 	Setup function, run before main() function.	
 */
 void _on_bootstrap(){
+	reset_timer();
 	/* Set up peripheral bus clock */
     /* OSCCONbits.PBDIV = 1; */
     OSCCONCLR = 0x100000; /* clear PBDIV bit 1 */
@@ -47,28 +49,27 @@ void _on_bootstrap(){
 
 	TRISE = 0;
 
-
-    TMR2 = 0; // Set counter to 0.
-    T2CON = 0x8000; // Set timer on (bit 15), prescale 1:256 (bits 6-4), 16-bit counter (bit 3), internal clock (bit 1).
-    PR2 = 65535; // Counter goes up to 31250, since 31250 * 256 * 10 = 80 000 000.
-
 	inititalize_display();
 	enable_debug();
-	rng_init(0);
 }
 
 void title_screen(){
 	paint_pic(0, 0, roguelet_title);
-	updateScreen();
-	buttonPress();
+	TMR2 = 0; // Set counter to 0.
+    T2CON = 0x8020; // Set timer on (bit 15), prescale 1:4 (bits 6-4), 16-bit counter (bit 3), internal clock (bit 1).
+    PR2 = 65535; // Counter goes up to 31250, since 31250 * 256 * 10 = 80 000 000.
+	update_screen();
+	buttonPress(0);
 	clearScreen();
 	int seed = TMR2;
 	print_text(35, 14, "Seed: ");
 	print_int(56, 14, seed);
 	rng_init(seed);
-	updateScreen();
-	delay_ms(300);
+	update_screen();
+	reset_timer();
+	buttonPress(10000);
 	clearScreen();
+<<<<<<< HEAD
 	updateScreen();
 }
 
@@ -78,6 +79,13 @@ int main(void) {
 	int i, j, k, xPos, yPos, game_state,inventory_index;
 	inventory_index = 0; 
 	game_state = 0; //inventory(1) or main game(0)
+=======
+	update_screen();
+}
+
+int main(void) {
+	int i, j, k, xPos, yPos;
+>>>>>>> 7ac84544bf47a283994d8913ad29c4a3c22f1464
 	i = -4;
 	j = -4;
 	k = 0;
@@ -87,6 +95,8 @@ int main(void) {
 	int button = 5;
 	int level = 0;
 	title_screen();
+	level_init();
+	char pointer[34] = {0};
 	while( 1 )
 	{
 		game_state = checkSwitches(1);
@@ -96,6 +106,28 @@ int main(void) {
 			k = 0;
 		clearScreen();
 
+<<<<<<< HEAD
+=======
+		if (button == 0)
+			button = buttonPress(0);
+		switch(button){
+			case 1:
+				player_moveUp();
+				break;
+			case 2:
+				player_moveDown();
+				break;
+			case 3:
+				player_moveRight();
+				break;
+			case 4:
+			    generate_room_seed(pointer);
+			    set_current_room_to_seed(pointer);
+				break;
+			default:
+				break;
+		}
+>>>>>>> 7ac84544bf47a283994d8913ad29c4a3c22f1464
 		
 		if (exp > 100){
 			exp = 0;
@@ -145,10 +177,13 @@ int main(void) {
 					break;
 			}
 		}
+		level_draw();
 		player_draw();
 
 		updateExpBar(100, exp += 3);
-		updateScreen();
+		print_player_info();
+		print_room_info();
+		update_screen();
 		button = 0;
 	}
 	return 0;

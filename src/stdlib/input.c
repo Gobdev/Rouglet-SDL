@@ -55,9 +55,12 @@ char checkSwitches(char switchNumber){
 	}
 }
 
-int buttonPress(){
+int buttonPress(int timeout){
+	TMR2 = 0;
 	int b = 0;
-	while (!b){
+	reset_timer();
+	int i = 0;
+	while (!b && (timeout == 0 || i < timeout)){
 		if (pressedButton(1))
 			b = 1;
 		else if (pressedButton(2))
@@ -66,6 +69,10 @@ int buttonPress(){
 			b = 3;
 		else if (pressedButton(4))
 			b = 4;
+		if (IFS(0) & 0x100){
+            IFS(0) &= ~0x100; // Reset flag.
+            i++;              // Increment time counter every 100 ms.
+        }
 	}
 	return b;
 }

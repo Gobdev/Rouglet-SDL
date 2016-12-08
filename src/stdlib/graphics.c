@@ -39,16 +39,6 @@ void enable_debug(){
     debug = 1;
 }
 
-
-void delay_ms(int milliseconds){
-    int i;
-    long j;
-    long ms = 80000;
-    for (i = 0; i < milliseconds; ++i){
-        for (j = 0; j < ms; ++j){}
-    }
-}
-
 void inititalize_host(){
     /* Initialize SPI port 2. 
     */ 
@@ -205,8 +195,22 @@ void print_debug(int page, char* string){
 
 void print_int(int x, int y, int value){
     char str[15] = {0};
-    intToString(value, str);
+    int_to_string(value, str);
     print_text(x, y, str);
+}
+
+void print_char(int x, int y, char value){
+    char str[15] = {0};
+    char_to_string(value, str);
+    print_text(x, y, str);   
+}
+
+void print_hex(int x, int y, int value){
+    char str[15] = {0};
+    unsigned int newValue = value; 
+    int_to_hex_string((unsigned int) value, str);
+    print_text(x, y, "0x");
+    print_text(x + 8, y, str);
 }
 
 void clearScreen(){
@@ -320,7 +324,7 @@ void putDebugInBuffer(){
     }
 }
 
-void updateScreen(){
+void update_screen(){
     if (debug)
         putDebugInBuffer();
     OledUpdate(oledBuffer);
