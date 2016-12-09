@@ -74,9 +74,10 @@ void title_screen(){
 	clearScreen();
 }
 
+
 int main(void) {
-	int i, j, k, xPos, yPos, game_state,inventory_index;
-	inventory_index = 0; 
+	int i, j, k, xPos, yPos, game_state, inventory_index;
+	inventory_index = 0;
 	game_state = 0; //inventory(1) or main game(0)
 	i = -4;
 	j = -4;
@@ -101,15 +102,17 @@ int main(void) {
 			exp = 0;
 			player_level_up();
 		}
+		
 		if (button == 0)
 			button = buttonPress(0);
 		game_state = checkSwitches(1);
-		if(game_state == 0){
+
+		if (game_state == 0){
 			main_game_state(button);
-		}else{
+		} else {
 			inventory_game_state(button,inventory_index);
-	
 		}
+
 		level_draw();
 		player_draw();
 
@@ -173,4 +176,5 @@ void inventory_game_state(int button,int inventory_index){
 	}
 
 	player_draw_inventory_ui();
+
 }
