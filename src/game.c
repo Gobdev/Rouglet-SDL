@@ -131,7 +131,9 @@ int main(void) {
 		updateExpBar(100, exp += 3);
 		//print_player_info();
 		//print_room_info();
+		enable_debug();
 		update_screen();
+		disable_debug();
 		button = 0;
 		delay_ms(100);
 	}
@@ -218,6 +220,7 @@ void inventory_game_state(int button, int* selected_index){
 	if (get_inventory_element((int) get_active_weapon_index())){
 		draw_equipped_item_box(*selected_index);
 	}
+	enable_debug();
 	if (*selected_index == 0){
 		paint_pic(2, inventory_position1[1] + 2, menu_dot);
 		for (i = 0 ; i < 3 ; i++){
@@ -234,7 +237,7 @@ void inventory_game_state(int button, int* selected_index){
 			displayed_items[i] = get_inventory_element(*selected_index - 1 + i);
 		}
 	}
-
+	disable_debug();
 	paint_from_items(inventory_position1[0], inventory_position1[1], displayed_items[0]);
 	paint_from_items(inventory_position2[0], inventory_position2[1], displayed_items[1]);
 	paint_from_items(inventory_position3[0], inventory_position3[1], displayed_items[2]);
