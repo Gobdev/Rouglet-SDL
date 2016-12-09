@@ -129,7 +129,7 @@ int main(void) {
 		//print_room_info();
 		update_screen();
 		button = 0;
-		delay_ms(150);
+		delay_ms(100);
 	}
 	return 0;
 }
@@ -206,5 +206,4 @@ void inventory_game_state(int button, int* selected_index){
 	paint_from_items(inventory_position1[0], inventory_position1[1], displayed_items[0]);
 	paint_from_items(inventory_position2[0], inventory_position2[1], displayed_items[1]);
 	paint_from_items(inventory_position3[0], inventory_position3[1], displayed_items[2]);
-
 }

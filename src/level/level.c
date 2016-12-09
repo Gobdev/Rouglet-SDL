@@ -1,5 +1,6 @@
 #include "level.h"
 #include "room.h"
+#include "../entities/enemies.h"
 
 const int seed_size = 6;
 char room_seeds[6 * 25 * 25] = {0};
@@ -11,6 +12,7 @@ void level_init(){
     char* pointer = room_seeds + seed_size * (x + y * 10);
     generate_room_seed(pointer);
     set_current_room_to_seed(pointer);
+    init_enemy(0, 0);
 }
 
 void level_draw(){

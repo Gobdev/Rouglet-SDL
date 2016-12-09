@@ -2,6 +2,7 @@
 #include "enemy_arrays.h"
 #include "../stdlib/graphics.h"
 
+const int number_of_enemies = 4;
 int enemy_max_hp[4];
 int enemy_hp[4];
 int enemy_atk_low[4];
@@ -11,24 +12,38 @@ int enemy_y[4];
 int enemy_exp_on_kill[4];
 char* enemy_sprite[4]; 
 
-int get_enemy_hp(int enemy){
+int enemy_get_hp(int enemy){
     return enemy_hp[enemy];
 }
 
-int get_enemy_attack_low(int enemy){
+int enemy_get_attack_low(int enemy){
     return enemy_atk_low[enemy];
 }
 
-int get_enemy_attack_high(int enemy){
+int enemy_get_attack_high(int enemy){
     return enemy_atk_high[enemy];
 }
 
-int get_enemy_x(int enemy){
+int enemy_get_x(int enemy){
     return enemy_x[enemy];
 }
 
-int get_enemy_y(int enemy){
+int enemy_get_y(int enemy){
     return enemy_y[enemy];
+}
+
+int get_number_of_enemies(){
+    return number_of_enemies;
+}
+
+void enemy_damage_player(int enemy){
+    player_take_damage(enemy_atk_low[enemy] + get_random_int(enemy_atk_high[enemy] - enemy_atk_low[enemy]));
+}
+
+void enemy_take_damage(int enemy, int damage){
+    enemy_hp[enemy] -= damage;
+    if (enemy_hp[enemy] <= 0)
+        delete_enemy(enemy);
 }
 
 void delete_enemy(int enemy){
@@ -42,7 +57,7 @@ void delete_enemy(int enemy){
     enemy_sprite[enemy] = 0;
 }
 
-char* get_enemy_sprite(int enemy){
+char* enemy_get_sprite(int enemy){
     return enemy_sprite[enemy];
 }
 
@@ -58,6 +73,16 @@ void init_enemy(int enemy, int type){
     enemy_sprite[enemy] = (char*) enemy_array[6 * type + 5];
 }
 
-void draw_enemy(int enemy){
-    paint_pic(enemy_x[enemy], enemy_y[enemy], enemy_sprite[enemy]);
+void enemy_draw(int enemy, int x, int y){
+    if (enemy_hp[enemy] > 0)
+        paint_pic(x, y, enemy_sprite[enemy]);
+}
+
+char enemy_on_square(int x, int y){
+    int i;
+    for (i = 0; i < number_of_enemies; i++){
+        if (enemy_hp[i] > 0 && enemy_x[i] == x && enemy_y[i] == y)
+            return i + 1;
+    }
+    return 0;
 }
