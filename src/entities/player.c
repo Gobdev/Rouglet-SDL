@@ -103,6 +103,14 @@ void remove_item(int item_index){
     inventory[inventory_size - 1] = 0;
 }
 
+void player_damage_enemy(int enemy){
+    enemy_take_damage(enemy, player_atk_low + get_random_int(player_atk_high - player_atk_low));
+}
+
+void player_take_damage(int damage){
+    player_hp -= damage;
+}
+
 void player_move_up(){
     player_y --;
 }

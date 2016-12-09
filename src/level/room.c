@@ -37,32 +37,52 @@ int get_corner_y(){
 }
 
 void move_up(){
-    if (player_get_y() > 0)
+    char enemy_hit = enemy_on_square(player_get_x(), player_get_y() - 1);
+    if (player_get_y() > 0 && !enemy_hit)
         player_move_up();
+    else if (enemy_hit){
+        player_damage_enemy(enemy_hit - 1);
+        enemy_damage_player(enemy_hit - 1);
+    }
     else if (top_door && player_get_x() == top_door - 1){
         player_move_up();
     }
 }
 
 void move_left(){
-    if (player_get_x() > 0)
+    char enemy_hit = enemy_on_square(player_get_x() - 1, player_get_y());
+    if (player_get_x() > 0 && !enemy_hit)
         player_move_left();
+    else if (enemy_hit){
+        player_damage_enemy(enemy_hit - 1);
+        enemy_damage_player(enemy_hit - 1);
+    }
     else if (left_door && player_get_y() == left_door - 1){
         player_move_left();
     }
 }
 
 void move_right(){
-    if (player_get_x() < width - 1)
+    char enemy_hit = enemy_on_square(player_get_x() + 1, player_get_y());
+    if (player_get_x() < width - 1 && !enemy_hit)
         player_move_right();
+    else if (enemy_hit){
+        player_damage_enemy(enemy_hit - 1);
+        enemy_damage_player(enemy_hit - 1);
+    }
     else if (right_door && player_get_y() == right_door - 1){
         player_move_right();
     }
 }
 
 void move_down(){
-    if (player_get_y() < height - 1)
+    char enemy_hit = enemy_on_square(player_get_x(), player_get_y() + 1);
+    if (player_get_y() < height - 1 && !enemy_hit)
         player_move_down();
+    else if (enemy_hit){
+        player_damage_enemy(enemy_hit - 1);
+        enemy_damage_player(enemy_hit - 1);
+    }
     else if (bottom_door && player_get_x() == bottom_door - 1){
         player_move_down();
     }
@@ -233,7 +253,8 @@ void room_draw(){
             paint_pic(current_corner_x + i * square_size, current_corner_y + j * square_size, dot_pic);
         }
     }
+    for (i = 0; i < get_number_of_enemies(); i++){ 
+        enemy_draw(i, current_corner_x + enemy_get_x(i) * square_size, current_corner_y + enemy_get_y() * square_size);
+    }
     player_draw(current_corner_x + player_get_x() * square_size, current_corner_y + player_get_y() * square_size);
-    print_int(42, 0, height);
-    print_int(42, 6, player_get_y());
 }

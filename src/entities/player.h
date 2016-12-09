@@ -18,3 +18,5 @@ void add_to_inventory(int item_index);
 void remove_item(int item_index);
 int get_inventory_size();
 int get_inventory_element(int index);
+void player_damage_enemy(int enemy);
+void player_take_damage(int damage);
