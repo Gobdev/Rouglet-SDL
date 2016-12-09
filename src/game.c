@@ -190,14 +190,14 @@ void inventory_game_state(int button,int selected_index){
 		for(i = 0 ; i < 3 ; i++){
 			displayed_items[i] = get_inventory_element(i);
 		}
-	}else if(selected_index == get_inventory_size - 1){
+	}else if(selected_index == get_inventory_size() - 1){
 		paint_pic(0, inventory_position3[2], menu_dot);
 		for(i = 0 ; i < 3 ; i++){
 			displayed_items[i] = get_inventory_element(i + selected_index - 1);
 		}
 	}else{
 		paint_pic(0, inventory_position2[2], menu_dot);
-		for(i = get_inventory_size - 4 ; i < get_inventory_size  ; i++){
+		for(i = get_inventory_size() - 4 ; i < get_inventory_size()  ; i++){
 			displayed_items[i] = get_inventory_element(i);
 		}
 	}
