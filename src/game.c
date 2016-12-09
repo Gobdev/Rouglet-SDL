@@ -198,8 +198,8 @@ void inventory_game_state(int button,int selected_index){
 		}
 	}else{
 		paint_pic(0, inventory_position2[2], menu_dot);
-		for(i = get_inventory_size() - 4 ; i < get_inventory_size()  ; i++){
-			displayed_items[i] = get_inventory_element(i);
+		for(i = 0 ; i < 3 ; i++){
+			displayed_items[i] = get_inventory_element(get_inventory_size() - 4 + i);
 		}
 	}
 
