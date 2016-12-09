@@ -36,6 +36,38 @@ int get_corner_y(){
     return current_corner_y;
 }
 
+void move_up(){
+    if (player_get_y() > 0)
+        player_move_up();
+    else if (top_door && player_get_x() == top_door - 1){
+        player_move_up();
+    }
+}
+
+void move_left(){
+    if (player_get_x() > 0)
+        player_move_left();
+    else if (left_door && player_get_y() == left_door - 1){
+        player_move_left();
+    }
+}
+
+void move_right(){
+    if (player_get_x() < width - 1)
+        player_move_right();
+    else if (right_door && player_get_y() == right_door - 1){
+        player_move_right();
+    }
+}
+
+void move_down(){
+    if (player_get_y() < height - 1)
+        player_move_down();
+    else if (bottom_door && player_get_x() == bottom_door - 1){
+        player_move_down();
+    }
+}
+
 char generate_room_width(){
     int rng = get_random_int(100);
     if (rng > 74)
@@ -115,7 +147,7 @@ void set_current_room_to_seed(char* pointer){
     left_door = current_seed[2] & 0x7;
     bottom_door = current_seed[3] >> 3;
     right_door = current_seed[3] & 0x7;
-    set_player_position(current_corner_x, current_corner_y); 
+    set_player_position(0, 0); 
 }
 
 void room_init(char* seed){
@@ -201,4 +233,7 @@ void room_draw(){
             paint_pic(current_corner_x + i * square_size, current_corner_y + j * square_size, dot_pic);
         }
     }
+    player_draw(current_corner_x + player_get_x() * square_size, current_corner_y + player_get_y() * square_size);
+    print_int(42, 0, height);
+    print_int(42, 6, player_get_y());
 }

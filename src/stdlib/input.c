@@ -55,6 +55,14 @@ char checkSwitches(char switchNumber){
 	}
 }
 
+char check_all_switches(){
+	if ((PORTD & 0x200) >> 9) //bit index 9 in PORTD
+		return 2;
+	else if ((PORTD & 0x100) >> 8) //bit index 8 in PORTD
+		return 1;
+	return 0;
+}
+
 char get_switch_state(){
 	char return_char = 0;
 	return_char += checkSwitches(4);

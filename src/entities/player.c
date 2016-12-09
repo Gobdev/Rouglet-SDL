@@ -18,8 +18,8 @@ int weapon_atk_low = 0;
 int weapon_atk_high = 0;
 int player_gold = 0;
 int player_level = 1;
-int player_x = 64;
-int player_y = 12;
+int player_x = 0;
+int player_y = 0;
 int inventory_size = 5;
 int potion_heal_amount = 50;
 int inventory[5] = {0};
@@ -31,6 +31,14 @@ int get_inventory_size(){
 
 int get_inventory_element(int index){
     return inventory[index];
+}
+
+int player_get_x(){
+    return player_x;
+}
+
+int player_get_y(){
+    return player_y;
 }
 
 void set_current_weapon(int low,int high,int item_index){
@@ -91,17 +99,17 @@ void remove_item(int item_index){
     inventory[inventory_size - 1] = 0;
 }
 
-void player_moveUp(){
-    player_y += 7;
+void player_move_up(){
+    player_y --;
 }
-void player_moveDown(){
-    player_y -= 7;
+void player_move_down(){
+    player_y ++;
 }
-void player_moveRight(){
-    player_x += 7;
+void player_move_right(){
+    player_x ++;
 }
-void player_moveLeft(){
-    player_x -= 7;
+void player_move_left(){
+    player_x --;
 }
 
 void player_level_up(){
@@ -133,8 +141,8 @@ void player_draw_main_ui(){
     print_int(25, 26, min_int(999, player_level));
 }
 
-void player_draw(){
-    paint_pic(player_x, player_y, smileyMan);
+void player_draw(int x, int y){
+    paint_pic(x, y, smileyMan);
 }
 
 void print_player_info(){
