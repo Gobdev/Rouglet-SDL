@@ -245,7 +245,7 @@ void paint_pic(int x, int y, const unsigned char* pic){
     int y_size = pic[1];
     pic += 2;
     int i, j, shift, first_page, last_page, current_page, picPage;
-    char clearLeft, clearRight;
+    char clearLeft, clearRight, clearLeftLast, clearRightLast;
 
     /*
         If not a single pixel of the image falls on the screen, the rest of the code is skipped and the function returns here.
@@ -271,6 +271,8 @@ void paint_pic(int x, int y, const unsigned char* pic){
     */
     clearLeft = ~(0xFF << shift);                   
     clearRight = ~(0xFF >> (OLED_COL_LENGTH - shift));
+    clearLeftLast = ~((~(0xFF << (OLED_COL_LENGTH - (y_size % OLED_COL_LENGTH)))) << shift);
+    clearRightLast = ~(0xFF >> (OLED_COL_LENGTH - min_int(shift, (y + y_size) % OLED_COL_LENGTH)));
     
     /*
         Iterates for as many pages as the picture needs to be drawn.
@@ -284,7 +286,7 @@ void paint_pic(int x, int y, const unsigned char* pic){
             for (j = 0; j < x_size; j++){
                 if (x + j >= 0 && x + j < OLED_ROW_LENGTH){
                     if (current_page == last_page)
-                        oledBuffer[current_page + x + j] &= ~((~(0xFF << (OLED_COL_LENGTH - (y_size % OLED_COL_LENGTH)))) << shift); // Special case for last page.
+                        oledBuffer[current_page + x + j] &= clearLeftLast; // Special case for last page.
                     else
                         oledBuffer[current_page + x + j] &= clearLeft;                  // Clear the bits to be used.
                     oledBuffer[current_page + x + j] |= pic[j + picPage] << shift;  // Set the bits to the values in the picture.    
@@ -300,7 +302,7 @@ void paint_pic(int x, int y, const unsigned char* pic){
             for (j = 0; j < x_size; j++){
                 if (x + j >= 0 && x + j < OLED_ROW_LENGTH){
                     if (current_page == last_page)
-                        oledBuffer[current_page + x + j] &= ~(0xFF >> (OLED_COL_LENGTH - min_int(shift, (y + y_size) % OLED_COL_LENGTH)));
+                        oledBuffer[current_page + x + j] &= clearRightLast;
                     else
                         oledBuffer[current_page + x + j] &= clearRight;                                     // Clear the bits to be used
                     oledBuffer[current_page + x + j] |= pic[j + picPage] >> (OLED_COL_LENGTH - shift);  // Set the bits to the value in the picture

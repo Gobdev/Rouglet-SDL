@@ -57,7 +57,7 @@ void title_screen(){
 	paint_pic(0, 0, roguelet_title);
 	TMR2 = 0; // Set counter to 0.
     T2CON = 0x8020; // Set timer on (bit 15), prescale 1:4 (bits 6-4), 16-bit counter (bit 3), internal clock (bit 1).
-    PR2 = 65535; // Counter goes up to 31250, since 31250 * 256 * 10 = 80 000 000.
+    PR2 = 65535; // Counter goes up to 65535, to choose a random number from TMR2 as a initial seed.
 	update_screen();
 	buttonPress(0);
 	clearScreen();
