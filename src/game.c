@@ -83,8 +83,8 @@ int main(void) {
 
 	//TEST INVETNORY
 
-	for(i = 0 ; i < 5 ; i++){
-		add_to_inventory(i );
+	for (i = 1; i < 6; i++){
+		add_to_inventory(i);
 	}
 
 	inventory_index = 0;
@@ -119,7 +119,7 @@ int main(void) {
 		if (game_state == 0){
 			main_game_state(button);
 		} else {
-			inventory_game_state(button,inventory_index);
+			inventory_game_state(button, &inventory_index);
 		}
 
 		level_draw();
@@ -158,54 +158,54 @@ void main_game_state(int button){
 	player_draw_main_ui();
 }
 
-void inventory_game_state(int button,int selected_index){
-	int inventory_position1[] = {42,2};
-	int inventory_position2[] = {42,10};
-	int inventory_position3[] = {42,18};
+void inventory_game_state(int button, int* selected_index){
+	int inventory_position1[] = {42, 2};
+	int inventory_position2[] = {42, 12};
+	int inventory_position3[] = {42, 22};
 	int displayed_items[3];
 	int i;
 
+	player_draw_inventory_ui();
 	switch(button){
 		case 1:
-			if(selected_index < get_inventory_size() - 1){
-				selected_index++;
+			if(*selected_index < get_inventory_size() - 1){
+				(*selected_index)++;
 			}
 			break;
 		case 2:
-			if(selected_index > 0){	
-				selected_index--;
+			if(*selected_index > 0){	
+				(*selected_index)--;
 			}
 			break;
 		case 3:
-			remove_item(selected_index);
+			remove_item(*selected_index);
 			break;
 		case 4:
-			use_item(selected_index);
+			use_item(*selected_index);
 			break;
 		default:
 			break;
 	}
 
-	if(selected_index == 0){
-		paint_pic(0, inventory_position1[2], menu_dot);
-		for(i = 0 ; i < 3 ; i++){
+	if (*selected_index == 0){
+		paint_pic(0, inventory_position1[1], menu_dot);
+		for (i = 0 ; i < 3 ; i++){
 			displayed_items[i] = get_inventory_element(i);
 		}
-	}else if(selected_index == get_inventory_size() - 1){
-		paint_pic(0, inventory_position3[2], menu_dot);
-		for(i = 0 ; i < 3 ; i++){
-			displayed_items[i] = get_inventory_element(i + selected_index - 1);
+	} else if (*selected_index == get_inventory_size() - 1){
+		paint_pic(0, inventory_position3[1], menu_dot);
+		for (i = 0 ; i < 3 ; i++){
+			displayed_items[i] = get_inventory_element(i + get_inventory_size() - 3);
 		}
-	}else{
-		paint_pic(0, inventory_position2[2], menu_dot);
-		for(i = 0 ; i < 3 ; i++){
-			displayed_items[i] = get_inventory_element(get_inventory_size() - 4 + i);
+	} else {
+		paint_pic(0, inventory_position2[1], menu_dot);
+		for (i = 0 ; i < 3 ; i++){
+			displayed_items[i] = get_inventory_element(*selected_index - 1 + i);
 		}
 	}
 
-	player_draw_inventory_ui();
-	paint_from_items(inventory_position1[1], inventory_position1[2], displayed_items[1]);
-	paint_from_items(inventory_position2[1], inventory_position2[2], displayed_items[2]);
-	paint_from_items(inventory_position3[1], inventory_position3[2], displayed_items[3]);
+	paint_from_items(inventory_position1[0], inventory_position1[1], displayed_items[0]);
+	paint_from_items(inventory_position2[0], inventory_position2[1], displayed_items[1]);
+	paint_from_items(inventory_position3[0], inventory_position3[1], displayed_items[2]);
 
 }
