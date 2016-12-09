@@ -83,11 +83,7 @@ int main(void) {
 
 	//TEST INVETNORY
 
-<<<<<<< HEAD
-	for(i = 0 ; i < 5 ; i++){
-=======
 	for (i = 1; i < 6; i++){
->>>>>>> 1f46fbea72e05d86882546ff6d7241b9c3465350
 		add_to_inventory(i);
 	}
 
@@ -127,13 +123,13 @@ int main(void) {
 		}
 
 		level_draw();
-		player_draw();
 
 		updateExpBar(100, exp += 3);
 		//print_player_info();
 		//print_room_info();
 		update_screen();
 		button = 0;
+		delay_ms(150);
 	}
 	return 0;
 }
@@ -144,13 +140,13 @@ void main_game_state(int button){
 
 	switch(button){
 		case 1:
-			player_moveUp();
+			move_down();
 			break;
 		case 2:
-			player_moveDown();
+			move_up();
 			break;
 		case 3:
-			player_moveRight();
+			move_right();
 			break;
 		case 4:
 			generate_room_seed(pointer);

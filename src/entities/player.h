@@ -1,10 +1,10 @@
 #pragma once
 
 void set_player_position(int x, int y);
-void player_moveUp();
-void player_moveDown();
-void player_moveRight();
-void player_moveLeft();
+void player_move_up();
+void player_move_down();
+void player_move_right();
+void player_move_left();
 void player_level_up();
 int player_get_attack_damage();
 void player_draw_main_ui();

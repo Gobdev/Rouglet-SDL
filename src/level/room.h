@@ -1,5 +1,9 @@
 #pragma once
 
+void move_up();
+void move_left();
+void move_right();
+void move_down();
 void room_draw();
 void room_init();
 void generate_room_seed(char* pointer);
