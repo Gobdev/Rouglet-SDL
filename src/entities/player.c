@@ -97,7 +97,9 @@ void add_to_inventory(int item_id){
 
 void remove_item(int item_index){
     int i;
-    for(i = item_index ; i < inventory_size - 1 ; i++){
+    if (item_index == active_weapon_index)
+        set_current_weapon(0,0,100);
+    for (i = item_index ; i < inventory_size - 1 ; i++){
         inventory[i] = inventory[i+1];
     }
     inventory[inventory_size - 1] = 0;
