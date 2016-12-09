@@ -204,15 +204,18 @@ void inventory_game_state(int button, int* selected_index){
 		}
 	}
 
-	switch(*selected_index - get_active_weapon_index()){
+	switch (*selected_index - get_active_weapon_index()){
 		case -1:
-			paint_pic(inventory_position1[0], inventory_position1[1], menu_box);
+			if (get_inventory_element((int) get_active_weapon_index) != 0)
+				paint_pic(0, inventory_position1[1], menu_box);
 			break;
 		case 0:
-			paint_pic(inventory_position2[0], inventory_position2[1], menu_box);
+			if (get_inventory_element((int) get_active_weapon_index) != 0)
+				paint_pic(0, inventory_position2[1], menu_box);
 			break;
 		case 1:
-			paint_pic(inventory_position3[0], inventory_position3[1], menu_box);
+			if (get_inventory_element((int) get_active_weapon_index) != 0)
+				paint_pic(0, inventory_position3[1], menu_box);
 			break;
 		default:
 			break;
