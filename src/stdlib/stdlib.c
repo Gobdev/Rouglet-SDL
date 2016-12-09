@@ -1,6 +1,13 @@
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "stdlib.h"
 
+char mod(char first, char second){
+    char return_char = first % second;
+    if (return_char < 0){
+        return_char += second;
+    }
+}
+
 void reset_timer(){
     TMR2 = 0; // Set counter to 0.
     T2CON = 0x8070; // Set timer on (bit 15), prescale 1:256 (bits 6-4), 16-bit counter (bit 3), internal clock (bit 1).

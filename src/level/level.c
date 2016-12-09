@@ -12,7 +12,7 @@ void level_init(){
     char* pointer = room_seeds + seed_size * (x + y * 10);
     generate_room_seed(pointer);
     set_current_room_to_seed(pointer);
-    init_enemy(0, 0);
+    init_enemy(0, 0, 1, 1);
 }
 
 void level_draw(){

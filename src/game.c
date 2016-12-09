@@ -19,6 +19,10 @@ void inventory_game_state();
 
 const char white_square[7] = {5, 5, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F};
 char pointer[34] = {0};
+int inventory_position1[] = {42, 2};
+int inventory_position2[] = {42, 12};
+int inventory_position3[] = {42, 22};
+
 /* Non-Maskable Interrupt; something bad likely happened, so hang */
 void _nmi_handler(){for(;;);}
 /* This function is called upon reset, before .data and .bss is set up */
@@ -127,7 +131,9 @@ int main(void) {
 		updateExpBar(100, exp += 3);
 		//print_player_info();
 		//print_room_info();
+		enable_debug();
 		update_screen();
+		disable_debug();
 		button = 0;
 		delay_ms(100);
 	}
@@ -158,14 +164,38 @@ void main_game_state(int button){
 	player_draw_main_ui();
 }
 
+void draw_equipped_item_box(int selected_index){
+	if (selected_index == 0){								// Selected index is the one at the absolute top, edge case.
+		if(get_active_weapon_index() == 0)
+			paint_pic(0, inventory_position1[1], menu_box);
+		if(get_active_weapon_index() == 1)
+			paint_pic(0, inventory_position2[1], menu_box);
+		if(get_active_weapon_index() == 2)
+			paint_pic(0, inventory_position3[1], menu_box);
+	
+	} else if (selected_index == get_inventory_size() - 1){ // Selected index is the one at the absolute bottom, the other edge case.
+		if(get_active_weapon_index() == get_inventory_size() - 3)
+			paint_pic(0, inventory_position1[1], menu_box);
+		if(get_active_weapon_index() == get_inventory_size() - 2)
+			paint_pic(0, inventory_position2[1], menu_box);
+		if(get_active_weapon_index() == get_inventory_size() - 1)
+			paint_pic(0, inventory_position3[1], menu_box);
+	
+	} else {												// Normal case, selected index is in the middle.
+		if(get_active_weapon_index() == selected_index - 1)
+			paint_pic(0, inventory_position1[1], menu_box);
+		if(get_active_weapon_index() == selected_index)
+			paint_pic(0, inventory_position2[1], menu_box);
+		if(get_active_weapon_index() == selected_index + 1)
+			paint_pic(0, inventory_position3[1], menu_box);
+	}
+}
+
 void inventory_game_state(int button, int* selected_index){
-	int inventory_position1[] = {42, 2};
-	int inventory_position2[] = {42, 12};
-	int inventory_position3[] = {42, 22};
 	int displayed_items[3];
 	int i;
 
-	player_draw_inventory_ui();
+	player_draw_inventory_ui();	
 	switch(button){
 		case 1:
 			if(*selected_index < get_inventory_size() - 1){
@@ -187,41 +217,27 @@ void inventory_game_state(int button, int* selected_index){
 			break;
 	}
 
+	if (get_inventory_element((int) get_active_weapon_index())){
+		draw_equipped_item_box(*selected_index);
+	}
+	enable_debug();
 	if (*selected_index == 0){
-		paint_pic(0, inventory_position1[1], menu_dot);
+		paint_pic(2, inventory_position1[1] + 2, menu_dot);
 		for (i = 0 ; i < 3 ; i++){
 			displayed_items[i] = get_inventory_element(i);
 		}
 	} else if (*selected_index == get_inventory_size() - 1){
-		paint_pic(0, inventory_position3[1], menu_dot);
+		paint_pic(2, inventory_position3[1] + 2, menu_dot);
 		for (i = 0 ; i < 3 ; i++){
 			displayed_items[i] = get_inventory_element(i + get_inventory_size() - 3);
 		}
 	} else {
-		paint_pic(0, inventory_position2[1], menu_dot);
+		paint_pic(2, inventory_position2[1] + 2, menu_dot);
 		for (i = 0 ; i < 3 ; i++){
 			displayed_items[i] = get_inventory_element(*selected_index - 1 + i);
 		}
 	}
-
-	switch (*selected_index - get_active_weapon_index()){
-		case -1:
-			if (get_inventory_element((int) get_active_weapon_index()) != 0)
-				paint_pic(0, inventory_position1[1], menu_box);
-			break;
-		case 0:
-			if (get_inventory_element((int) get_active_weapon_index()) != 0)
-				paint_pic(0, inventory_position2[1], menu_box);
-			break;
-		case 1:
-			if (get_inventory_element((int) get_active_weapon_index()) != 0)
-				paint_pic(0, inventory_position3[1], menu_box);
-			break;
-		default:
-			break;
-	}
-
-
+	disable_debug();
 	paint_from_items(inventory_position1[0], inventory_position1[1], displayed_items[0]);
 	paint_from_items(inventory_position2[0], inventory_position2[1], displayed_items[1]);
 	paint_from_items(inventory_position3[0], inventory_position3[1], displayed_items[2]);

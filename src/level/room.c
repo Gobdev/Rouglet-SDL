@@ -36,6 +36,17 @@ int get_corner_y(){
     return current_corner_y;
 }
 
+int square_busy(int x, int y){
+    int i;
+    if (x == player_get_x() && y == player_get_y())
+        return 1;
+    for (i = 0; i < get_number_of_enemies(); i++){
+        if (enemy_is_enabled(i) && x == enemy_get_x(i) && y == enemy_get_y(i))
+            return 1;
+    } 
+    return 0;
+}
+
 void move_up(){
     char enemy_hit = enemy_on_square(player_get_x(), player_get_y() - 1);
     if (player_get_y() > 0 && !enemy_hit)

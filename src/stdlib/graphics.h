@@ -1,6 +1,7 @@
 #pragma once
 
 void enable_debug();
+void disable_debug();
 void delay_ms(int milliseconds);
 void inititalize_display();
 void print_debug(int page, char* string);

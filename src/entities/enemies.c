@@ -3,6 +3,7 @@
 #include "../stdlib/graphics.h"
 
 const int number_of_enemies = 4;
+char enemy_enabled[4] = {0};
 int enemy_max_hp[4];
 int enemy_hp[4];
 int enemy_atk_low[4];
@@ -11,6 +12,10 @@ int enemy_x[4];
 int enemy_y[4];
 int enemy_exp_on_kill[4];
 char* enemy_sprite[4]; 
+
+char enemy_is_enabled(int enemy){
+    return enemy_enabled[enemy];
+}
 
 int enemy_get_hp(int enemy){
     return enemy_hp[enemy];
@@ -46,7 +51,12 @@ void enemy_take_damage(int enemy, int damage){
         delete_enemy(enemy);
 }
 
+void disable_enemy(int enemy){
+    enemy_enabled[enemy] = 0;
+}
+
 void delete_enemy(int enemy){
+    enemy_enabled[enemy] = 0;
     enemy_max_hp[enemy] = 0;
     enemy_hp[enemy] = 0;
     enemy_atk_low[enemy] = 0;
@@ -61,10 +71,10 @@ char* enemy_get_sprite(int enemy){
     return enemy_sprite[enemy];
 }
 
-void init_enemy(int enemy, int type){
+void init_enemy(int enemy, int type, int x, int y){
     type = 0;
-    enemy_x[enemy] = 0;
-    enemy_y[enemy] = 0;
+    enemy_x[enemy] = x;
+    enemy_y[enemy] = y;
     enemy_max_hp[enemy] = enemy_array[6 * type];
     enemy_hp[enemy] = enemy_array[6 * type + 1];
     enemy_atk_low[enemy] = enemy_array[6 * type + 2];
