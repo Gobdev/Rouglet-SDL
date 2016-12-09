@@ -155,8 +155,7 @@ void main_game_state(int button){
 			move_right();
 			break;
 		case 4:
-			generate_room_seed(pointer);
-			set_current_room_to_seed(pointer);
+			move_left();
 			break;
 		default:
 			break;

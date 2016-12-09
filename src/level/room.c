@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "room.h"
+#include "level.h"
 #include "../entities/player.h"
 #include "../stdlib/graphics.h"
 #include "../images/walls.h"
@@ -36,6 +37,22 @@ int get_corner_y(){
     return current_corner_y;
 }
 
+char seed_has_top_door(char* seed){
+    return (seed[2] >> 3) > 0;
+}
+
+char seed_has_left_door(char* seed){
+    return (seed[2] & 0x7) > 0;
+}
+
+char seed_has_right_door(char* seed){
+    return (seed[3] & 0x7) > 0;
+}
+
+char seed_has_bottom_door(char* seed){
+    return (seed[3] >> 3) > 0;
+}
+
 int square_busy(int x, int y){
     int i;
     if (x == player_get_x() && y == player_get_y())
@@ -56,7 +73,7 @@ void move_up(){
         enemy_damage_player(enemy_hit - 1);
     }
     else if (top_door && player_get_x() == top_door - 1){
-        player_move_up();
+        enter_top_door();
     }
 }
 
@@ -69,7 +86,7 @@ void move_left(){
         enemy_damage_player(enemy_hit - 1);
     }
     else if (left_door && player_get_y() == left_door - 1){
-        player_move_left();
+        enter_left_door();
     }
 }
 
@@ -82,7 +99,7 @@ void move_right(){
         enemy_damage_player(enemy_hit - 1);
     }
     else if (right_door && player_get_y() == right_door - 1){
-        player_move_right();
+        enter_right_door();
     }
 }
 
@@ -95,7 +112,7 @@ void move_down(){
         enemy_damage_player(enemy_hit - 1);
     }
     else if (bottom_door && player_get_x() == bottom_door - 1){
-        player_move_down();
+        enter_bottom_door();
     }
 }
 
@@ -131,12 +148,20 @@ char generate_room_position(char room_width, char room_height){
     return (x_pos << 4) + y_pos; 
 }
 
+char generate_vertical_door(int room_height){
+    return (char) (get_random_int(room_height - 2) + 1);
+}
+
+char generate_horizontal_door(int room_width){
+    return (char) (get_random_int(room_width - 1) + 1);
+}
+
 char generate_doors(int room_width, int room_height){
     char doors = 0;
     if (get_random_int(100) < 80)
-        doors += (char) ((get_random_int(room_width - 1) + 1) << 3);
+        doors += generate_vertical_door(room_height);
     if (get_random_int(100) < 80)
-        doors += (char) (get_random_int(room_height - 1) + 1);
+        doors += (generate_horizontal_door(room_width) << 3);
     return doors;
 }
 
@@ -178,7 +203,6 @@ void set_current_room_to_seed(char* pointer){
     left_door = current_seed[2] & 0x7;
     bottom_door = current_seed[3] >> 3;
     right_door = current_seed[3] & 0x7;
-    set_player_position(0, 0); 
 }
 
 void room_init(char* seed){
