@@ -13,6 +13,9 @@
 #include "images/title.h"
 #include "level/level.h"
 
+void main_game_state();
+void inventory_game_state();
+
 const char white_square[7] = {5, 5, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F};
 /* Non-Maskable Interrupt; something bad likely happened, so hang */
 void _nmi_handler(){for(;;);}
@@ -93,6 +96,7 @@ int main(void) {
 		if (++k > 3)
 			k = 0;
 		clearScreen();
+
 		if (exp > 100){
 			exp = 0;
 			player_level_up();
@@ -101,45 +105,10 @@ int main(void) {
 			button = buttonPress(0);
 		game_state = checkSwitches(1);
 		if(game_state == 0){
-			switch(button){
-				case 1:
-					player_moveUp();
-					break;
-				case 2:
-					player_moveDown();
-					break;
-				case 3:
-					player_moveRight();
-					break;
-				case 4:
-				    generate_room_seed(pointer);
-				    set_current_room_to_seed(pointer);
-					break;
-				default:
-					break;
-			}
-			player_draw_main_ui();
-		} else {
-			player_draw_inventory_ui();
-			switch(button){
-				case 1:
-					if(inventory_index < get_inventory_size() - 1){
-						inventory_index++;
-					}
-					break;
-				case 2:
-					if(inventory_index > 0){
-						inventory_index--;
-					}
-					break;
-				case 3:
-					break;
-				case 4:
-					use_item(inventory_index);
-					break;
-				default:
-					break;
-			}
+			main_game_state(button);
+		}else{
+			inventory_game_state(button,inventory_index);
+	
 		}
 		level_draw();
 		player_draw();
@@ -153,10 +122,55 @@ int main(void) {
 	return 0;
 }
 
-void main_game_state(){
+void main_game_state(int button){
+	if (button == 0)
+		button = buttonPress();
 
+	switch(button){
+		case 1:
+			player_moveUp();
+			break;
+		case 2:
+			player_moveDown();
+			break;
+		case 3:
+			player_moveRight();
+			break;
+		case 4:
+			player_moveLeft();
+			break;
+		default:
+			break;
+	}
+	player_draw_main_ui();
 }
 
-void inventory_game_state(){
+void inventory_game_state(int button,int inventory_index){
+	int item1 = get_inventory_element(0);
+	int item2 = get_inventory_element(1);
+	int item3 = get_inventory_element(3);
 
+
+	switch(button){
+		case 1:
+			if(inventory_index < get_inventory_size() - 1){
+				inventory_index++;
+			}
+			break;
+		case 2:
+			if(inventory_index > 0){	
+				inventory_index--;
+			}
+			break;
+		case 3:
+			remove_item(inventory_index);
+			break;
+		case 4:
+			use_item(inventory_index);
+			break;
+		default:
+			break;
+	}
+
+	player_draw_inventory_ui();
 }

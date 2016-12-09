@@ -17,3 +17,4 @@ void use_item(int item_index);
 void add_to_inventory(int item_index);
 void remove_item(int item_index);
 int get_inventory_size();
+int get_inventory_element(int index);

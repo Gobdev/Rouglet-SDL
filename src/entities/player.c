@@ -20,13 +20,17 @@ int player_gold = 0;
 int player_level = 1;
 int player_x = 64;
 int player_y = 12;
-int inventory_size = 15;
+int inventory_size = 5;
 int potion_heal_amount = 50;
-int inventory[15] = {0};
+int inventory[5] = {0};
 int active_weapon_index = 0;
 
 int get_inventory_size(){
     return inventory_size;
+}
+
+int get_inventory_element(int index){
+    return inventory[index];
 }
 
 void set_current_weapon(int low,int high,int item_index){
