@@ -84,7 +84,7 @@ int main(void) {
 	//TEST INVETNORY
 
 	for(i = 0 ; i < 5 ; i++){
-		add_to_inventory(i );
+		add_to_inventory(i);
 	}
 
 	inventory_index = 0;
@@ -185,7 +185,8 @@ void inventory_game_state(int button,int selected_index){
 		default:
 			break;
 	}
-
+	
+	player_draw_inventory_ui();
 	if(selected_index == 0){
 		paint_pic(0, inventory_position1[2], menu_dot);
 		for(i = 0 ; i < 3 ; i++){
@@ -203,7 +204,6 @@ void inventory_game_state(int button,int selected_index){
 		}
 	}
 
-	player_draw_inventory_ui();
 	paint_from_items(inventory_position1[1], inventory_position1[2], displayed_items[1]);
 	paint_from_items(inventory_position2[1], inventory_position2[2], displayed_items[2]);
 	paint_from_items(inventory_position3[1], inventory_position3[2], displayed_items[3]);
