@@ -79,6 +79,14 @@ void title_screen(){
 
 int main(void) {
 	int i, j, k, xPos, yPos, game_state, inventory_index;
+
+
+	//TEST INVETNORY
+
+	for(i = 0 ; i < 5 ; i++){
+		add_to_inventory(i );
+	}
+
 	inventory_index = 0;
 	game_state = 0; //inventory(1) or main game(0)
 	i = -4;
@@ -150,34 +158,54 @@ void main_game_state(int button){
 	player_draw_main_ui();
 }
 
-void inventory_game_state(int button,int inventory_index){
-	int item1 = get_inventory_element(0);
-	int item2 = get_inventory_element(1);
-	int item3 = get_inventory_element(3);
-
+void inventory_game_state(int button,int selected_index){
+	int inventory_position1[] = {42,2};
+	int inventory_position2[] = {42,10};
+	int inventory_position3[] = {42,18};
+	int displayed_items[3];
+	int i;
 
 	switch(button){
 		case 1:
-			if(inventory_index < get_inventory_size() - 1){
-				inventory_index++;
+			if(selected_index < get_inventory_size() - 1){
+				selected_index++;
 			}
 			break;
 		case 2:
-			if(inventory_index > 0){	
-				inventory_index--;
+			if(selected_index > 0){	
+				selected_index--;
 			}
 			break;
 		case 3:
-			remove_item(inventory_index);
+			remove_item(selected_index);
 			break;
 		case 4:
-			use_item(inventory_index);
+			use_item(selected_index);
 			break;
 		default:
 			break;
 	}
 
+	if(selected_index == 0){
+		paint_pic(0, inventory_position1[2], menu_dot);
+		for(i = 0 ; i < 3 ; i++){
+			displayed_items[i] = get_inventory_element(i);
+		}
+	}else if(selected_index == get_inventory_size - 1){
+		paint_pic(0, inventory_position3[2], menu_dot);
+		for(i = 0 ; i < 3 ; i++){
+			displayed_items[i] = get_inventory_element(i + selected_index - 1);
+		}
+	}else{
+		paint_pic(0, inventory_position2[2], menu_dot);
+		for(i = get_inventory_size - 4 ; i < get_inventory_size  ; i++){
+			displayed_items[i] = get_inventory_element(i);
+		}
+	}
+
 	player_draw_inventory_ui();
-	paint_from_items(42, 2, 0);
+	paint_from_items(inventory_position1[1], inventory_position1[2], displayed_items[1]);
+	paint_from_items(inventory_position2[1], inventory_position2[2], displayed_items[2]);
+	paint_from_items(inventory_position3[1], inventory_position3[2], displayed_items[3]);
 
 }
