@@ -5,6 +5,7 @@
 #include "stdlib.h"
 #include "../images/alphabet.h"
 #include "../images/symbols.h"
+#include "../images/item_sprites.h"
 
 #define CHANGE_TO_COMMAND_MODE (PORTFCLR = 0x10)
 #define CHANGE_TO_DATA_MODE (PORTFSET = 0x10)
@@ -174,6 +175,19 @@ const char* getCharacterPointer(char character){
     if (character > 0x60 && character < 0x7B){
         return letters + (character - 0x61) * 3 + 2;
     }
+}
+
+void paint_from_items(int x, int y, int item_id){
+    int i;
+    int start_position = item_id * 7;
+    char draw_array[9] = {0};
+    draw_array[0] = 7;
+    draw_array[1] = 7;
+    for(i = 2; i < 9 ; i++){
+        draw_array[i] = items[start_position];
+        start_position++;
+    }
+    paint_pic(x, y, draw_array);
 }
 
 void print_debug(int page, char* string){
