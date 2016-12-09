@@ -97,8 +97,8 @@ int main(void) {
 			exp = 0;
 			player_level_up();
 		}
-		
-		button = buttonPress(0);
+		if (button == 0)
+			button = buttonPress(0);
 		game_state = checkSwitches(1);
 		if(game_state == 0){
 			switch(button){

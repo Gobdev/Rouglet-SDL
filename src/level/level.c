@@ -2,7 +2,7 @@
 #include "room.h"
 
 const int seed_size = 6;
-char room_seeds[6 * 20 * 20] = {0};
+char room_seeds[6 * 25 * 25] = {0};
 int current_room[2] = {10, 10};
 
 void level_init(){
