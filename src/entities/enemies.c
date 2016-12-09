@@ -55,7 +55,7 @@ void init_enemy(int enemy, int type){
     enemy_atk_low[enemy] = enemy_array[6 * type + 2];
     enemy_atk_high[enemy] = enemy_array[6 * type + 3];
     enemy_exp_on_kill[enemy] = enemy_array[6 * type + 4];
-    enemy_sprite[enemy] = enemy_array[6 * type + 5];
+    enemy_sprite[enemy] = (char*) enemy_array[6 * type + 5];
 }
 
 void draw_enemy(int enemy){
