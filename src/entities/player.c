@@ -5,10 +5,10 @@
 #include "../images/UI.h"
 #include "../images/character_sprites.h"
 
-enum items {SWORD1,SWORD2,SWORD3,SPEAR1,SPEAR2,HAMMER,GREATSWORD,PICKAXE,AXE,HALBERD,SMALL_AXE,TRIDENT,BATTLE_AXE,POTION,BOMB};
+enum items {SWORD1, SWORD2, SWORD3, SPEAR1, SPEAR2, HAMMER, GREATSWORD, PICKAXE, AXE, HALBERD, SMALL_AXE, TRIDENT, BATTLE_AXE, POTION, BOMB};
 
-int weapon_low_list[] = {10,20,30,40,50,60,70,80,90,100,110,120,130};
-int weapon_high_list[] = {10,20,30,40,50,60,70,80,90,100,110,120,130};
+int weapon_low_list[] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130};
+int weapon_high_list[] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130};
 
 int player_max_hp = 160;
 int player_hp = 160;
