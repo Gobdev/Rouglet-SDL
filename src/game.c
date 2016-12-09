@@ -12,6 +12,7 @@
 #include "stdlib/ui.h"
 #include "images/title.h"
 #include "level/level.h"
+#include "entities/enemies.h"
 
 void main_game_state();
 void inventory_game_state();

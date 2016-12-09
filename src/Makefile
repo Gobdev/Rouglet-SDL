@@ -49,6 +49,7 @@ all: $(HEXFILE)
 clean:
 	$(RM) $(HEXFILE) $(ELFFILE) $(OBJFILES)
 	$(RM) -R $(DEPDIR)
+	$(RM) images/*.h
 
 envcheck:
 	python images/compileImages.py
