@@ -10,7 +10,6 @@ void level_init(){
     int y = current_room[1];
     char* pointer = room_seeds + seed_size * (x + y * 10);
     generate_room_seed(pointer);
-    pointer[2] |= 0xF0;
     set_current_room_to_seed(pointer);
 }
 

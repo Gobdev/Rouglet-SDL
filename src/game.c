@@ -17,6 +17,7 @@ void main_game_state();
 void inventory_game_state();
 
 const char white_square[7] = {5, 5, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F};
+char pointer[34] = {0};
 /* Non-Maskable Interrupt; something bad likely happened, so hang */
 void _nmi_handler(){for(;;);}
 /* This function is called upon reset, before .data and .bss is set up */
@@ -89,7 +90,6 @@ int main(void) {
 	int level = 0;
 	title_screen();
 	level_init();
-	char pointer[34] = {0};
 	while( 1 )
 	{
 		i += 7;
@@ -118,7 +118,7 @@ int main(void) {
 
 		updateExpBar(100, exp += 3);
 		//print_player_info();
-		print_room_info();
+		//print_room_info();
 		update_screen();
 		button = 0;
 	}
@@ -140,7 +140,8 @@ void main_game_state(int button){
 			player_moveRight();
 			break;
 		case 4:
-			player_moveLeft();
+			generate_room_seed(pointer);
+			set_current_room_to_seed(pointer);
 			break;
 		default:
 			break;
@@ -176,5 +177,6 @@ void inventory_game_state(int button,int inventory_index){
 	}
 
 	player_draw_inventory_ui();
+	paint_from_items(42, 2, 0);
 
 }

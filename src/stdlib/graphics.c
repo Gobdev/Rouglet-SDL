@@ -192,8 +192,7 @@ void paint_from_items(int x, int y, int item_id){
     draw_array[0] = 7;
     draw_array[1] = 7;
     for(i = 2; i < 9 ; i++){
-        draw_array[i] = items[start_position];
-        start_position++;
+        draw_array[i] = items[start_position + i];
     }
     paint_pic(x, y, draw_array);
 }
