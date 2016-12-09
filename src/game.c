@@ -83,11 +83,8 @@ int main(void) {
 
 	//TEST INVETNORY
 
-<<<<<<< HEAD
-	for(i = 0 ; i < 5 ; i++){
-=======
+
 	for (i = 1; i < 6; i++){
->>>>>>> 1f46fbea72e05d86882546ff6d7241b9c3465350
 		add_to_inventory(i);
 	}
 
@@ -190,7 +187,7 @@ void inventory_game_state(int button, int* selected_index){
 		default:
 			break;
 	}
-	
+
 	if (*selected_index == 0){
 		paint_pic(0, inventory_position1[1], menu_dot);
 		for (i = 0 ; i < 3 ; i++){
