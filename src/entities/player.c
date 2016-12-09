@@ -23,7 +23,7 @@ int player_y = 0;
 int inventory_size = 5;
 int potion_heal_amount = 50;
 int inventory[5] = {0};
-int active_weapon_index = 0;
+int active_weapon_index = 100;
 
 int get_inventory_size(){
     return inventory_size;
@@ -47,6 +47,10 @@ void set_current_weapon(int low,int high,int item_index){
     active_weapon_index = item_index;
 }
 
+int get_active_weapon_index(){
+    return active_weapon_index;
+}
+
 
 void set_player_position(int new_x, int new_y){
     player_x = new_x;
@@ -55,7 +59,7 @@ void set_player_position(int new_x, int new_y){
 
 
 void draw_active_weapon(){
-    //TODO
+
 }
 
 void use_item(int item_index){
@@ -129,8 +133,8 @@ void player_level_up(){
 }
 
 int player_get_attack_damage(){
-    int extra_dmg = get_random_int(player_atk_high - player_atk_low);
-    return player_atk_low + extra_dmg;
+    int extra_dmg = get_random_int((player_atk_high + weapon_atk_high) - (player_atk_low + weapon_atk_low));
+    return player_atk_low + weapon_atk_low + extra_dmg;
 }
 
 void player_draw_inventory_ui(){
@@ -139,9 +143,9 @@ void player_draw_inventory_ui(){
 
 void player_draw_main_ui(){
     paint_pic(0, 0, main_ui);
-    print_int(10, 2, min_int(999, player_atk_low));
+    print_int(10, 2, min_int(999, player_atk_low + weapon_atk_low));
     print_text(22, 2, "-");
-    print_int(26, 2, min_int(999, player_atk_high));
+    print_int(26, 2, min_int(999, player_atk_high + weapon_atk_high));
     print_int(10, 10, min_int(999, player_hp));
     print_text(22, 10, "/");
     print_int(26, 10, min_int(999, player_max_hp));
