@@ -13,13 +13,10 @@
 #include "images/title.h"
 #include "level/level.h"
 
-<<<<<<< HEAD
 void main_game_state();
 void inventory_game_state();
 
-=======
 const char white_square[7] = {5, 5, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F};
->>>>>>> f2ca453f310a764fa434bfd2f7a99c0745cdbfb4
 /* Non-Maskable Interrupt; something bad likely happened, so hang */
 void _nmi_handler(){for(;;);}
 /* This function is called upon reset, before .data and .bss is set up */
@@ -106,56 +103,16 @@ int main(void) {
 			player_level_up();
 		}
 		
-<<<<<<< HEAD
-		if(game_state == 0){
-			main_game_state(button);
-		}else{
-			inventory_game_state(button,inventory_index);
-=======
-		button = buttonPress(0);
+		if (button == 0)
+			button = buttonPress(0);
 		game_state = checkSwitches(1);
-		if(game_state == 0){
-			switch(button){
-				case 1:
-					player_moveUp();
-					break;
-				case 2:
-					player_moveDown();
-					break;
-				case 3:
-					player_moveRight();
-					break;
-				case 4:
-				    generate_room_seed(pointer);
-				    set_current_room_to_seed(pointer);
-					break;
-				default:
-					break;
-			}
-			player_draw_main_ui();
+
+		if (game_state == 0){
+			main_game_state(button);
 		} else {
-			player_draw_inventory_ui();
-			switch(button){
-				case 1:
-					if(inventory_index < get_inventory_size() - 1){
-						inventory_index++;
-					}
-					break;
-				case 2:
-					if(inventory_index > 0){
-						inventory_index--;
-					}
-					break;
-				case 3:
-					break;
-				case 4:
-					use_item(inventory_index);
-					break;
-				default:
-					break;
-			}
->>>>>>> f2ca453f310a764fa434bfd2f7a99c0745cdbfb4
+			inventory_game_state(button,inventory_index);
 		}
+
 		level_draw();
 		player_draw();
 
@@ -219,4 +176,5 @@ void inventory_game_state(int button,int inventory_index){
 	}
 
 	player_draw_inventory_ui();
+
 }
