@@ -40,6 +40,14 @@ void enable_debug(){
     debug = 1;
 }
 
+int get_oled_height(){
+    return OLED_COL_LENGTH * OLED_PAGES;
+}
+
+int get_oled_width(){
+    return OLED_ROW_LENGTH;
+}
+
 void inititalize_host(){
     /* Initialize SPI port 2. 
     */ 
@@ -213,18 +221,20 @@ void print_int(int x, int y, int value){
     print_text(x, y, str);
 }
 
-void print_char(int x, int y, char value){
-    char str[15] = {0};
-    char_to_string(value, str);
-    print_text(x, y, str);   
-}
-
 void print_hex(int x, int y, int value){
     char str[15] = {0};
     unsigned int newValue = value; 
     int_to_hex_string((unsigned int) value, str);
     print_text(x, y, "0x");
     print_text(x + 8, y, str);
+}
+
+void print_char(int x, int y, char value){
+    print_int(x, y, ((int) value & ~(~0 << 8)));
+}
+
+void print_char_hex(int x, int y, char value){
+    print_hex(x, y, ((int) value & ~(~0 << 8)));
 }
 
 void clearScreen(){
@@ -249,7 +259,7 @@ void paint_pic(int x, int y, const unsigned char* pic){
     int y_size = pic[1];
     pic += 2;
     int i, j, shift, first_page, last_page, current_page, picPage;
-    char clearLeft, clearRight;
+    char clearLeft, clearRight, clearLeftLast, clearRightLast;
 
     /*
         If not a single pixel of the image falls on the screen, the rest of the code is skipped and the function returns here.
@@ -271,10 +281,12 @@ void paint_pic(int x, int y, const unsigned char* pic){
     current_page = first_page;
     
     /* 
-        To no clear any pixels that are not used by this image, the clear bits are shifted by the same amount as the picture bits.
+        To not clear any pixels that are not used by this image, the clear bits are shifted by the same amount as the picture bits.
     */
     clearLeft = ~(0xFF << shift);                   
     clearRight = ~(0xFF >> (OLED_COL_LENGTH - shift));
+    clearLeftLast = ~((~(0xFF << (OLED_COL_LENGTH - (y_size % OLED_COL_LENGTH)))) << shift);
+    clearRightLast = ~(0xFF >> (OLED_COL_LENGTH - min_int(shift, (y + y_size) % OLED_COL_LENGTH)));
     
     /*
         Iterates for as many pages as the picture needs to be drawn.
@@ -287,7 +299,10 @@ void paint_pic(int x, int y, const unsigned char* pic){
             */
             for (j = 0; j < x_size; j++){
                 if (x + j >= 0 && x + j < OLED_ROW_LENGTH){
-                    oledBuffer[current_page + x + j] &= clearLeft;                  // Clear the bits to be used.
+                    if (current_page == last_page)
+                        oledBuffer[current_page + x + j] &= clearLeftLast; // Special case for last page.
+                    else
+                        oledBuffer[current_page + x + j] &= clearLeft;                  // Clear the bits to be used.
                     oledBuffer[current_page + x + j] |= pic[j + picPage] << shift;  // Set the bits to the values in the picture.    
                 }
             }
@@ -300,7 +315,10 @@ void paint_pic(int x, int y, const unsigned char* pic){
             */
             for (j = 0; j < x_size; j++){
                 if (x + j >= 0 && x + j < OLED_ROW_LENGTH){
-                    oledBuffer[current_page + x + j] &= clearRight;                                     // Clear the bits to be used
+                    if (current_page == last_page)
+                        oledBuffer[current_page + x + j] &= clearRightLast;
+                    else
+                        oledBuffer[current_page + x + j] &= clearRight;                                     // Clear the bits to be used
                     oledBuffer[current_page + x + j] |= pic[j + picPage] >> (OLED_COL_LENGTH - shift);  // Set the bits to the value in the picture
                 }
             }

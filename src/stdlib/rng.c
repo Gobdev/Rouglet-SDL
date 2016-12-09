@@ -34,9 +34,3 @@ int get_random_int(int max){
         return 0;
     return ((int) rng_function()) % (max + 1);
 }
-
-char get_random_char(char max){
-    if (max < 1)
-        return 0;
-    return ((char) rng_function()) % (max + 1);
-}
