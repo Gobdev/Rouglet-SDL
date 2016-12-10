@@ -11,6 +11,7 @@ void move_right();
 void move_down();
 void room_draw();
 void room_init();
+void room_update();
 char generate_vertical_door(int room_height);
 char generate_horizontal_door(int room_width);
 void generate_room_seed(char* pointer);

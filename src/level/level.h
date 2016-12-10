@@ -1,6 +1,7 @@
 #pragma once
 
 void level_init();
+void level_update();
 void level_draw();
 void print_pointer();
 void enter_top_door();

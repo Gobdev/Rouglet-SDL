@@ -1,8 +1,26 @@
 #include "enemies.h"
 #include "enemy_arrays.h"
 #include "../stdlib/graphics.h"
+#include "../stdlib/input.h"
+#include "../stdlib/stdlib.h"
 
 const int number_of_enemies = 4;
+
+char* enemy_names[15] = {"ghost",
+                         "firekid",
+                         "frog",
+                         "fetus",
+                         "alien",
+                         "alienking",
+                         "slime",
+                         "eye",
+                         "mreye",
+                         "spooks",
+                         "skeleton",
+                         "flowerman",
+                         "evilthing",
+                         "oni",
+                         "knight"};
 char enemy_enabled[4] = {0};
 int enemy_max_hp[4];
 int enemy_hp[4];
@@ -11,6 +29,8 @@ int enemy_atk_high[4];
 int enemy_x[4];
 int enemy_y[4];
 int enemy_exp_on_kill[4];
+char enemy_type[4];
+char* enemy_name[4];
 char* enemy_sprite[4]; 
 
 char enemy_is_enabled(int enemy){
@@ -41,14 +61,46 @@ int get_number_of_enemies(){
     return number_of_enemies;
 }
 
+char get_enemy_seed(int enemy){
+    if (enemy_get_hp(enemy) > 0)
+        return enemy_type[enemy] + 1;
+    return 0;
+}
+
+char* get_enemy_name(int enemy){
+    return (char*) enemy_name[enemy];
+}
+
+void enemy_print_damage(int enemy, int damage){
+    char text1[20] = {0};
+    char text2[20] = {0};
+
+    concat_3_strings(20, text1, get_enemy_name(enemy), " hits you", "");
+    int int_len = intlen(damage);
+    char damage_string[int_len];
+    int_to_string(damage, damage_string);
+    concat_3_strings(20, text2, "for ", damage_string, " damage.");
+    
+    pop_up_text(text1, text2);
+}
+
 void enemy_damage_player(int enemy){
-    player_take_damage(enemy_atk_low[enemy] + get_random_int(enemy_atk_high[enemy] - enemy_atk_low[enemy]));
+    int damage = enemy_atk_low[enemy] + get_random_int(enemy_atk_high[enemy] - enemy_atk_low[enemy]);
+    if (damage > 0){
+        enemy_print_damage(enemy, damage);
+        player_take_damage(damage);
+    }
 }
 
 void enemy_take_damage(int enemy, int damage){
     enemy_hp[enemy] -= damage;
-    if (enemy_hp[enemy] <= 0)
+    if (enemy_hp[enemy] <= 0){
+        player_receive_exp(enemy_exp_on_kill[enemy]);
+        char text[20] = {0};
+        concat_3_strings(20, text, get_enemy_name(enemy), " dies.", "");
+        pop_up_text(text, "");
         delete_enemy(enemy);
+    }
 }
 
 void disable_enemy(int enemy){
@@ -67,12 +119,21 @@ void delete_enemy(int enemy){
     enemy_sprite[enemy] = 0;
 }
 
+void clear_enemies(){
+    delete_enemy(0);
+    delete_enemy(1);
+    delete_enemy(2);
+    delete_enemy(3);
+}
+
 char* enemy_get_sprite(int enemy){
     return enemy_sprite[enemy];
 }
 
 void init_enemy(int enemy, int type, int x, int y){
-    type = 0;
+    enemy_type[enemy] = (char) type;
+    enemy_enabled[enemy] = 1;
+    enemy_name[enemy] = enemy_names[type];
     enemy_x[enemy] = x;
     enemy_y[enemy] = y;
     enemy_max_hp[enemy] = enemy_array[6 * type];

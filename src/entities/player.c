@@ -1,3 +1,4 @@
+#include <pic32mx.h>
 #include "player.h"
 #include "../stdlib/rng.h"
 #include "../stdlib/graphics.h"
@@ -20,6 +21,8 @@ int player_gold = 0;
 int player_level = 1;
 int player_x = 0;
 int player_y = 0;
+int player_exp = 0;
+int player_max_exp = 100;
 int inventory_size = 5;
 int potion_heal_amount = 50;
 int inventory[5] = {0};
@@ -39,6 +42,19 @@ int player_get_x(){
 
 int player_get_y(){
     return player_y;
+}
+
+void player_print_damage(int enemy, int damage){
+    char text1[20] = {0};
+    char text2[20] = {0};
+
+    concat_3_strings(20, text1, "you hit ", (char*) get_enemy_name(enemy), "");
+    int int_len = intlen(damage);
+    char damage_string[3] = {0};
+    int_to_string(damage, damage_string);
+    concat_3_strings(20, text2, "for ", damage_string, " damage.");
+    
+    pop_up_text(text1, text2);
 }
 
 void set_current_weapon(int low,int high,int item_index){
@@ -106,7 +122,9 @@ void remove_item(int item_index){
 }
 
 void player_damage_enemy(int enemy){
-    enemy_take_damage(enemy, player_atk_low + get_random_int(player_atk_high - player_atk_low));
+    int damage = player_atk_low + get_random_int(player_atk_high - player_atk_low);
+    player_print_damage(enemy, damage);
+    enemy_take_damage(enemy, damage);
 }
 
 void player_take_damage(int damage){
@@ -132,6 +150,8 @@ void player_level_up(){
     player_atk_low += 3;
     player_max_hp += 10;
     player_hp += 10;
+    player_exp = 0;
+    player_max_exp += player_max_exp / 20;
 }
 
 int player_get_attack_damage(){
@@ -161,4 +181,17 @@ void player_draw(int x, int y){
 
 void print_player_info(){
 
+}
+
+void update_exp_bar(){
+    float exp_ratio = (float)player_exp/(float)player_max_exp;
+    int LED_count = (int) (exp_ratio * 8);
+    PORTE = ~(((char) 0xFF) << LED_count);
+}
+
+void player_receive_exp(int exp_amount){
+    player_exp += exp_amount;
+    if (player_exp >= player_max_exp)
+        player_level_up();
+    update_exp_bar();
 }

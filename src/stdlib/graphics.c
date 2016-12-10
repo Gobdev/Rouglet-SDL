@@ -6,6 +6,7 @@
 #include "../images/alphabet.h"
 #include "../images/symbols.h"
 #include "../images/item_sprites.h"
+#include "../images/graphic_elements.h"
 
 #define CHANGE_TO_COMMAND_MODE (PORTFCLR = 0x10)
 #define CHANGE_TO_DATA_MODE (PORTFSET = 0x10)
@@ -32,7 +33,6 @@
  //oldGraphics
 char oledBuffer[OLED_MAX_BYTES] = {0};
 char debugBuffer[OLED_MAX_BYTES] = {0};
-const char whiteBox[7] = {0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F};
 int debug = 0;
 int debug_pages_len[4] = {0};
 
@@ -354,6 +354,14 @@ void print_text(int x, int y, char* str){
     }
 }
 
+void pop_up_text(char* text1, char* text2){
+    paint_pic(18, 5, pop_up_background);
+    print_text(24, 9, text1);
+    print_text(24, 16, text2);
+    update_screen();
+    buttonPress(1000);
+    //clearScreen();
+}
 
 void putDebugInBuffer(){
     int page, i, j;
