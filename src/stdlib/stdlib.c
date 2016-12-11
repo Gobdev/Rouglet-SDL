@@ -86,8 +86,37 @@ int strlen(char* string){
     return i;
 }
 
+int intlen(int integer){
+    int i = 1;
+    if (integer < 0){
+        i++;
+        integer = ~integer + 1;
+    }
+    while(integer > 9){
+        integer /= 10;
+        i++;
+    }
+    return i;
+}
+
 int min_int(int first, int second){
     if (first <= second)
         return first;
     return second;
+}
+
+
+void concat_3_strings(int max_len, char* result, char* first, char* second, char* third){
+    int i, j, k;
+    int first_len, second_len, third_len;
+    first_len = strlen(first);
+    second_len = first_len + strlen(second);
+    third_len = second_len + strlen(third);
+    for (i = 0; i < first_len && i < max_len - 1; i++)
+        result[i] = first[i];
+    for (j = 0; i < second_len && i < max_len - 1; i++)
+        result[i] = second[j++];
+    for (k = 0; i < third_len && i < max_len - 1; i++)
+        result[i] = third[k++];
+    result[++i] = 0;
 }

@@ -13,6 +13,7 @@ void clearScreen();
 void paintOnePixel(int x, int y);
 void paint_pic(int x, int y, const unsigned char* pic);
 void print_text(int x, int y, char* str);
+void pop_up_text(char* text1, char* text2);
 void update_screen();
 void paint_from_items(int x, int y, int item_id);
 int get_oled_height();

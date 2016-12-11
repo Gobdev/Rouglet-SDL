@@ -16,6 +16,7 @@
 
 void main_game_state();
 void inventory_game_state();
+void draw_inventory(int selected_index);
 
 const char white_square[7] = {5, 5, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F};
 char pointer[34] = {0};
@@ -64,13 +65,12 @@ void _on_bootstrap(){
 
 void title_screen(){
 	paint_pic(0, 0, roguelet_title);
-	TMR2 = 0; // Set counter to 0.
-    T2CON = 0x8020; // Set timer on (bit 15), prescale 1:4 (bits 6-4), 16-bit counter (bit 3), internal clock (bit 1).
-    PR2 = 65535; // Counter goes up to 65535, to choose a random number from TMR2 as a initial seed.
 	update_screen();
+	T2CON = 0x8020; // Set timer on (bit 15), prescale 1:4 (bits 6-4), 16-bit counter (bit 3), internal clock (bit 1).
+    PR2 = 65535; // Counter goes up to 65535, to choose a random number from TMR2 as a initial seed.
 	buttonPress(0);
-	clearScreen();
 	int seed = TMR2;
+	clearScreen();
 	print_text(35, 14, "Seed: ");
 	print_int(56, 14, seed);
 	rng_init(seed);
@@ -93,49 +93,31 @@ int main(void) {
 
 	inventory_index = 0;
 	game_state = 0; //inventory(1) or main game(0)
-	i = -4;
-	j = -4;
-	k = 0;
-	xPos = 105;
-	yPos = 16;
-	int exp = 0;
 	int button = 5;
-	int level = 0;
 	title_screen();
 	level_init();
 	while( 1 )
 	{
-		i += 7;
-		j += 7;
-		if (++k > 3)
-			k = 0;
-		clearScreen();
-
-		if (exp > 100){
-			exp = 0;
-			player_level_up();
-		}
-		
 		if (button == 0)
 			button = buttonPress(0);
 		game_state = checkSwitches(1);
 
 		if (game_state == 0){
 			main_game_state(button);
+			level_update();
 		} else {
 			inventory_game_state(button, &inventory_index);
 		}
-
+		clearScreen();
+		if (game_state == 0){
+			player_draw_main_ui();
+		} else {
+			draw_inventory(inventory_index);
+		}
 		level_draw();
-
-		updateExpBar(100, exp += 3);
-		//print_player_info();
-		//print_room_info();
-		enable_debug();
 		update_screen();
-		disable_debug();
 		button = 0;
-		delay_ms(100);
+		delay_ms(100); 								// Delay to avoid double button presses.
 	}
 	return 0;
 }
@@ -155,13 +137,11 @@ void main_game_state(int button){
 			move_right();
 			break;
 		case 4:
-			generate_room_seed(pointer);
-			set_current_room_to_seed(pointer);
+			move_left();
 			break;
 		default:
 			break;
 	}
-	player_draw_main_ui();
 }
 
 void draw_equipped_item_box(int selected_index){
@@ -191,11 +171,36 @@ void draw_equipped_item_box(int selected_index){
 	}
 }
 
-void inventory_game_state(int button, int* selected_index){
-	int displayed_items[3];
+void draw_inventory(int selected_index){
 	int i;
+	int displayed_items[3];
 
 	player_draw_inventory_ui();	
+	if (get_inventory_element((int) get_active_weapon_index())){
+		draw_equipped_item_box(selected_index);
+	}
+	if (selected_index == 0){
+		paint_pic(2, inventory_position1[1] + 2, menu_dot);
+		for (i = 0 ; i < 3 ; i++){
+			displayed_items[i] = get_inventory_element(i);
+		}
+	} else if (selected_index == get_inventory_size() - 1){
+		paint_pic(2, inventory_position3[1] + 2, menu_dot);
+		for (i = 0 ; i < 3 ; i++){
+			displayed_items[i] = get_inventory_element(i + get_inventory_size() - 3);
+		}
+	} else {
+		paint_pic(2, inventory_position2[1] + 2, menu_dot);
+		for (i = 0 ; i < 3 ; i++){
+			displayed_items[i] = get_inventory_element(selected_index - 1 + i);
+		}
+	}
+	paint_from_items(inventory_position1[0], inventory_position1[1], displayed_items[0]);
+	paint_from_items(inventory_position2[0], inventory_position2[1], displayed_items[1]);
+	paint_from_items(inventory_position3[0], inventory_position3[1], displayed_items[2]);
+}
+
+void inventory_game_state(int button, int* selected_index){
 	switch(button){
 		case 1:
 			if(*selected_index < get_inventory_size() - 1){
@@ -217,28 +222,4 @@ void inventory_game_state(int button, int* selected_index){
 			break;
 	}
 
-	if (get_inventory_element((int) get_active_weapon_index())){
-		draw_equipped_item_box(*selected_index);
-	}
-	enable_debug();
-	if (*selected_index == 0){
-		paint_pic(2, inventory_position1[1] + 2, menu_dot);
-		for (i = 0 ; i < 3 ; i++){
-			displayed_items[i] = get_inventory_element(i);
-		}
-	} else if (*selected_index == get_inventory_size() - 1){
-		paint_pic(2, inventory_position3[1] + 2, menu_dot);
-		for (i = 0 ; i < 3 ; i++){
-			displayed_items[i] = get_inventory_element(i + get_inventory_size() - 3);
-		}
-	} else {
-		paint_pic(2, inventory_position2[1] + 2, menu_dot);
-		for (i = 0 ; i < 3 ; i++){
-			displayed_items[i] = get_inventory_element(*selected_index - 1 + i);
-		}
-	}
-	disable_debug();
-	paint_from_items(inventory_position1[0], inventory_position1[1], displayed_items[0]);
-	paint_from_items(inventory_position2[0], inventory_position2[1], displayed_items[1]);
-	paint_from_items(inventory_position3[0], inventory_position3[1], displayed_items[2]);
 }

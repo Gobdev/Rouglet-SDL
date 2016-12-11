@@ -75,7 +75,6 @@ char get_switch_state(){
 int buttonPress(int timeout){
 	TMR2 = 0;
 	int b = 0;
-	reset_timer();
 	int i = 0;
 	char switch_state = get_switch_state();
 	while (!b && (timeout == 0 || i < timeout)){
