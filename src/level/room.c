@@ -18,6 +18,7 @@ int current_corner_x;
 int current_corner_y;
 
 char* current_seed;
+char* last_seed = 0;
 
 char top_door;
 char left_door;
@@ -242,17 +243,18 @@ void save_current_room_to_seed(){
     }
     if (enemy_is_enabled(2)){
         current_seed[5] &= 0x0F;
-        current_seed[5] |= get_enemy_seed(0) << 4;
+        current_seed[5] |= get_enemy_seed(2) << 4;
     }
     if (enemy_is_enabled(3)){
         current_seed[5] &= 0xF0; 
-        current_seed[5] |= get_enemy_seed(1);     
+        current_seed[5] |= get_enemy_seed(3);     
     }
     clear_enemies();
 }
 
 void set_current_room_to_seed(char* pointer){
     save_current_room_to_seed();
+    last_seed = current_seed;
     current_seed = pointer;
     width = (int) (pointer[0] >> 4) + 1;
     height = (int) (pointer[0] & 0x0F);

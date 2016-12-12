@@ -171,10 +171,6 @@ void init_enemy(int enemy, int type, int x, int y){
 void enemy_draw(int enemy, int x, int y){
     if (enemy_hp[enemy] > 0)
         paint_pic(x, y, enemy_sprite[enemy]);
-    int i;
-    for (i = 0; i < number_of_enemies; i++){
-        print_int(42, 0 + 6 * i, enemy_type[i]);
-    }
 }
 
 char enemy_on_square(int x, int y){
