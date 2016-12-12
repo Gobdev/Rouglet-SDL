@@ -1,5 +1,6 @@
 #pragma once
 
+int get_current_room_average();
 void level_init();
 void level_update();
 void level_draw();

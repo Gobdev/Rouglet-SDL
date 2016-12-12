@@ -9,15 +9,15 @@ const int number_of_enemies = 4;
 char* enemy_names[15] = {"ghost",
                          "firekid",
                          "frog",
-                         "fetus",
-                         "alien",
-                         "alienking",
                          "slime",
                          "eye",
                          "mreye",
+                         "fetus",
                          "spooks",
                          "skeleton",
                          "flowerman",
+                         "alien",
+                         "alienking",
                          "evilthing",
                          "oni",
                          "knight"};
@@ -35,6 +35,11 @@ char* enemy_sprite[4];
 
 char enemy_is_enabled(int enemy){
     return enemy_enabled[enemy];
+}
+
+
+char enemy_is_alive(int enemy){
+    return (char) (enemy_hp[enemy] > 0);
 }
 
 int enemy_get_hp(int enemy){
@@ -61,10 +66,30 @@ int get_number_of_enemies(){
     return number_of_enemies;
 }
 
+int enemy_next_to_player(int enemy){
+    return abs(player_get_x() - enemy_x[enemy]) + abs(player_get_y() - enemy_y[enemy]) == 1;
+}
+
 char get_enemy_seed(int enemy){
     if (enemy_get_hp(enemy) > 0)
         return enemy_type[enemy] + 1;
     return 0;
+}
+
+void enemy_move_up(int enemy){
+    enemy_y[enemy]--;
+}
+
+void enemy_move_down(int enemy){
+    enemy_y[enemy]++;
+}
+
+void enemy_move_left(int enemy){
+    enemy_x[enemy]--;
+}
+
+void enemy_move_right(int enemy){
+    enemy_x[enemy]++;
 }
 
 char* get_enemy_name(int enemy){
@@ -77,7 +102,7 @@ void enemy_print_damage(int enemy, int damage){
 
     concat_3_strings(20, text1, get_enemy_name(enemy), " hits you", "");
     int int_len = intlen(damage);
-    char damage_string[int_len];
+    char damage_string[4] = {0};
     int_to_string(damage, damage_string);
     concat_3_strings(20, text2, "for ", damage_string, " damage.");
     
@@ -99,7 +124,6 @@ void enemy_take_damage(int enemy, int damage){
         char text[20] = {0};
         concat_3_strings(20, text, get_enemy_name(enemy), " dies.", "");
         pop_up_text(text, "");
-        delete_enemy(enemy);
     }
 }
 
@@ -147,6 +171,10 @@ void init_enemy(int enemy, int type, int x, int y){
 void enemy_draw(int enemy, int x, int y){
     if (enemy_hp[enemy] > 0)
         paint_pic(x, y, enemy_sprite[enemy]);
+    int i;
+    for (i = 0; i < number_of_enemies; i++){
+        print_int(42, 0 + 6 * i, enemy_type[i]);
+    }
 }
 
 char enemy_on_square(int x, int y){

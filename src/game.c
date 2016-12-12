@@ -93,13 +93,15 @@ int main(void) {
 
 	inventory_index = 0;
 	game_state = 0; //inventory(1) or main game(0)
-	int button = 5;
+	int button;
 	title_screen();
 	level_init();
+	player_draw_main_ui();
+	level_draw();
+	update_screen();
 	while( 1 )
 	{
-		if (button == 0)
-			button = buttonPress(0);
+		button = buttonPress(0);
 		game_state = checkSwitches(1);
 
 		if (game_state == 0){
@@ -116,7 +118,6 @@ int main(void) {
 		}
 		level_draw();
 		update_screen();
-		button = 0;
 		delay_ms(100); 								// Delay to avoid double button presses.
 	}
 	return 0;

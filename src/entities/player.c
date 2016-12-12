@@ -11,10 +11,10 @@ enum items {EMPTY, SWORD1, SWORD2, SWORD3, SPEAR1, SPEAR2, HAMMER, GREATSWORD, P
 int weapon_low_list[] = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130};
 int weapon_high_list[] = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130};
 
-int player_max_hp = 160;
-int player_hp = 160;
-int player_atk_low = 135;
-int player_atk_high = 165;
+int player_max_hp = 100;
+int player_hp = 100;
+int player_atk_low = 30;
+int player_atk_high = 40;
 int weapon_atk_low = 0;
 int weapon_atk_high = 0;
 int player_gold = 0;
@@ -50,7 +50,7 @@ void player_print_damage(int enemy, int damage){
 
     concat_3_strings(20, text1, "you hit ", (char*) get_enemy_name(enemy), "");
     int int_len = intlen(damage);
-    char damage_string[3] = {0};
+    char damage_string[4] = {0};
     int_to_string(damage, damage_string);
     concat_3_strings(20, text2, "for ", damage_string, " damage.");
     
@@ -122,7 +122,7 @@ void remove_item(int item_index){
 }
 
 void player_damage_enemy(int enemy){
-    int damage = player_atk_low + get_random_int(player_atk_high - player_atk_low);
+    int damage = player_atk_low + weapon_atk_low + get_random_int(player_atk_high + weapon_atk_high - (player_atk_low + weapon_atk_low));
     player_print_damage(enemy, damage);
     enemy_take_damage(enemy, damage);
 }

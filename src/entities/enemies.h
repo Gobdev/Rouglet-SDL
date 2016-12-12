@@ -2,6 +2,7 @@
 
 char* get_enemy_name(int enemy);
 char enemy_is_enabled(int enemy);
+char enemy_is_alive(int enemy);
 int enemy_get_x(int enemy);
 int enemy_get_y(int enemy);
 char get_enemy_seed(int enemy);

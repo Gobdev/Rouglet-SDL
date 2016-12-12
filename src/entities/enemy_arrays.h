@@ -2,20 +2,19 @@
 
 const int enemy_array[] = {
 //  max_hp,     hp,         atk_low,   atk_high,    exp,        (int) sprite
-	10,         20,        	5,         15,          5,          (int) ghost,
-	30,        	30,         20,        25,          7,          (int) fireKid,
-	60,         60,       	6,         17,          9,          (int) frog,
-	50,        	50,         15,        40,          15,         (int) fetus,
-	55,        	55,        	5,         9,           6,          (int) mrEye,
-    170,        170,        10,        45,          24,         (int) alien,
-    300,        300,        25,        60,          43,         (int) alienKing,
-    80,        	80,         4,         8,           6,          (int) doomSlime,
-    150,        150,     	30,        40,          12,         (int) floatingEye,
-    90,         90,         24,        40,          15,         (int) skeleton,
-    110,        110,        26,        36,          21,         (int) flower_man,
-    200,        200,        30,        40,          33,         (int) spooks,
-    240,        240,        20,         34,         32,         (int) evil_thing,
-    300,        300,        25,        30,          45,         (int) oni,
-    600,        600,       	40,        70,          61,         (int) knight,
-    1000,       1000,       80,        120,         220,        (int) spider_face
+	20,         20,        	5,         10,          20,         (int) ghost,
+	30,        	30,         6,         10,          22,         (int) fireKid,
+	40,         40,       	7,         11,          24,         (int) frog,
+    45,         45,         8,         11,          30,         (int) doomSlime,
+    55,         55,         9,         12,          35,         (int) floatingEye,
+    65,         65,         5,         16,          40,         (int) mrEye,
+	75,        	75,         10,        19,          50,         (int) fetus,
+    95,         95,         11,        20,          60,         (int) spooks,
+    105,        105,        13,        22,          75,         (int) skeleton,
+    120,        120,        15,        25,          85,         (int) flower_man,
+    130,        130,        16,        26,          95,         (int) alien,
+    150,        150,        17,        30,          100,        (int) alienKing,
+    160,        160,        20,        33,          110,        (int) evil_thing,
+    180,        180,        22,        35,          120,        (int) oni,
+    200,        200,       	24,        35,          140,        (int) knight
 };

@@ -6,15 +6,18 @@
 
 const int seed_size = 6;
 const int level_length = 25;
+int current_room[2] = {0, 0};
+int right = 0;
 char room_seeds[6 * 25 * 25] = {0};
-int current_room[2] = {1, 1};
-char left_spawned = 0;
-char right_spawned = 0;
 
 char* get_current_room_pointer();
 
 char get_room_width_from_seed(char* seed){
     return (int) (seed[0] >> 4) + 1;
+}
+
+int get_current_room_average(){
+    return (current_room[0] + current_room[1]) / 2;
 }
 
 char get_room_height_from_seed(char* seed){
@@ -23,11 +26,6 @@ char get_room_height_from_seed(char* seed){
 
 void level_draw(){
     room_draw();
-    if (left_spawned)
-        print_text(42, 0, "left");
-    if (right_spawned)
-        print_text(42, 6, "right");
-    //print_pointer();
 }
 
 void level_update(){
@@ -65,11 +63,12 @@ void level_init(){
     int room_width = get_room_width_from_seed(pointer);
     int room_height = get_room_height_from_seed(pointer);
     pointer[2] &= 0;
-    pointer[2] |= (generate_horizontal_door(room_width) << 3) + generate_vertical_door(room_height);
+    //pointer[2] |= (generate_horizontal_door(room_width) << 3) + generate_vertical_door(room_height);
     pointer[3] &= 0;
-    pointer[3] |= (generate_horizontal_door(room_width) << 3) + generate_vertical_door(room_height);     
+    pointer[3] |= (generate_horizontal_door(room_width) << 3) + generate_vertical_door(room_height);  
+    pointer[4] = 0x01;
+    pointer[5] = 0x00;
     set_current_room_to_seed(pointer);
-    init_enemy(0, 14, 1, 1);
 }
 
 void fix_current_room_doors(){
@@ -77,15 +76,11 @@ void fix_current_room_doors(){
     int room_height = get_room_height_from_seed(pointer);
     int room_width = get_room_width_from_seed(pointer);
 
-    left_spawned = 0;
-    right_spawned = 0;
-
     if (room_exists(current_room[0] - 1, current_room[1])){
         if (seed_has_right_door(get_room_pointer(current_room[0] - 1, current_room[1]))){
             pointer[2] &= 0xF8;
             pointer[2] |= generate_vertical_door(room_height);
         } else if (room_set(current_room[0] - 1, current_room[1])) {
-            left_spawned = 1;
             pointer[2] &= 0xF8;
         }
     } else {
@@ -96,9 +91,7 @@ void fix_current_room_doors(){
         if (seed_has_left_door(get_room_pointer(current_room[0] + 1, current_room[1]))){
             pointer[3] &= 0xF8;
             pointer[3] |= generate_vertical_door(room_height);
-            right_spawned = 1;
         } else if (room_set(current_room[0] + 1, current_room[1])) {
-            left_spawned = 1;
             pointer[3] &= 0xF8;
         }
     } else {
@@ -110,7 +103,6 @@ void fix_current_room_doors(){
             pointer[2] &= 0x07;
             pointer[2] |= (generate_horizontal_door(room_width) << 3);
         } else if (room_set(current_room[0], current_room[1] - 1)) {
-            left_spawned = 1;
             pointer[2] &= 0x07;
         }
     } else {
@@ -122,7 +114,6 @@ void fix_current_room_doors(){
             pointer[3] &= 0x07;
             pointer[3] |= (generate_horizontal_door(room_width) << 3);
         } else if (room_set(current_room[0], current_room[1] + 1)) {
-            left_spawned = 1;
             pointer[3] &= 0x07;
         }
     } else {
@@ -159,6 +150,7 @@ void enter_left_door(){
 
 void enter_right_door(){
     current_room[0]++;
+    right++;
     char* pointer = get_current_room_pointer();
     if (!pointer[0]){
         generate_room_seed(pointer);

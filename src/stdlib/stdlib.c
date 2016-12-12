@@ -25,6 +25,13 @@ void delay_ms(int milliseconds){
     }
 }
 
+int abs(int integer){
+    if (integer < 0){
+        return ~integer + 1;
+    }
+    return integer;
+}
+
 void char_to_string(char value, char* str){
     char valueCopy; 
     int i;
@@ -108,15 +115,11 @@ int min_int(int first, int second){
 
 void concat_3_strings(int max_len, char* result, char* first, char* second, char* third){
     int i, j, k;
-    int first_len, second_len, third_len;
-    first_len = strlen(first);
-    second_len = first_len + strlen(second);
-    third_len = second_len + strlen(third);
-    for (i = 0; i < first_len && i < max_len - 1; i++)
+    for (i = 0; i < first[i] && i < max_len - 1; i++)
         result[i] = first[i];
-    for (j = 0; i < second_len && i < max_len - 1; i++)
+    for (j = 0; i < second[j] && i < max_len - 1; i++)
         result[i] = second[j++];
-    for (k = 0; i < third_len && i < max_len - 1; i++)
+    for (k = 0; i < third[k] && i < max_len - 1; i++)
         result[i] = third[k++];
-    result[++i] = 0;
+    result[i] = 0;
 }

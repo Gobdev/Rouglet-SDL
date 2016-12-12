@@ -23,6 +23,7 @@ char top_door;
 char left_door;
 char right_door;
 char bottom_door;
+int just_entered = 0;
 
 const int square_size = 7;
 const char octothorpe[7] = {5, 5, 0xA, 0x1F, 0xA, 0x1F, 0xA};
@@ -55,10 +56,12 @@ char seed_has_bottom_door(char* seed){
 
 int square_busy(int x, int y){
     int i;
+    if (x < 0 || x >= width || y < 0 || y >= height)
+        return 1;
     if (x == player_get_x() && y == player_get_y())
         return 1;
     for (i = 0; i < get_number_of_enemies(); i++){
-        if (enemy_is_enabled(i) && x == enemy_get_x(i) && y == enemy_get_y(i))
+        if (enemy_is_enabled(i) && enemy_is_alive(i) && x == enemy_get_x(i) && y == enemy_get_y(i))
             return 1;
     } 
     return 0;
@@ -70,10 +73,10 @@ void move_up(){
         player_move_up();
     else if (enemy_hit){
         player_damage_enemy(enemy_hit - 1);
-        enemy_damage_player(enemy_hit - 1);
     }
     else if (top_door && player_get_x() == top_door - 1){
         enter_top_door();
+        just_entered = 1;
     }
 }
 
@@ -83,10 +86,10 @@ void move_left(){
         player_move_left();
     else if (enemy_hit){
         player_damage_enemy(enemy_hit - 1);
-        enemy_damage_player(enemy_hit - 1);
     }
     else if (left_door && player_get_y() == left_door - 1){
         enter_left_door();
+        just_entered = 1;
     }
 }
 
@@ -96,10 +99,10 @@ void move_right(){
         player_move_right();
     else if (enemy_hit){
         player_damage_enemy(enemy_hit - 1);
-        enemy_damage_player(enemy_hit - 1);
     }
     else if (right_door && player_get_y() == right_door - 1){
         enter_right_door();
+        just_entered = 1;
     }
 }
 
@@ -109,10 +112,10 @@ void move_down(){
         player_move_down();
     else if (enemy_hit){
         player_damage_enemy(enemy_hit - 1);
-        enemy_damage_player(enemy_hit - 1);
     }
     else if (bottom_door && player_get_x() == bottom_door - 1){
         enter_bottom_door();
+        just_entered = 1;
     }
 }
 
@@ -166,7 +169,11 @@ char generate_doors(int room_width, int room_height){
 }
 
 char get_random_enemy(){
-    return (char) get_random_int(14) + 1;
+    int difficulty_level = get_current_room_average() / 2;
+    difficulty_level = get_random_int(3) + difficulty_level + 1;
+    if (difficulty_level > 15)
+        return (char) 15;
+    return (char) difficulty_level;
 }
 
 char generate_enemies(char* pointer){
@@ -263,8 +270,54 @@ void room_init(char* seed){
     current_corner_y = 2 + square_size * get_random_int(max_height - height);
 }
 
+int move_enemy_inner(int enemy, int first_choice){
+    int x_diff = abs(player_get_x() - enemy_get_x(enemy));
+    int y_diff = abs(player_get_x() - enemy_get_y(enemy));
+    if ((y_diff >= x_diff && first_choice) || (y_diff < x_diff && !first_choice)){
+        if (enemy_get_y(enemy) > player_get_y()){
+            if (!square_busy(enemy_get_x(enemy), enemy_get_y(enemy) - 1)){
+                enemy_move_up(enemy);
+                return 1;
+            }
+        } else if (enemy_get_y(enemy) < player_get_y() && !square_busy(enemy_get_x(enemy), enemy_get_y(enemy) + 1)){
+            enemy_move_down(enemy);
+            return 1;
+        }
+    } else {
+        if (enemy_get_x(enemy) > player_get_x()){
+            if (!square_busy(enemy_get_x(enemy) - 1, enemy_get_y(enemy))){
+                enemy_move_left(enemy);
+                return 1;
+            }
+        } else if (enemy_get_x(enemy) < player_get_x() && !square_busy(enemy_get_x(enemy) + 1, enemy_get_y(enemy))){
+            enemy_move_right(enemy);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void move_enemy(int enemy){
+    if (move_enemy_inner(enemy, 1)){
+        return;
+    }
+    move_enemy_inner(enemy, 0);
+}
+
 void room_update(){
-    
+    int i;
+    if (!just_entered){
+        for (i = 0; i < get_number_of_enemies(); i++){
+            if (enemy_get_hp(i) > 0){
+                if (enemy_next_to_player(i))
+                    enemy_damage_player(i);
+                else
+                    move_enemy(i);
+            }
+        }
+    } else {
+        just_entered = 0;
+    }
 }
 
 void print_seed(){
