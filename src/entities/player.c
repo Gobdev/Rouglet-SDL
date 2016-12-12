@@ -165,12 +165,21 @@ void player_draw_inventory_ui(){
 
 void player_draw_main_ui(){
     paint_pic(0, 0, main_ui);
-    print_int(10, 2, min_int(999, player_atk_low + weapon_atk_low));
-    print_text(22, 2, "-");
-    print_int(26, 2, min_int(999, player_atk_high + weapon_atk_high));
-    print_int(10, 10, min_int(999, player_hp));
-    print_text(22, 10, "/");
-    print_int(26, 10, min_int(999, player_max_hp));
+    char damage_text[8] = {0};
+    char damage_low[4] = {0};
+    char damage_high[4] = {0};
+    int_to_string(min_int(999, player_atk_low + weapon_atk_low), damage_low);
+    int_to_string(min_int(999, player_atk_high + weapon_atk_high), damage_high);
+    concat_3_strings(8, damage_text, damage_low, "-", damage_high);
+    print_text(10, 2, damage_text);
+
+    char hp[4] = {0};
+    char max_hp[4] = {0};
+    char hp_text[8] = {0};
+    int_to_string(min_int(999, player_hp), hp);
+    int_to_string(min_int(999, player_max_hp), max_hp);
+    concat_3_strings(8, hp_text, hp, "/", max_hp);
+    print_text(10, 10, hp_text);
     print_int(10, 18, min_int(9999999, player_gold));
     print_int(25, 26, min_int(999, player_level));
 }
