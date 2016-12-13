@@ -6,6 +6,7 @@ void player_move_down();
 void player_move_right();
 void player_move_left();
 void player_level_up();
+void player_get_gold(int gold);
 int player_get_attack_damage();
 void player_draw_main_ui();
 void player_draw_inventory_ui();

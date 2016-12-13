@@ -44,6 +44,10 @@ int player_get_y(){
     return player_y;
 }
 
+void player_get_gold(int gold){
+    player_gold += gold;
+}
+
 void player_print_damage(int enemy, int damage){
     char text1[20] = {0};
     char text2[20] = {0};

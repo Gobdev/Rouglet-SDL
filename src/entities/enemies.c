@@ -121,6 +121,7 @@ void enemy_take_damage(int enemy, int damage){
     enemy_hp[enemy] -= damage;
     if (enemy_hp[enemy] <= 0){
         player_receive_exp(enemy_exp_on_kill[enemy]);
+        player_get_gold(enemy_exp_on_kill[enemy] * 10 + get_random_int(9));
         char text[20] = {0};
         concat_3_strings(20, text, get_enemy_name(enemy), " dies.", "");
         pop_up_text(text, "");
