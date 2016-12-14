@@ -1,14 +1,17 @@
 #include <pic32mx.h>
 #include "player.h"
+#include "enemies.h"
 #include "../stdlib/rng.h"
 #include "../stdlib/graphics.h"
 #include "../stdlib/stdlib.h"
 #include "../images/UI.h"
 #include "../images/character_sprites.h"
 
-enum items {EMPTY, SWORD1, SWORD2, SWORD3, SPEAR1, SPEAR2, HAMMER, GREATSWORD, PICKAXE, AXE, HALBERD, SMALL_AXE, TRIDENT, BATTLE_AXE, GOBLET, POTION, BOMB};
+enum items {EMPTY = 0, SWORD1 = 1, SWORD2 = 2, SWORD3 = 3, SPEAR1 = 4, SPEAR2 = 5 , HAMMER = 6, GREATSWORD = 7,
+            PICKAXE = 8, AXE = 9, HALBERD = 10, SMALL_AXE = 11, TRIDENT = 12, BATTLE_AXE = 13, GOBLET = 14, POTION = 15, BOMB = 16, SUPER_POTION = 17,
+            ELIXIR = 18, SUPER_ELIXIR = 19};
 
-int weapon_low_list[] =  {0, 10, 30, 60, 5,  15, 5,  70, 5,  50, 60, 0, 30, 80, 0};
+int weapon_low_list[] =  {0, 10, 30, 60, 5,  15, 5,  70, 5,  50, 60, 0, 30, 80, 100};
 int weapon_high_list[] = {0, 50, 40, 70, 30, 40, 55, 80, 25, 95, 90, 40, 100, 90, 160};
 
 int player_max_hp = 100;
@@ -23,9 +26,10 @@ int player_x = 0;
 int player_y = 0;
 int player_exp = 0;
 int player_max_exp = 100;
-int inventory_size = 5;
-int potion_heal_amount = 50;
-int inventory[5] = {0};
+int inventory_size = 7;
+int potion_heal_amount = 100;
+int super_potion_heal_amount = 200;
+int inventory[7] = {0};
 int active_weapon_index = 100;
 
 int get_inventory_size(){
@@ -82,8 +86,19 @@ void draw_active_weapon(){
 
 }
 
+
+
+
 void use_item(int item_index){
     int item_id = inventory[item_index];
+    int i;
+    char* text;
+    if (item_id >= 15){
+        text = "Used:";
+    } else {
+        text = "Equipped:";
+    }
+    pop_up_text(text, get_item_name(item_id));
     switch(item_id){
         case POTION:
             if(player_hp + potion_heal_amount >= player_max_hp){
@@ -93,8 +108,34 @@ void use_item(int item_index){
             }
             remove_item(item_index);
             break;
-        case BOMB:
-            break; //TODO
+        case BOMB: //damage all eneimes with bomb TODO: CRASHED GAME!
+            for ( i = 0 ; i < get_number_of_enemies() ; i++){
+                if (enemy_is_alive(1)){
+                    //player_damage_enemy(i);
+                }
+            }
+            remove_item(item_index);
+            break; 
+        case ELIXIR:
+            if(player_hp + player_max_hp/2 >= player_max_hp){
+                player_hp = player_max_hp;
+            }else{
+                player_hp += player_max_hp/2;
+            }
+            remove_item(item_index);
+            break;
+        case SUPER_ELIXIR:
+            player_hp = player_max_hp;
+            remove_item(item_index);
+            break;
+        case SUPER_POTION:
+            if(player_hp + super_potion_heal_amount >= player_max_hp){
+                player_hp = player_max_hp;
+            }else{
+                player_hp += super_potion_heal_amount;
+            }            
+            remove_item(item_index);
+            break;
         default:
             set_current_weapon(weapon_low_list[item_id], weapon_high_list[item_id], item_index);
             break;
@@ -104,15 +145,22 @@ void use_item(int item_index){
 
 //TODO if inveotory is full, dont remove item form ground
 void add_to_inventory(int item_id){
-    int i;
-    if (inventory[inventory_size - 1] == 0){
-        for (i = 0; i < inventory_size; i++){
-            if (inventory[i] == 0){
-                inventory[i] = item_id;
-                break;
-            }
-        }  
+    if (item_id != 0){
+        int i;
+        if (inventory[inventory_size - 1] == 0){
+            for (i = 0; i < inventory_size; i++){
+                if (inventory[i] == 0){
+                    inventory[i] = item_id;
+                    break;
+                }
+            }  
+        }
     }
+}
+
+void drop_item(int item_index){
+    pop_up_text("Dropped:", get_item_name(inventory[item_index]));
+    remove_item(item_index);
 }
 
 void remove_item(int item_index){
@@ -189,7 +237,7 @@ void player_draw_main_ui(){
 }
 
 void player_draw(int x, int y){
-    paint_pic(x, y, smileyMan);
+    paint_pic(x, y, mc3);
 }
 
 void print_player_info(){

@@ -92,8 +92,8 @@ int main(void) {
 
 	//TEST INVETNORY
 
-	for (i = 1; i < 6; i++){
-		add_to_inventory(i);
+	for (i = 12; i < 19; i++){
+		add_to_inventory(16);
 	}
 
 	inventory_index = 0;
@@ -148,6 +148,8 @@ void main_game_state(int button){
 		default:
 			break;
 	}
+
+	player_loot();
 }
 
 void draw_equipped_item_box(int selected_index){
@@ -219,7 +221,7 @@ void inventory_game_state(int button, int* selected_index){
 			}
 			break;
 		case 3:
-			remove_item(*selected_index);
+			drop_item(*selected_index);
 			break;
 		case 4:
 			use_item(*selected_index);

@@ -112,6 +112,17 @@ int min_int(int first, int second){
     return second;
 }
 
+int calculate_drop(){
+    int random = get_random_int(100);
+    if (random > 75){
+        return 1;       //Drop a weapon
+    } else if (random > 50){
+        return 2;       //Drop a consumable
+    }else{
+        return 0;       //Drop nothing
+    }    
+}
+
 
 void concat_3_strings(int max_len, char* result, char* first, char* second, char* third){
     int i, j, k;

@@ -21,12 +21,34 @@ char* enemy_names[15] = {"ghost",
                          "evilthing",
                          "oni",
                          "knight"};
+
+char* item_names[20] = { "",
+                         "dagger",
+                         "sword",
+                         "winged sword",
+                         "spear",
+                         "winged spear",
+                         "hammer",
+                         "great sword",
+                         "pickaxe",
+                         "axe",
+                         "small axe",
+                         "halberd",
+                         "trident",
+                         "great axe",
+                         "goblet",
+                         "potion",
+                         "bomb",
+                         "super potion",
+                         "elixir",
+                         "super elixir"};
 char enemy_enabled[4] = {0};
 int enemy_max_hp[4];
 int enemy_hp[4];
 int enemy_atk_low[4];
 int enemy_atk_high[4];
 int enemy_x[4];
+int loot[4] = {0};
 int enemy_y[4];
 int enemy_exp_on_kill[4];
 char enemy_type[4];
@@ -36,7 +58,6 @@ char* enemy_sprite[4];
 char enemy_is_enabled(int enemy){
     return enemy_enabled[enemy];
 }
-
 
 char enemy_is_alive(int enemy){
     return (char) (enemy_hp[enemy] > 0);
@@ -96,6 +117,10 @@ char* get_enemy_name(int enemy){
     return (char*) enemy_name[enemy];
 }
 
+char* get_item_name(int item_id){
+    return (char*) item_names[item_id];
+}
+
 void enemy_print_damage(int enemy, int damage){
     char text1[20] = {0};
     char text2[20] = {0};
@@ -117,14 +142,19 @@ void enemy_damage_player(int enemy){
     }
 }
 
+void enemy_die(int enemy){
+    player_receive_exp(enemy_exp_on_kill[enemy]);
+    player_get_gold(enemy_exp_on_kill[enemy] * 10 + get_random_int(9));
+    char text[20] = {0};
+    concat_3_strings(20, text, get_enemy_name(enemy), " dies.", ""); 
+    pop_up_text(text, "");
+    loot[enemy] = get_random_int(19);
+}
+
 void enemy_take_damage(int enemy, int damage){
     enemy_hp[enemy] -= damage;
     if (enemy_hp[enemy] <= 0){
-        player_receive_exp(enemy_exp_on_kill[enemy]);
-        player_get_gold(enemy_exp_on_kill[enemy] * 10 + get_random_int(9));
-        char text[20] = {0};
-        concat_3_strings(20, text, get_enemy_name(enemy), " dies.", "");
-        pop_up_text(text, "");
+        enemy_die(enemy);
     }
 }
 
@@ -142,6 +172,7 @@ void delete_enemy(int enemy){
     enemy_y[enemy] = 0;
     enemy_exp_on_kill[enemy] = 0;
     enemy_sprite[enemy] = 0;
+    loot[enemy] = 0;
 }
 
 void clear_enemies(){
@@ -169,9 +200,38 @@ void init_enemy(int enemy, int type, int x, int y){
     enemy_sprite[enemy] = (char*) enemy_array[6 * type + 5];
 }
 
+void draw_loot(int enemy, int x, int y){
+    paint_from_items(x, y, loot[enemy]);
+}
+
+char loot_on_square(int x, int y){
+    int i;
+    for (i = 0; i < number_of_enemies; i++){
+        if (loot[i] > 0 && enemy_x[i] == x && enemy_y[i] == y)
+            return i + 1;
+    }
+    return 0;
+}
+
+void player_loot(){
+    char loot_index = loot_on_square(player_get_x(), player_get_y());
+    if (loot_index > 0)
+    {
+        char text[20] = {0};
+        concat_3_strings(20, text, "", get_item_name(loot[loot_index - 1]), ".");  
+        pop_up_text("Picked up: ", text);
+        add_to_inventory(loot[loot_index - 1]);
+        loot[loot_index - 1] = 0;
+    }
+}
+
 void enemy_draw(int enemy, int x, int y){
-    if (enemy_hp[enemy] > 0)
+    if (loot[enemy]){
+        draw_loot(enemy, x, y);
+    }
+    if (enemy_hp[enemy] > 0){
         paint_pic(x, y, enemy_sprite[enemy]);
+    }
 }
 
 char enemy_on_square(int x, int y){
@@ -182,3 +242,4 @@ char enemy_on_square(int x, int y){
     }
     return 0;
 }
+
