@@ -64,8 +64,13 @@ void _on_bootstrap(){
 }
 
 void title_screen(){
-	paint_pic(0, 0, roguelet_title);
-	update_screen();
+	int i;
+	for (i = 0; i < 32; i++){
+		clearScreen();
+		paint_pic(0, 32 - i, roguelet_title);
+		update_screen();
+		delay_ms(100);
+	}	
 	T2CON = 0x8020; // Set timer on (bit 15), prescale 1:4 (bits 6-4), 16-bit counter (bit 3), internal clock (bit 1).
     PR2 = 65535; // Counter goes up to 65535, to choose a random number from TMR2 as a initial seed.
 	buttonPress(0);
