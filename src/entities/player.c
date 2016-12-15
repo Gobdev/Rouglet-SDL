@@ -12,8 +12,8 @@ enum items {EMPTY = 0, SWORD1 = 1, SWORD2 = 2, SWORD3 = 3, SPEAR1 = 4, SPEAR2 = 
             PICKAXE = 8, AXE = 9, HALBERD = 10, SMALL_AXE = 11, TRIDENT = 12, BATTLE_AXE = 13, GOBLET = 14, POTION = 15, BOMB = 16, SUPER_POTION = 17,
             ELIXIR = 18, SUPER_ELIXIR = 19};
 
-int weapon_low_list[] =  {0, 10, 30, 60, 5,  15, 5,  70, 5,  50, 60, 0, 30, 80, 100};
-int weapon_high_list[] = {0, 50, 40, 70, 30, 40, 55, 80, 25, 95, 90, 40, 100, 90, 160};
+int weapon_low_list[] =  {0, 10, 20, 30, 20, 30, 10, 60, 20,  50, 60, 10, 70, 100, 200};
+int weapon_high_list[] = {0, 20, 30, 40, 60, 70, 85, 70, 100, 120, 130, 200, 140, 150, 300};
 
 int player_max_hp = 100;
 int player_hp = 100;
@@ -86,14 +86,18 @@ void player_print_damage(int enemy, int damage){
     pop_up_text(text1, text2);
 }
 
-void set_current_weapon(int low,int high,int item_index){
-    weapon_atk_low = low;
-    weapon_atk_high = high;
-    active_weapon_index = item_index;
+void set_current_weapon(int item_index){
+    weapon_atk_low = weapon_low_list[item_index];
+    weapon_atk_high = weapon_high_list[item_index];
+    //active_weapon_index = item_index;
 }
 
 int get_active_weapon_index(){
     return active_weapon_index;
+}
+
+void set_active_weapon_index(int index){
+    active_weapon_index = index;
 }
 
 
@@ -101,13 +105,6 @@ void set_player_position(int new_x, int new_y){
     player_x = new_x;
     player_y = new_y;
 }
-
-
-void draw_active_weapon(){
-
-}
-
-
 
 
 void use_item(int item_index){
@@ -159,7 +156,7 @@ void use_item(int item_index){
             remove_item(item_index);
             break;
         default:
-            set_current_weapon(weapon_low_list[item_id], weapon_high_list[item_id], item_index);
+            set_current_weapon(item_id);
             break;
     }
 }
@@ -187,11 +184,16 @@ void drop_item(int item_index){
 
 void remove_item(int item_index){
     int i;
-    if (item_index == active_weapon_index)
-        set_current_weapon(0,0,100);
+    if (item_index == active_weapon_index){
+        active_weapon_index = 100;
+    } 
+    /*else if (active_weapon_index > item_index) {
+        active_weapon_index--;
+    }
     for (i = item_index ; i < inventory_size - 1 ; i++){
         inventory[i] = inventory[i+1];
     }
+    */
     inventory[inventory_size - 1] = 0;
 }
 

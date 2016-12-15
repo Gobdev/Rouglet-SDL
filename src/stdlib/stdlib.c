@@ -161,18 +161,15 @@ int random_drop_rarity(int n){
 }
 
 int calculate_drop(int weapon_amount){
-    int random = get_random_int(100);
-    return random_drop_rarity(weapon_amount);
-    /*
+    int random = get_random_int(100);    
     if (random > 70){
         int random_type = get_random_int(100);
-        if (random_type > 30){
-            return random_drop_rarity(weapon_amount);
+        if (random_type > 70){
+            return random_drop_rarity(weapon_amount - 1) + 1;
         } else {
             return 15 + get_random_int(4);
         }
     } else {
         return 0;
     }
-    */
 }

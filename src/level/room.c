@@ -401,6 +401,9 @@ void room_draw(){
         }
     }
     for (i = 0; i < get_number_of_enemies(); i++){ 
+        loot_draw(i, current_corner_x + enemy_get_x(i) * square_size, current_corner_y + enemy_get_y() * square_size);
+    }
+    for (i = 0; i < get_number_of_enemies(); i++){ 
         enemy_draw(i, current_corner_x + enemy_get_x(i) * square_size, current_corner_y + enemy_get_y() * square_size);
     }
     player_draw(current_corner_x + player_get_x() * square_size, current_corner_y + player_get_y() * square_size);

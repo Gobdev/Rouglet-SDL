@@ -10,6 +10,7 @@ void clear_enemies();
 void delete_enemy(int enemy);
 void init_enemy(int enemy, int type, int x, int y);
 void enemy_draw(int enemy, int x, int y);
+void loot_draw(int enemy, int x, int y);
 void enemy_damage_player(int enemy);
 void enemy_take_damage(int enemy, int damage);
 void player_loot();

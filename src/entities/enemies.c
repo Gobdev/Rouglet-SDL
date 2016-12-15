@@ -148,7 +148,7 @@ void enemy_die(int enemy){
     char text[20] = {0};
     concat_3_strings(20, text, get_enemy_name(enemy), " dies.", ""); 
     pop_up_text(text, "");
-    loot[enemy] = calculate_drop(13) + 1;
+    loot[enemy] = calculate_drop(14);
 }
 
 void enemy_take_damage(int enemy, int damage){
@@ -200,8 +200,10 @@ void init_enemy(int enemy, int type, int x, int y){
     enemy_sprite[enemy] = (char*) enemy_array[6 * type + 5];
 }
 
-void draw_loot(int enemy, int x, int y){
-    paint_from_items(x, y, loot[enemy]);
+void loot_draw(int enemy, int x, int y){
+    if (loot[enemy]){
+        paint_from_items(x, y, loot[enemy]);
+    }
 }
 
 char loot_on_square(int x, int y){
@@ -226,9 +228,6 @@ void player_loot(){
 }
 
 void enemy_draw(int enemy, int x, int y){
-    if (loot[enemy]){
-        draw_loot(enemy, x, y);
-    }
     if (enemy_hp[enemy] > 0){
         paint_pic(x, y, enemy_sprite[enemy]);
     }
