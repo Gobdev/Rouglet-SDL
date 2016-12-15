@@ -41,6 +41,14 @@ void print_pointer(){
     print_char_hex(42, 24, pointer[5]);
 }
 
+int get_current_room_x(){
+    return current_room[0];
+}
+
+int get_current_room_y(){
+    return current_room[1];
+}
+
 char* get_room_pointer(int x, int y){
     return room_seeds + seed_size * (x + y * level_length);
 }
@@ -171,4 +179,13 @@ void enter_bottom_door(){
     int door_pos = pointer[2] >> 3;
     set_player_position(door_pos - 1, 0);
     set_current_room_to_seed(pointer);
+}
+
+void reset_level(){
+    int i;
+    for (i = 0; i < level_length*level_length*seed_size; i++){
+        room_seeds[i] = 0;
+    }
+    current_room[0] = 0;
+    current_room[1] = 0;
 }

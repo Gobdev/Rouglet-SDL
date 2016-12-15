@@ -6,6 +6,7 @@
 #include "../stdlib/stdlib.h"
 #include "../images/UI.h"
 #include "../images/character_sprites.h"
+#include "../game.h"
 
 enum items {EMPTY = 0, SWORD1 = 1, SWORD2 = 2, SWORD3 = 3, SPEAR1 = 4, SPEAR2 = 5 , HAMMER = 6, GREATSWORD = 7,
             PICKAXE = 8, AXE = 9, HALBERD = 10, SMALL_AXE = 11, TRIDENT = 12, BATTLE_AXE = 13, GOBLET = 14, POTION = 15, BOMB = 16, SUPER_POTION = 17,
@@ -34,6 +35,26 @@ int active_weapon_index = 100;
 
 int get_inventory_size(){
     return inventory_size;
+}
+
+void reset_player(){
+    int i;
+    for (i = 0; i < inventory_size; i++){
+        inventory[i] = 0;
+    }
+    player_max_hp = 100;
+    player_hp = 100;
+    player_atk_low = 30;
+    player_atk_high = 40;
+    weapon_atk_low = 0;
+    weapon_atk_high = 0;
+    player_gold = 0;
+    player_level = 1;
+    player_x = 0;
+    player_y = 0;
+    player_exp = 0;
+    player_max_exp = 100;
+    active_weapon_index = 100;
 }
 
 int get_inventory_element(int index){
@@ -110,8 +131,9 @@ void use_item(int item_index){
             break;
         case BOMB: //damage all eneimes with bomb TODO: CRASHED GAME!
             for ( i = 0 ; i < get_number_of_enemies() ; i++){
-                if (enemy_is_alive(1)){
-                    //player_damage_enemy(i);
+                if (enemy_is_alive(i)){
+                    player_damage_enemy(i);
+                    //enemy_take_damage(i, 100);
                 }
             }
             remove_item(item_index);
@@ -181,6 +203,9 @@ void player_damage_enemy(int enemy){
 
 void player_take_damage(int damage){
     player_hp -= damage;
+    if (player_hp <= 0){
+        gameover();
+    }
 }
 
 void player_move_up(){

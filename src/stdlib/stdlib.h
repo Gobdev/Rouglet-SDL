@@ -8,4 +8,6 @@ int strlen(char* string);
 int intlen(int integer);
 void concat_3_strings(int max_len, char* result, char* first, char* second, char* third);
 int min_int();
-int calculate_drop();
+int random_drop_rarity(int n);
+int calculate_drop(int weapon_amount);
+float pow_custom(float number, int power);

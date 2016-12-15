@@ -17,12 +17,14 @@
 void main_game_state();
 void inventory_game_state();
 void draw_inventory(int selected_index);
+void reset_game();
 
 const char white_square[7] = {5, 5, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F};
 char pointer[34] = {0};
 int inventory_position1[] = {42, 2};
 int inventory_position2[] = {42, 12};
 int inventory_position3[] = {42, 22};
+int game_over = 0;
 
 /* Non-Maskable Interrupt; something bad likely happened, so hang */
 void _nmi_handler(){for(;;);}
@@ -89,13 +91,6 @@ void title_screen(){
 int main(void) {
 	int i, j, k, xPos, yPos, game_state, inventory_index;
 
-
-	//TEST INVETNORY
-
-	for (i = 12; i < 19; i++){
-		add_to_inventory(16);
-	}
-
 	inventory_index = 0;
 	game_state = 0; //inventory(1) or main game(0)
 	int button;
@@ -104,7 +99,7 @@ int main(void) {
 	player_draw_main_ui();
 	level_draw();
 	update_screen();
-	while( 1 )
+	while(!game_over)
 	{
 		button = buttonPress(0);
 		game_state = checkSwitches(1);
@@ -125,6 +120,7 @@ int main(void) {
 		update_screen();
 		delay_ms(100); 								// Delay to avoid double button presses.
 	}
+	reset_game();
 	return 0;
 }
 
@@ -230,4 +226,15 @@ void inventory_game_state(int button, int* selected_index){
 			break;
 	}
 
+}
+
+void reset_game(){
+	game_over = 0;
+	reset_level();
+	reset_player();
+	main();
+}
+
+void gameover(){
+	game_over = 1;
 }

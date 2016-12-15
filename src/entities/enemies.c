@@ -148,7 +148,7 @@ void enemy_die(int enemy){
     char text[20] = {0};
     concat_3_strings(20, text, get_enemy_name(enemy), " dies.", ""); 
     pop_up_text(text, "");
-    loot[enemy] = get_random_int(19);
+    loot[enemy] = calculate_drop(13) + 1;
 }
 
 void enemy_take_damage(int enemy, int damage){

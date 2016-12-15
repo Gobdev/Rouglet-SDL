@@ -9,3 +9,6 @@ void enter_top_door();
 void enter_left_door();
 void enter_right_door();
 void enter_bottom_door();
+int get_current_room_x();
+int get_current_room_y();
+void reset_level();

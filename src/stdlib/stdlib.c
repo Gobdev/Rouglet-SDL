@@ -1,5 +1,7 @@
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "stdlib.h"
+#include "rng.h"
+
 
 char mod(char first, char second){
     char return_char = first % second;
@@ -112,16 +114,6 @@ int min_int(int first, int second){
     return second;
 }
 
-int calculate_drop(){
-    int random = get_random_int(100);
-    if (random > 75){
-        return 1;       //Drop a weapon
-    } else if (random > 50){
-        return 2;       //Drop a consumable
-    }else{
-        return 0;       //Drop nothing
-    }    
-}
 
 
 void concat_3_strings(int max_len, char* result, char* first, char* second, char* third){
@@ -133,4 +125,54 @@ void concat_3_strings(int max_len, char* result, char* first, char* second, char
     for (k = 0; i < third[k] && i < max_len - 1; i++)
         result[i] = third[k++];
     result[i] = 0;
+}
+
+float pow_custom(float number, int power){
+    int i;
+    float original_number = number;
+    for (i = 0; i < power - 1; i++){
+        number = number * original_number;
+    }
+    return number;
+}
+
+float get_room_average(){
+    return (get_current_room_x() + get_current_room_y()) / 2;
+}
+
+int inner_formel(int x){
+    return (int) 200 * pow_custom((0.8 + (float) get_room_average() / 25 * 0.5), x);
+}
+
+int random_drop_rarity(int n){
+    int sum = 0;
+    int i;
+    for (i = 0; i <= n; i++){
+        sum += inner_formel(i);
+    }
+    int r = get_random_int(sum);
+    sum = 0;
+    for (i = 0; i < n; i++){
+        sum += inner_formel(i);
+        if (r < sum)
+            return i;
+    }
+    return i;
+}
+
+int calculate_drop(int weapon_amount){
+    int random = get_random_int(100);
+    return random_drop_rarity(weapon_amount);
+    /*
+    if (random > 70){
+        int random_type = get_random_int(100);
+        if (random_type > 30){
+            return random_drop_rarity(weapon_amount);
+        } else {
+            return 15 + get_random_int(4);
+        }
+    } else {
+        return 0;
+    }
+    */
 }

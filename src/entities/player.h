@@ -22,3 +22,4 @@ int get_inventory_element(int index);
 void player_damage_enemy(int enemy);
 void player_take_damage(int damage);
 void drop_item(int item_index);
+void reset_player();
