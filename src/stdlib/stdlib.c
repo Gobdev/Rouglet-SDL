@@ -1,4 +1,4 @@
-#include <pic32mx.h>  /* Declarations of system-specific addresses etc */
+#include <SDL2/SDL.h>
 #include "stdlib.h"
 #include "rng.h"
 
@@ -11,20 +11,11 @@ char mod(char first, char second){
 }
 
 void reset_timer(){
-    TMR2 = 0; // Set counter to 0.
-    T2CON = 0x8070; // Set timer on (bit 15), prescale 1:256 (bits 6-4), 16-bit counter (bit 3), internal clock (bit 1).
-    PR2 = 312; // Counter goes up to 312, 31250 * 256 * 1000 is almost 80 000 000.
+    
 }
 
 void delay_ms(int milliseconds){
-    TMR2 = 0;
-    int i = 0;
-    while (i < milliseconds){
-        if (IFS(0) & 0x100){
-            IFS(0) &= ~0x100; // Reset flag.
-            i++;              // Increment time counter every 100 ms.
-        }
-    }
+    SDL_Delay(milliseconds); 
 }
 
 int abs(int integer){
@@ -55,12 +46,7 @@ void char_to_string(char value, char* str){
 void int_to_string(int value, char* str){
     int valueCopy, i;
     i = 0;
-    if (value < 0){
-        str[0] = 0x2D;                  // Negative sign  
-        str++;
-        value = ~value + 1;             // For negative numbers
-    }
-    for (valueCopy = value; valueCopy >= 10; valueCopy /= 10){
+    if (value < 0){ str[0] = 0x2D;                  // Negative sign  str++; value = ~value + 1;             // For negative numbers } for (valueCopy = value; valueCopy >= 10; valueCopy /= 10){
         i++;
     }
     for (;i >= 0; i--){
@@ -85,15 +71,6 @@ void int_to_hex_string(unsigned int value, char* str){
     }
 }
 
-int strlen(char* string){
-    int i;
-    for (i = 0; i < 128; i++){
-        if (string[i] == 0){
-            break;
-        }
-    }
-    return i;
-}
 
 int intlen(int integer){
     int i = 1;

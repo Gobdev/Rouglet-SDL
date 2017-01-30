@@ -1,4 +1,3 @@
-#include <pic32mx.h>
 #include "player.h"
 #include "enemies.h"
 #include "../stdlib/rng.h"
@@ -274,7 +273,7 @@ void print_player_info(){
 void update_exp_bar(){
     float exp_ratio = (float)player_exp/(float)player_max_exp;
     int LED_count = (int) (exp_ratio * 8);
-    PORTE = ~(((char) 0xFF) << LED_count);
+    //PORTE = ~(((char) 0xFF) << LED_count);
 }
 
 void player_receive_exp(int exp_amount){

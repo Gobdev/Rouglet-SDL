@@ -1,5 +1,4 @@
 #include <stdint.h>
-#include <pic32mx.h>
 #include "ui.h"
 #include "graphics.h"
 #include "../entities/player.h"

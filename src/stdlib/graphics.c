@@ -1,12 +1,14 @@
 #include <stdint.h>
 #include <math.h>
-#include <pic32mx.h>
+#include <SDL2/SDL.h>
 #include "graphics.h"
 #include "stdlib.h"
 #include "../images/alphabet.h"
 #include "../images/symbols.h"
 #include "../images/item_sprites.h"
 #include "../images/graphic_elements.h"
+
+
 
 #define CHANGE_TO_COMMAND_MODE (PORTFCLR = 0x10)
 #define CHANGE_TO_DATA_MODE (PORTFSET = 0x10)
@@ -30,11 +32,20 @@
 #define OLED_PAGES 4 
 //number of display memory pages
 
- //oldGraphics
+//Screen dimension constants 
+const int SCREEN_WIDTH = 640; 
+const int SCREEN_HEIGHT = 480;
+
+const int PIXEL_SIZE = 2;
+
+//oldGraphics
 char oledBuffer[OLED_MAX_BYTES] = {0};
 char debugBuffer[OLED_MAX_BYTES] = {0};
 int debug = 0;
 int debug_pages_len[4] = {0};
+
+SDL_Window *window;
+SDL_Renderer *renderer;
 
 void enable_debug(){
     debug = 1;
@@ -52,128 +63,50 @@ int get_oled_width(){
     return OLED_ROW_LENGTH;
 }
 
-void inititalize_host(){
-    /* Initialize SPI port 2. 
-    */ 
-    SPI2CON = 0; 
-    SPI2BRG = 15; //8Mhz, with 80Mhz PB clock 
-    /* SPI2STAT bit SPIROV = 0; */
-    SPI2STATCLR = 0x40;
-    SPI2CONSET = 0x8060;
-    
-    /* Make pins RF4, RF5, and RF6 be outputs. 
-    */ 
-    //PORTFSET = 0x70;
-    CHANGE_TO_COMMAND_MODE;     // Command mode 
-    ACTIVATE_VDD;               // Turn on VDD power
-    ACTIVATE_VBAT;              // Turn on VBAT power
-
-    /* Make the RG9 pin be an output. On the Basic I/O Shield, this pin 
-    ** is tied to reset. 
-    */ 
-    ACTIVATE_RESET;
-    DO_NOT_RESET;
-}
-
-char Spi2PutByte(char data) {
-    /* Wait for transmitter to be ready 
-    */ 
-    while(!(SPI2STAT & 0x08));
-    /* Write the next transmit byte. 
-    */ 
-    SPI2BUF = data;
-    /* Wait for receive byte. 
-    */ 
-    while(!(SPI2STAT & 1));
-    /* Return the received byte in the buffer. 
-    */ 
-    return SPI2BUF;
-}
 
 
-void inititalize_display() 
+
+void initialize_display() 
 { 
-    inititalize_host();
-    /* We're going to be sending commands, so clear the Data/Cmd bit 
-    */ 
-    CHANGE_TO_COMMAND_MODE; 
-    delay_ms(1); 
-    /* Start by turning VDD on and wait a while for the power to come up.  
-    */
-    ACTIVATE_VDD;
-    delay_ms(10); 
-    /* Display off command 
-    */ 
-    Spi2PutByte(0xAE); 
-    /* Bring Reset low and then high 
-    */ 
-    ACTIVATE_RESET; 
-    delay_ms(1); 
-    DO_NOT_RESET; 
-    /* Send the Set Charge Pump and Set Pre-Charge Period commands 
-    */ 
-    Spi2PutByte(0x8D); 
-    Spi2PutByte(0x14); 
-    Spi2PutByte(0xD9); 
-    Spi2PutByte(0xF1); 
-    /* Turn on VCC and wait 100ms 
-    */ 
-    ACTIVATE_VBAT;
-    delay_ms(100); 
-    /* Send the commands to invert the display. This puts the display origin 
-    ** in the upper left corner. 
-    */ 
-    Spi2PutByte(0xA1); 
-    //remap columns 
-    Spi2PutByte(0xC8); 
-    //remap the rows 
-    /* Send the commands to select sequential COM configuration. This makes the 
-    ** display memory non-interleaved. 
-    */ 
-    Spi2PutByte(0xDA); 
-    //set COM configuration command 
-    Spi2PutByte(0x20); 
-    //sequential COM, left/right remap enabled 
-    /* Send Display On command 
-    */ 
-    Spi2PutByte(0xAF); 
+    
+    //Initialize SDL 
+        //Create windows
+        SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer);
+        if( window == NULL )
+        {
+            printf( "Window could not be created!");
+        }
+        else 
+        {
+            SDL_SetWindowTitle(window, "GOBLET 1.5.1");
+			SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
+			SDL_RenderClear(renderer);
+			SDL_RenderPresent(renderer);
+		}
 } 
 
-void OledPutBuffer(int cb, char* rgbTx) { 
-    int ib; 
-    char bTmp; 
-    /* Write/Read the data 
-    */ 
-    for (ib = 0; ib < cb; ib++) { 
-        bTmp = Spi2PutByte(*rgbTx++);
-    }   
-} 
 
 void OledUpdate(char* buffer) { 
+    int ibit;
     int ipag; 
+    int irow;
     int icol; 
     char* pb; 
     pb = buffer; 
+			SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
+			SDL_RenderClear(renderer);
+			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     for (ipag = 0; ipag < OLED_PAGES; ipag++) { 
-        CHANGE_TO_COMMAND_MODE; 
-        /* Set the page address 
-        */ 
-        Spi2PutByte(0x22); 
-        //Set page command 
-        Spi2PutByte(ipag); 
-        //page number 
-        /* Start at the left column 
-        */ 
-        Spi2PutByte(0x00); 
-        //set low nybble of column 
-        Spi2PutByte(0x10); 
-        //set high nybble of column 
-        CHANGE_TO_DATA_MODE; 
-        /* Copy this memory page of display data. 
-        */ 
-        OledPutBuffer(OLED_ROW_LENGTH, pb);
-        pb += OLED_ROW_LENGTH; 
+        for(irow = 0; irow< OLED_ROW_LENGTH; irow++)
+        {
+        for(ibit = 0; ibit<8; ibit++)
+        {
+            if((*pb >> ibit) & 1) SDL_RenderDrawPoint(renderer, irow,ipag*8+ibit);
+        }
+        pb++;
+        }
     } 
+	SDL_RenderPresent(renderer);
 } 
 
 

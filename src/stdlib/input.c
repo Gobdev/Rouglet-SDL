@@ -1,5 +1,6 @@
 #include <stdint.h>
-#include <pic32mx.h>
+#include <SDL2/SDL.h>
+
 #include "input.h"
 #include "graphics.h"
 
@@ -10,16 +11,16 @@ char allowPress[4] = {1,1,1,1}; //Allow a button to send signal
 char checkButton(char buttonNumber){
 	switch(buttonNumber){
 		case 1:
-			return PORTF & 0x2;
+			return 0;
 			//bit index 1 in PORTF
 		case 2:
-			return PORTD & 0x20;
+			return 0;
 			//bit index 5 in PORTD
 		case 3:
-			return PORTD & 0x40;
+			return 0;
 			//bit index 6 in PORTD
 		case 4:
-			return PORTD & 0x80;
+			return 0;
 			//bit index 7 in PORTD
 	}
 }
@@ -41,25 +42,21 @@ char pressedButton(char buttonNumber){
 char checkSwitches(char switchNumber){
 	switch(switchNumber){
 		case 1:
-			return (PORTD & 0x100) >> 8; //bit index 8 in PORTD
+			return 0; //bit index 8 in PORTD
 			break;
 		case 2:
-			return (PORTD & 0x200) >> 9;//bit index 9 in PORTD
+			return 0;//bit index 9 in PORTD
 			break;
 		case 3:
-			return (PORTD & 0x400) >> 10;//bit index 10 in PORTD
+			return 0;//bit index 10 in PORTD
 			break;
 		case 4:
-			return (PORTD & 0x800) >> 11;//bit index 11 in PORTD
+			return 0;//bit index 11 in PORTD
 			break;	
 	}
 }
 
 char check_all_switches(){
-	if ((PORTD & 0x200) >> 9) //bit index 9 in PORTD
-		return 2;
-	else if ((PORTD & 0x100) >> 8) //bit index 8 in PORTD
-		return 1;
 	return 0;
 }
 
@@ -73,7 +70,6 @@ char get_switch_state(){
 }
 
 int buttonPress(int timeout){
-	TMR2 = 0;
 	int b = 0;
 	int i = 0;
 	char switch_state = get_switch_state();
@@ -88,10 +84,8 @@ int buttonPress(int timeout){
 			b = 4;
 		else if (get_switch_state() != switch_state)
 			b = 5;
-		if (IFS(0) & 0x100){
-            IFS(0) &= ~0x100; // Reset flag.
-            i++;              // Increment time counter every 100 ms.
-        }
+
+        SDL_Delay(100);
 	}
 	return b;
 }

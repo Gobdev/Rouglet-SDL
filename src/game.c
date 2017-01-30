@@ -4,7 +4,8 @@
 */
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
-#include <pic32mx.h>  /* Declarations of system-specific addresses etc */
+#include <time.h>
+#include <SDL2/SDL.h>
 #include "entities/player.h"
 #include "stdlib/graphics.h"
 #include "stdlib/rng.h"
@@ -31,39 +32,6 @@ void _nmi_handler(){for(;;);}
 /* This function is called upon reset, before .data and .bss is set up */
 void _on_reset(){}
 
-/*
-	Setup function, run before main() function.	
-*/
-void _on_bootstrap(){
-	reset_timer();
-	/* Set up peripheral bus clock */
-    /* OSCCONbits.PBDIV = 1; */
-    OSCCONCLR = 0x100000; /* clear PBDIV bit 1 */
-	OSCCONSET = 0x080000; /* set PBDIV bit 0 */
-	
-	/* Set up output pins */
-	AD1PCFG = 0xFFFF;
-	ODCE = 0x0;
-	TRISECLR = 0xFF;
-	PORTE = 0x0;
-	
-	/* Output pins for display signals */
-	PORTF = 0xFFFF;
-	PORTG = (1 << 9);
-	ODCF = 0x0;
-	ODCG = 0x0;
-	TRISFCLR = 0x70;
-	TRISGCLR = 0x200;
-	
-	/* Set up input pins */
-	TRISDSET = (1 << 8);
-	TRISFSET = (1 << 1);
-
-	TRISE = 0;
-
-	inititalize_display();
-	enable_debug();
-}
 
 void title_screen(){
 	int i;
@@ -73,23 +41,31 @@ void title_screen(){
 		update_screen();
 		delay_ms(100);
 	}	
-	T2CON = 0x8020; // Set timer on (bit 15), prescale 1:4 (bits 6-4), 16-bit counter (bit 3), internal clock (bit 1).
-    PR2 = 65535; // Counter goes up to 65535, to choose a random number from TMR2 as a initial seed.
-	buttonPress(0);
-	int seed = TMR2;
+	//buttonPress(0);
+	int seed = time(NULL);
 	clearScreen();
 	print_text(35, 14, "Seed: ");
 	print_int(56, 14, seed);
 	rng_init(seed);
 	update_screen();
 	reset_timer();
-	buttonPress(1000);
+	//buttonPress(1000);
 	clearScreen();
 }
 
 
 int main(void) {
 	int i, j, k, xPos, yPos, game_state, inventory_index;
+    SDL_Event event;
+    printf( "Test1\n"); 
+     
+    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0 ) 
+    { 
+       printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() ); 
+       return -1;
+    }
+
+	initialize_display();
 
 	inventory_index = 0;
 	game_state = 0; //inventory(1) or main game(0)
@@ -99,8 +75,14 @@ int main(void) {
 	player_draw_main_ui();
 	level_draw();
 	update_screen();
+    SDL_Log("Test\n");
 	while(!game_over)
 	{
+        SDL_PollEvent(&event);
+        if(event.type == SDL_QUIT){
+            return 0;
+        }
+
 		button = buttonPress(0);
 		game_state = checkSwitches(1);
 
