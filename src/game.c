@@ -41,7 +41,7 @@ void title_screen(){
 		update_screen();
 		delay_ms(100);
 	}	
-	//buttonPress(0);
+	buttonPress(0);
 	int seed = time(NULL);
 	clearScreen();
 	print_text(35, 14, "Seed: ");
@@ -49,7 +49,7 @@ void title_screen(){
 	rng_init(seed);
 	update_screen();
 	reset_timer();
-	//buttonPress(1000);
+	buttonPress(1000);
 	clearScreen();
 }
 
@@ -78,10 +78,6 @@ int main(void) {
     SDL_Log("Test\n");
 	while(!game_over)
 	{
-        SDL_PollEvent(&event);
-        if(event.type == SDL_QUIT){
-            return 0;
-        }
 
 		button = buttonPress(0);
 		game_state = checkSwitches(1);

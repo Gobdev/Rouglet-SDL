@@ -6,6 +6,7 @@
 
 
 char allowPress[4] = {1,1,1,1}; //Allow a button to send signal
+SDL_Event event;
 
 
 char checkButton(char buttonNumber){
@@ -74,16 +75,29 @@ int buttonPress(int timeout){
 	int i = 0;
 	char switch_state = get_switch_state();
 	while (!b && (timeout == 0 || i < timeout)){
-		if (pressedButton(1))
-			b = 1;
-		else if (pressedButton(2))
-			b = 2;
-		else if (pressedButton(3))
-			b = 3;
-		else if (pressedButton(4))
-			b = 4;
-		else if (get_switch_state() != switch_state)
-			b = 5;
+        SDL_PollEvent(&event);
+
+        if(event.type == SDL_QUIT) exit(0);
+        else if(event.type == SDL_KEYDOWN) {
+            switch(event.key.keysym.sym)
+            {
+                case SDLK_DOWN:
+                    b = 1;
+                    break;
+                case SDLK_UP:
+                    b = 2;
+                    break;
+                case SDLK_RIGHT:
+                    b = 3;
+                    break;
+                case SDLK_LEFT:
+                    b = 4;
+                    break;
+                case KMOD_SHIFT:
+                    b = 5;
+                    break;
+            }
+        }
 
         SDL_Delay(100);
 	}

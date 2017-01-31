@@ -36,7 +36,7 @@
 const int SCREEN_WIDTH = 640; 
 const int SCREEN_HEIGHT = 480;
 
-const int PIXEL_SIZE = 2;
+const int PIXEL_SIZE = 4;
 
 //oldGraphics
 char oledBuffer[OLED_MAX_BYTES] = {0};
@@ -78,12 +78,26 @@ void initialize_display()
         }
         else 
         {
-            SDL_SetWindowTitle(window, "GOBLET 1.5.1");
+            SDL_SetWindowTitle(window, "Rouglet 1.505");
 			SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
 			SDL_RenderClear(renderer);
 			SDL_RenderPresent(renderer);
 		}
 } 
+
+
+
+void GobSetPixel(int x, int y)
+{
+    int i, j;
+    for(i = 0; i<PIXEL_SIZE; i++) {
+        for(j = 0; j<PIXEL_SIZE; j++) {
+            SDL_RenderDrawPoint(renderer, x*PIXEL_SIZE+i, y*PIXEL_SIZE+j);
+        }
+    }
+
+}
+
 
 
 void OledUpdate(char* buffer) { 
@@ -101,7 +115,7 @@ void OledUpdate(char* buffer) {
         {
         for(ibit = 0; ibit<8; ibit++)
         {
-            if((*pb >> ibit) & 1) SDL_RenderDrawPoint(renderer, irow,ipag*8+ibit);
+            if((*pb >> ibit) & 1) GobSetPixel(irow,ipag*8+ibit);
         }
         pb++;
         }
