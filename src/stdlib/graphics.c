@@ -74,7 +74,7 @@ void initialize_display()
         SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer);
         if( window == NULL )
         {
-            printf( "Window could not be created!");
+            //printf( "Window could not be created!");
         }
         else 
         {

@@ -54,14 +54,14 @@ void title_screen(){
 }
 
 
-int main(void) {
+int main(int argc, char* argv[]){
 	int i, j, k, xPos, yPos, game_state, inventory_index;
     SDL_Event event;
-    printf( "Test1\n"); 
+    //printf( "Test1\n"); 
      
     if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0 ) 
     { 
-       printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() ); 
+		SDL_Log( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
        return -1;
     }
 
@@ -75,7 +75,7 @@ int main(void) {
 	player_draw_main_ui();
 	level_draw();
 	update_screen();
-    SDL_Log("Test\n");
+    SDL_Log("Entering main loop\n");
 	while(!game_over)
 	{
 
@@ -210,7 +210,7 @@ void reset_game(){
 	game_over = 0;
 	reset_level();
 	reset_player();
-	main();
+	main(0,0);
 }
 
 void gameover(){

@@ -6,44 +6,14 @@
 
 
 char allowPress[4] = {1,1,1,1}; //Allow a button to send signal
+int toggle = 0;
 SDL_Event event;
 
-
-char checkButton(char buttonNumber){
-	switch(buttonNumber){
-		case 1:
-			return 0;
-			//bit index 1 in PORTF
-		case 2:
-			return 0;
-			//bit index 5 in PORTD
-		case 3:
-			return 0;
-			//bit index 6 in PORTD
-		case 4:
-			return 0;
-			//bit index 7 in PORTD
-	}
-}
-
-char pressedButton(char buttonNumber){
-	if(checkButton(buttonNumber)){
-		if(allowPress[buttonNumber - 1] == 1){
-			allowPress[buttonNumber - 1] = 0;
-			return 1;
-		}else{
-			return 0;
-		}
-	}else{
-		allowPress[buttonNumber - 1] = 1;
-		return 0;
-	}
-}
 
 char checkSwitches(char switchNumber){
 	switch(switchNumber){
 		case 1:
-			return 0; //bit index 8 in PORTD
+			return toggle;
 			break;
 		case 2:
 			return 0;//bit index 9 in PORTD
@@ -93,13 +63,15 @@ int buttonPress(int timeout){
                 case SDLK_LEFT:
                     b = 4;
                     break;
-                case KMOD_SHIFT:
-                    b = 5;
+                case SDLK_RSHIFT:
+					toggle = !toggle;
+					b = 5;
                     break;
             }
         }
         
-        SDL_Delay(50);
+		SDL_Delay(50);
+		i++;
 	}
 	return b;
 }
