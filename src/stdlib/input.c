@@ -98,8 +98,8 @@ int buttonPress(int timeout){
                     break;
             }
         }
-
-        SDL_Delay(100);
+        
+        SDL_Delay(50);
 	}
 	return b;
 }
