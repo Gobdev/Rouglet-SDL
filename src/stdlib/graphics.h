@@ -3,7 +3,7 @@
 void enable_debug();
 void disable_debug();
 void delay_ms(int milliseconds);
-void inititalize_display();
+void initialize_display();
 void print_debug(int page, char* string);
 void print_int(int x, int y, int value);
 void print_char(int x, int y, char value);

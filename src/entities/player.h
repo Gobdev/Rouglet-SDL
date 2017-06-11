@@ -1,5 +1,8 @@
 #pragma once
 
+int player_get_x();
+int player_get_y();
+
 void set_player_position(int x, int y);
 void player_move_up();
 void player_move_down();
@@ -23,4 +26,6 @@ void player_damage_enemy(int enemy);
 void player_take_damage(int damage);
 void drop_item(int item_index);
 void reset_player();
+int get_active_weapon_index();
 void set_active_weapon_index(int index);
+void player_receive_exp(int exp_amount);

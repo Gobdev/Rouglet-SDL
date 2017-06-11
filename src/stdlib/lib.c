@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
-#include "stdlib.h"
+#include "../level/level.h"
+#include "lib.h"
 #include "rng.h"
 
 
@@ -8,6 +9,7 @@ char mod(char first, char second){
     if (return_char < 0){
         return_char += second;
     }
+	return return_char;
 }
 
 void reset_timer(){
@@ -18,12 +20,6 @@ void delay_ms(int milliseconds){
     SDL_Delay(milliseconds); 
 }
 
-int abs(int integer){
-    if (integer < 0){
-        return ~integer + 1;
-    }
-    return integer;
-}
 
 void char_to_string(char value, char* str){
     char valueCopy; 
@@ -114,11 +110,11 @@ float pow_custom(float number, int power){
 }
 
 float get_room_average(){
-    return (get_current_room_x() + get_current_room_y()) / 2;
+    return (get_current_room_x() + get_current_room_y()) / 2.0f;
 }
 
 int inner_formel(int x){
-    return (int) 200 * pow_custom((0.8 + (float) get_room_average() / 25 * 0.5), x);
+    return (int) 200 * pow_custom((0.8f + (float) get_room_average() / 25 * 0.5f), x);
 }
 
 int random_drop_rarity(int n){

@@ -1,8 +1,11 @@
 #include "enemies.h"
 #include "enemy_arrays.h"
 #include "../stdlib/graphics.h"
+#include "../stdlib/rng.h"
+#include "../entities/player.h"
 #include "../stdlib/input.h"
-#include "../stdlib/stdlib.h"
+#include "../stdlib/lib.h"
+#include <stdlib.h>
 
 const int number_of_enemies = 4;
 

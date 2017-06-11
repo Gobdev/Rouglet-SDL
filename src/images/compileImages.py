@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#! python2
 from PIL import Image
 import os, re
 

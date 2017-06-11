@@ -25,6 +25,7 @@ char checkSwitches(char switchNumber){
 			return 0;//bit index 11 in PORTD
 			break;	
 	}
+	return 0;
 }
 
 char check_all_switches(){
@@ -36,7 +37,7 @@ char get_switch_state(){
 	return_char += checkSwitches(4);
 	return_char += checkSwitches(3) << 1;
 	return_char += checkSwitches(2) << 2;
-	return_char += checkSwitches(1) << 3;
+	return_char += checkSwitches(1);
 	return return_char;
 }
 

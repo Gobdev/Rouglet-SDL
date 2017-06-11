@@ -2,7 +2,7 @@
 #include "enemies.h"
 #include "../stdlib/rng.h"
 #include "../stdlib/graphics.h"
-#include "../stdlib/stdlib.h"
+#include "../stdlib/lib.h"
 #include "../images/UI.h"
 #include "../images/character_sprites.h"
 #include "../game.h"

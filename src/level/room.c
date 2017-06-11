@@ -2,11 +2,12 @@
 #include "room.h"
 #include "level.h"
 #include "../entities/player.h"
+#include "../entities/enemies.h"
 #include "../stdlib/graphics.h"
 #include "../images/walls.h"
 #include "../stdlib/rng.h"
-#include "../stdlib/stdlib.h"
-
+#include "../stdlib/lib.h"
+#include <stdlib.h>
 
 const int max_width = 8;
 const int max_height = 4;
@@ -177,7 +178,7 @@ char get_random_enemy(){
     return (char) difficulty_level;
 }
 
-char generate_enemies(char* pointer){
+void generate_enemies(char* pointer){
     int number_of_enemies = get_random_int(4);
     for (; number_of_enemies > 1; number_of_enemies -= 2){
         *pointer = (get_random_enemy() << 4) + get_random_enemy();
@@ -401,10 +402,10 @@ void room_draw(){
         }
     }
     for (i = 0; i < get_number_of_enemies(); i++){ 
-        loot_draw(i, current_corner_x + enemy_get_x(i) * square_size, current_corner_y + enemy_get_y() * square_size);
+        loot_draw(i, current_corner_x + enemy_get_x(i) * square_size, current_corner_y + enemy_get_y(i) * square_size);
     }
     for (i = 0; i < get_number_of_enemies(); i++){ 
-        enemy_draw(i, current_corner_x + enemy_get_x(i) * square_size, current_corner_y + enemy_get_y() * square_size);
+        enemy_draw(i, current_corner_x + enemy_get_x(i) * square_size, current_corner_y + enemy_get_y(i) * square_size);
     }
     player_draw(current_corner_x + player_get_x() * square_size, current_corner_y + player_get_y() * square_size);
 }

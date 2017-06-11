@@ -14,6 +14,8 @@
 #include "images/title.h"
 #include "level/level.h"
 #include "entities/enemies.h"
+#include "level/level.h"
+#include "level/room.h"
 
 void main_game_state();
 void inventory_game_state();
@@ -48,7 +50,6 @@ void title_screen(){
 	print_int(56, 14, seed);
 	rng_init(seed);
 	update_screen();
-	reset_timer();
 	buttonPress(1000);
 	clearScreen();
 }

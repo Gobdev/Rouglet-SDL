@@ -1,13 +1,14 @@
 #include <stdint.h>
 #include <math.h>
 #include <SDL2/SDL.h>
+#include <string.h>
 #include "graphics.h"
-#include "stdlib.h"
+#include "../stdlib/lib.h"
 #include "../images/alphabet.h"
 #include "../images/symbols.h"
 #include "../images/item_sprites.h"
 #include "../images/graphic_elements.h"
-
+#include "input.h"
 
 
 #define CHANGE_TO_COMMAND_MODE (PORTFCLR = 0x10)
@@ -133,7 +134,11 @@ const char* getCharacterPointer(char character){
     }
     if (character > 0x60 && character < 0x7B){
         return letters + (character - 0x61) * 3 + 2;
-    }
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 void paint_from_items(int x, int y, int item_id){
