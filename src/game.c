@@ -44,7 +44,7 @@ void title_screen(){
 		delay_ms(100);
 	}	
 	buttonPress(0);
-	int seed = time(NULL);
+	int seed = time(NULL)%65535;
 	clearScreen();
 	print_text(35, 14, "Seed: ");
 	print_int(56, 14, seed);
