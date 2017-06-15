@@ -88,7 +88,7 @@ void player_print_damage(int enemy, int damage){
 void set_current_weapon(int item_index){
     weapon_atk_low = weapon_low_list[item_index];
     weapon_atk_high = weapon_high_list[item_index];
-    //active_weapon_index = item_index;
+	set_active_weapon_index(item_index);
 }
 
 int get_active_weapon_index(){
