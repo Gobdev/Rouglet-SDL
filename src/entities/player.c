@@ -193,7 +193,7 @@ void remove_item(int item_index){
         inventory[i] = inventory[i+1];
     }
     */
-    inventory[inventory_size - 1] = 0;
+    inventory[item_index] = 0;
 }
 
 void player_damage_enemy(int enemy){
