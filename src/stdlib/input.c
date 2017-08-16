@@ -64,7 +64,7 @@ int buttonPress(int timeout){
                 case SDLK_LEFT:
                     b = 4;
                     break;
-                case SDLK_RSHIFT:
+                case SDLK_RCTRL:
 					toggle = !toggle;
 					b = 5;
                     break;
