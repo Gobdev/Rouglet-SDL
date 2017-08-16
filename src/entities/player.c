@@ -182,7 +182,6 @@ void drop_item(int item_index){
 }
 
 void remove_item(int item_index){
-    int i;
     if (item_index == active_weapon_index){
         active_weapon_index = 100;
     } 

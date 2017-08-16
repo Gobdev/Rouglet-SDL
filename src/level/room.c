@@ -192,7 +192,7 @@ void generate_room_seed(char* pointer){
     int i;
     for (i = 0; i < 6; i++)
         pointer[i] = 0;
-    char room_width, room_height, room_pos;
+    char room_width, room_height;
     room_width = generate_room_width();
     room_height = generate_room_height();
     pointer[0] = (room_width << 4) + room_height;

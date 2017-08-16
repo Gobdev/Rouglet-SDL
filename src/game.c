@@ -60,9 +60,7 @@ void title_screen(){
 
 
 int main(int argc, char* argv[]){
-	int i, j, k, xPos, yPos, game_state, inventory_index;
-    SDL_Event event;
-    //printf( "Test1\n"); 
+	int game_state, inventory_index;
      
 	if (!SDL_initialized) {
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)

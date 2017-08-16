@@ -105,7 +105,6 @@ void OledUpdate(char* buffer) {
     int ibit;
     int ipag; 
     int irow;
-    int icol; 
     char* pb; 
     pb = buffer; 
 			SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
@@ -213,7 +212,7 @@ void paint_pic(int x, int y, const unsigned char* pic){
     int x_size = pic[0];  
     int y_size = pic[1];
     pic += 2;
-    int i, j, shift, first_page, last_page, current_page, picPage;
+    int j, shift, first_page, last_page, current_page, picPage;
     char clearBits, clear_left_to_do;
 
     /*
