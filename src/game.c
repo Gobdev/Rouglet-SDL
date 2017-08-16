@@ -29,6 +29,8 @@ int inventory_position2[] = {42, 12};
 int inventory_position3[] = {42, 22};
 int game_over = 0;
 
+char SDL_initialized = 0;
+
 /* Non-Maskable Interrupt; something bad likely happened, so hang */
 void _nmi_handler(){for(;;);}
 /* This function is called upon reset, before .data and .bss is set up */
@@ -55,18 +57,24 @@ void title_screen(){
 }
 
 
+
+
 int main(int argc, char* argv[]){
 	int i, j, k, xPos, yPos, game_state, inventory_index;
     SDL_Event event;
     //printf( "Test1\n"); 
      
-    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0 ) 
-    { 
-		SDL_Log( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
-       return -1;
-    }
+	if (!SDL_initialized) {
+		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
+		{
+			SDL_Log("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+			return -1;
+		}
+		initialize_display();
+		SDL_initialized = 1;
+	}
 
-	initialize_display();
+	
 
 	inventory_index = 0;
 	game_state = 0; //inventory(1) or main game(0)
