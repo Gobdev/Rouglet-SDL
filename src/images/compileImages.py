@@ -1,4 +1,4 @@
-#! python2
+#! python
 from PIL import Image
 import os, re
 
@@ -31,7 +31,7 @@ for directory in dirs:
 		images[key] = lista
 
 	f = open(path + directory + '.h', 'w')
-	print "Created file '" + path + directory + ".h'."
+	print ("Created file '" + path + directory + ".h'.")
 	f.write("#pragma once\n")
 	for key in images:
 		f.write('const unsigned char ' + key + '[' + str(len(images.get(key))) + '] = {')
