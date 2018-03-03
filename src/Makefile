@@ -36,7 +36,7 @@ df = $(DEPDIR)/$(*F)
 all :
 	python images/compileImages.py 
 	#Compile the c files
-	$(CC) $(CDEPS) $(CFILES) $(LDFLAGS)
+	$(CC) $(CDEPS) $(CFILES) $(LDFLAGS) -o $(PROGNAME)
 
 clean:
 	$(RM) $(HEXFILE) $(ELFFILE) $(OBJFILES)
