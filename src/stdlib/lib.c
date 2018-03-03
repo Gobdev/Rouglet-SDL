@@ -41,7 +41,10 @@ void char_to_string(char value, char* str){
 }
 
 void int_to_string(int value, char* str){
-	str = itoa(value, str, 10);
+    if(str == NULL){
+        return;
+    }
+    sprintf(str, "%d", value);
 }
 
 void int_to_hex_string(unsigned int value, char* str){
