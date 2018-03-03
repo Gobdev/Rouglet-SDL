@@ -90,6 +90,11 @@ int main(int argc, char* argv[]){
 		game_state = checkSwitches(1);
 
 		if (game_state == 0){
+			player_draw_main_ui();
+		} else {
+			draw_inventory(inventory_index);
+		}
+		if (game_state == 0){
 			main_game_state(button);
 			level_update();
 		} else {
