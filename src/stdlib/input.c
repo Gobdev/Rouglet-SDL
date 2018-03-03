@@ -7,6 +7,7 @@
 
 char allowPress[4] = {1,1,1,1}; //Allow a button to send signal
 int toggle = 0;
+char key_down = 0;
 SDL_Event event;
 
 
@@ -41,15 +42,20 @@ char get_switch_state(){
 	return return_char;
 }
 
+
 int buttonPress(int timeout){
 	int b = 0;
 	int i = 0;
 	char switch_state = get_switch_state();
 	while (!b && (timeout == 0 || i < timeout)){
-        SDL_PollEvent(&event);
-
+        
+		SDL_PollEvent(&event);
+		// key_down tracks key state to make sure that
+		// key presses are not repeated
+		// it only works with one key press at a time
         if(event.type == SDL_QUIT) exit(0);
-        else if(event.type == SDL_KEYDOWN) {
+        else if(event.type == SDL_KEYDOWN && key_down == 0) {
+			key_down = 1;
             switch(event.key.keysym.sym)
             {
                 case SDLK_DOWN:
@@ -69,8 +75,12 @@ int buttonPress(int timeout){
 					b = 5;
                     break;
             }
-        }
+		}
+		else if (event.type == SDL_KEYUP) {
+			key_down = 0;
+		}
         
+		//Delay for good measure
 		SDL_Delay(50);
 		i++;
 	}
